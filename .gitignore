@@ -1,0 +1,6 @@
+# Credentials — never commit
+condo_assistant_credentials.md
+
+# OS
+.DS_Store
+Thumbs.db
