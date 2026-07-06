@@ -4,17 +4,17 @@
 
 | # | Project | Status | Partners | Memory File |
 |---|---|---|---|---|
-| 1 | **Condo Assistant** ⭐ | 🟢 **Active — Priority** | Rob, Eliot | [project_condo_assistant.md](project_condo_assistant.md) |
+| 1 | **Condo Assistant** ⭐ | 🟢 **Active — Priority** | Alex | [project_condo_assistant.md](project_condo_assistant.md) |
 | | *AI concierge SaaS for vacation rentals. Live at assistant.winterparkmanagement.com. Target: 5,000 individual owners @ $40/mo + 200 PM companies @ $99–$499/mo.* | | | |
 | 2 | **Barndominium Complex** ⭐ | 🟢 **Priority** | Jim Cavoto | [project_barndominium.md](project_barndominium.md) |
 | | *Barndominium-style complex development. Proof of concept site: 655 Mountain View Ln, Wolcott CO 81655. Budgets built for Grand County (~$1.45M) and Eagle County (~$1.61M).* | | | |
 | 3 | **Pole Creek Home Budget** ⭐ | 🟢 **Priority** | Solo | [project_pole_creek.md](project_pole_creek.md) |
 | | *Budget planning and tracking tool for a home build in Grand County, CO (Pole Creek area).* | | | |
-| 4 | **Recycling Station** ⭐ | 🟢 **Priority** | Mike Mahonin | [project_recycling.md](project_recycling.md) |
+| 4 | **Recycling Station** ⭐ | 🟢 **Priority** | Mike Mahonin, Adam | [project_recycling.md](project_recycling.md) |
 | | *Recycling station business — drop-off, collection, or processing. Location and model TBD.* | | | |
-| 5 | **Luxury Tours & Adventures** ⭐ | 🟢 **Priority** | Tristan, Matthew | [project_luxury_tours.md](project_luxury_tours.md) |
+| 5 | **Luxury Tours & Adventures** ⭐ | 🟢 **Priority** | Rob, Isaac, Tristan | [project_luxury_tours.md](project_luxury_tours.md) |
 | | *High-end curated experiences in Colorado and San Francisco — ski, hiking, private guides, wellness retreats. Direct booking and travel agent partnerships.* | | | |
-| 6 | **Import Line — Windows** | 🟩 **In Progress** | Joaquin Lopez | [project_import_line.md](project_import_line.md) |
+| 6 | **Import Line — Windows** | 🟩 **In Progress** | Joaquin Lopez, Nour | [project_import_line.md](project_import_line.md) |
 | | *Importing windows from India, China, or Dubai for US resale/distribution. Source country TBD.* | | | |
 | 7 | **AI Exteriors Company** | 🟩 **In Progress** | Jeff, Stephen | [project_exteriors.md](project_exteriors.md) |
 | | *Exterior home improvement (roofing, siding, windows, etc.) using AI photo analysis for instant online quotes — no door-to-door sales, no commissions. Savings go to subcontractors.* | | | |
@@ -32,6 +32,13 @@
 | | *Bulk produce Ronnie's top 10 Danish pastry products at one central kitchen, distribute to 30–50 Denver cafes/hotels/offices. No retail storefront. Target: $1K/day/location.* | | | |
 | 14 | Tiny Homes — Granby | 🟡 Starting | Mike Mahonin | [project_tiny_homes.md](project_tiny_homes.md) |
 | | *Build 40 tiny homes near Granby, CO for low-income rentals. Mission-driven affordable housing in a high cost-of-living mountain community.* | | | |
+| 15 | **Perpetual Blue — BVI Charter Yacht** | 🟩 **In Progress** | Solo | [project_perpetual_blue.md](project_perpetual_blue.md) |
+| | *Self-managed crewed charter on 2013 Fountaine Pajot Sanya 57 (6 cabin). Captain + first mate/chef. 15–20 charters/season in BVI. Currently FL LLC — evaluating BVI BC + re-flagging. BVI Charter Yacht Show target Nov 2026.* | | | |
+| | ↳ **Sub: Yacht Management Company** — manage fleet of 15 yachts for other owners. Full-service management: maintenance, crew, charters, compliance. Partners: Sean, Mason | | | |
+
+## Vessels
+- [Grenada Itinerary](grenada_itinerary.md) — Perpetual Blue, Fountaine Pajot Sanya 57 · Aug 12–21 2026 · 10 days/9 nights · 6 guests + Captain Sean Powell · Grand Anse (2 nights) → Bathway NE Grenada → Tyrrel Bay Carriacou → Sandy Island + Sculptures → Salt Whistle Bay → Tobago Cays (2 nights) → Tyrrel Bay → Grand Anse
+- HTML guest-share page: `C:\Users\ducat\Projects\grenada-itinerary\index.html` — drag folder to drop.netlify.com for instant shareable link
 
 ## Personal Health
 - [Daily Food Baseline](food_baseline.md) — say "food list" to recall daily intake baseline

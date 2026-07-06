@@ -29,6 +29,7 @@ A car rental business. Details TBD — could be peer-to-peer (like Turo), a trad
 ## Fleet (under consideration)
 - **Lexus LX 600** — flagship full-size luxury SUV, 7-passenger. Higher price point, premium market.
 - **Ineos Grenadier** — purpose-built off-road utility vehicle, spiritual successor to the classic Land Rover Defender. Manual and automatic, extremely capable on dirt/snow, strong visual presence. Good fit for Colorado mountain/adventure market.
+- **2012 Mercedes R-Class** — 7-passenger AWD luxury wagon/van. $10K acquisition (~60K miles). Winter: studded snow tires + ski box. Summer: full camping setup. Target: $150/day, 150 days/yr. ⚠️ Verify air suspension vs coil spring before buying — air suspension replacement is $1,500–3,000; coil spring model is far cheaper to maintain.
 
 ## Financial Analysis (May 2, 2026)
 Assumptions: 0 down, 6% financing over 5 years, $2K/yr insurance, $8K/yr maintenance, $2K/yr misc
@@ -88,6 +89,29 @@ Notes:
 - Complements Defender 130 well: Defender = family/luxury, Grenadier = adventure/rugged — different clientele, same market
 - Best scenario: $325/day at 15 days/mo = $34K/yr during loan, $51.5K post-loan
 
+## Financial Analysis — 2012 Mercedes R-Class (June 15, 2026)
+Assumptions: $10K cash purchase (no financing), 150 rental days/yr @ $150/day
+
+| Vehicle | Car Cost | Rate/day | Days/yr | Gross Revenue | Annual Costs | Net/yr | Payback |
+|---|---|---|---|---|---|---|---|
+| Mercedes R-Class | $10K cash | $150 | 150 | $22,500 | $5,800 | **$16,700** | ~7 months |
+
+**Annual cost breakdown:**
+- Insurance: $1,500 (low — low vehicle value)
+- Maintenance: $2,500 (conservative — aging Mercedes parts are not cheap)
+- Snow tires + ski box (amortized): $500
+- Camping setup (amortized): $300
+- Misc / cleaning / platform fees: $1,000
+- **Total: $5,800/yr**
+
+**Notes:**
+- ROI is exceptional at 167% yr 1 — low acquisition cost does the heavy lifting
+- R-Class strengths as rental: AWD, 7-passenger, massive cargo area, highway comfort, unique/memorable
+- Watch out for: air suspension (expensive to repair if equipped), Mercedes aging maintenance costs
+- Check whether it has air suspension before buying — coil spring models are far cheaper to maintain
+- Segments well as a "ski family hauler" in winter and "adventure basecamp" in summer — different from rest of fleet
+- At $10K, even 1–2 big repairs don't kill the economics
+
 ## Session Log
 ### Session: April 9, 2026
 - Project added to directory
@@ -96,3 +120,7 @@ Notes:
 ### Session: May 8, 2026
 - Logged European car-sourcing site shortlist (mobile.de, AutoScout24, Classic-trader, mobile.de Oldtimer)
 - Noted 25-year US import rule applies to older PDK 911 Cabriolets
+
+### Session: June 15, 2026
+- Added 2012 Mercedes R-Class to fleet consideration: $10K cash, $150/day, 150 days/yr = $16,700 net/yr, ~7-month payback
+- Note: verify air suspension vs coil spring before purchase
