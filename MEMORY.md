@@ -42,6 +42,7 @@
 
 ## Personal Health
 - [Daily Food Baseline](food_baseline.md) — say "food list" to recall daily intake baseline
+- [Contrast Therapy Benefits](health_contrast_therapy.md) — 12 benefits + breathwork (6), essential oils (7), music (5), social connection (6) subcategories
 
 ## Personal
 - [Personal To-Do List](personal_todo.md) — daily tasks, updated ongoing

@@ -217,6 +217,8 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 - [ ] Join VIPCA
 - [ ] Commission professional photos + spec sheet for broker outreach
 - [ ] Set up provisioning account with Rite-Way Food Markets, Tortola
+- [ ] Order guest gift mugs — Kodiak Wholesale 12oz stemless insulated wine tumblers, navy powder coat, laser engraved Perpetual Blue logo. ~$10–12/unit, 150/season (10 per charter x 15 charters) = ~$1,500–$1,800/season. Optional: add guest first name on back. URL: kodiak-wholesale.com/products/bulk-custom-wine-cups-12-oz-engraved-wholesale
+- [ ] Build broker gift program — YETI or quality 20oz tumbler + handwritten note from owner to every broker who books Perpetual Blue. Start with Jonna Duvernoy (AMWAX Prime — jonna@amwaxprime.com, +1 407 512 0552)
 
 ---
 
@@ -244,6 +246,13 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 ---
 
 ## Session Log
+
+### Session: July 8, 2026
+- Built **Charter Log spreadsheet** — `C:\Users\ducat\Projects\Perpetual_Blue_Charter_Log.xlsx` — 3 sheets: Charter Log (30 rows, 25 columns, all formulas wired), Season Summary (SUMIF/COUNTIF by year 2027/2028/2029), Notes & Legend. Pre-loaded with Lacie Clark charter (PYC PPB 052727, May 27–Jun 3 2027, $26,800, 8 guests, BVI). Built in Node.js using ExcelJS.
+- Researched **Jonna Duvernoy** — confirmed she works at **AMWAX Prime Yacht Charters** (jonna@amwaxprime.com, +1 407 512 0552). AMWAX Prime is an active broker at the BVI Charter Yacht Show.
+- Decided to build **broker relationship gift program** — quality 20oz tumbler + handwritten note from owner to every broker who has booked Perpetual Blue. Starting with Jonna.
+- Decided on **guest gift program** — set of 10 x **Kodiak Wholesale 12oz stemless insulated wine tumblers**, navy powder coat, Perpetual Blue logo laser engraved. ~$10–12/unit, ~150/season. Optional: guest first name on back. Order sample first. kodiak-wholesale.com/products/bulk-custom-wine-cups-12-oz-engraved-wholesale
+- Kodiak Wholesale handles mug + engraving in-house, ships in 1–3 business days, no setup fees, free digital proof, $250 minimum.
 
 ### Session: July 6, 2026
 - Hired **ABM Group** (abm.vg) to handle regulatory work for Perpetual Blue — BVI vessel registration, BVI BC formation, and basing the vessel in BVI

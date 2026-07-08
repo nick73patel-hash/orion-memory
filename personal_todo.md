@@ -6,9 +6,11 @@ originSessionId: 857c0f78-789e-4084-88b5-28c6b177af4c
 ---
 # Personal To-Do List
 
-Last updated: 2026-05-13
+Last updated: 2026-07-08
 
 ## Active Tasks
+
+- [ ] **Push Orion memory to GitHub** — commit `f96b12f` is saved locally but not pushed. Run when back on solid internet: `cd "C:\Users\ducat\.claude\projects\C--Users-ducat--claude\memory"` then `git push` (may need to switch remote to SSH first)
 
 - [ ] **Email David & Derek** — update on Perpetual Blue listing status and what you've learned about self-management
 - [ ] **P&L — Perpetual Blue** — build out all business expenses for the upcoming season
@@ -27,6 +29,8 @@ Last updated: 2026-05-13
 - [ ] **Set up meeting notes system** — explore Fireflies.ai → Supabase or paste-to-Claude workflow
 - [ ] **Update LinkedIn profile**
 - [ ] **Setup payments and contracts with Ben and Kaleb**
+- [ ] **Order Perpetual Blue guest mugs** — Kodiak Wholesale 12oz stemless wine tumblers, navy, laser engraved logo. Order sample first, then full run of ~150. kodiak-wholesale.com
+- [ ] **Start broker gift program** — begin with Jonna Duvernoy at AMWAX Prime. Quality tumbler + handwritten note from you as owner.
 
 ## Completed
 _(moved here when done)_
