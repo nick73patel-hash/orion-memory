@@ -1,5 +1,7 @@
 # Memory Index
 
+- [Session Log](session_log.md) — chronological log of work sessions (newest first)
+
 ## Active Projects
 
 | # | Project | Status | Partners | Memory File |
