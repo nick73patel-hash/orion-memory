@@ -10,9 +10,7 @@ Last updated: 2026-07-08
 
 ## Active Tasks
 
-- [ ] **Set up a passkey** — (likely GitHub, tied to sorting out the memory-repo push auth when back in Denver)
-
-- [ ] **Push Orion memory to GitHub** — commit `f96b12f` is saved locally but not pushed. Run when back on solid internet: `cd "C:\Users\ducat\.claude\projects\C--Users-ducat--claude\memory"` then `git push` (may need to switch remote to SSH first)
+- [ ] **Set up a passkey** — GitHub login hardening (optional now — push auth is solved via PAT, but a passkey is still good account security)
 
 - [ ] **Email David & Derek** — update on Perpetual Blue listing status and what you've learned about self-management
 - [ ] **P&L — Perpetual Blue** — build out all business expenses for the upcoming season
@@ -35,4 +33,4 @@ Last updated: 2026-07-08
 - [ ] **Start broker gift program** — begin with Jonna Duvernoy at AMWAX Prime. Quality tumbler + handwritten note from you as owner.
 
 ## Completed
-_(moved here when done)_
+- [x] **Push Orion memory to GitHub** — ✅ done 2026-07-11. Auth solved via Personal Access Token embedded in remote URL (GCM was broken). Repo now syncs to github.com/nick73patel-hash/orion-memory; automated pushes work from any session.
