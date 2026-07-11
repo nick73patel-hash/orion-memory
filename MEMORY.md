@@ -15,7 +15,7 @@
 | 5 | **Luxury Tours & Adventures** ⭐ | 🟢 **Priority** | Rob, Isaac, Tristan | [project_luxury_tours.md](project_luxury_tours.md) |
 | | *High-end curated experiences in Colorado and San Francisco — ski, hiking, private guides, wellness retreats. Direct booking and travel agent partnerships.* | | | |
 | 6 | **Import Line — Windows** | 🟩 **In Progress** | Joaquin Lopez, Nour | [project_import_line.md](project_import_line.md) |
-| | *Importing windows from India, China, or Dubai for US resale/distribution. Source country TBD.* | | | |
+| | *Premium window import for US/Colorado resale. 3-line strategy: Canadian pultruded fiberglass (duty-free USMCA) + Polish aluminum-clad wood (~15% via HTS 4418 wood-primary) confirmed; Dubai architectural aluminum exploratory (luxury tier). Business plan + supplier tracker built.* | | | |
 | 7 | **AI Exteriors Company** | 🟩 **In Progress** | Jeff, Stephen | [project_exteriors.md](project_exteriors.md) |
 | | *Exterior home improvement (roofing, siding, windows, etc.) using AI photo analysis for instant online quotes — no door-to-door sales, no commissions. Savings go to subcontractors.* | | | |
 | 8 | Smart Home — Loxone | 🟡 Starting | Eduardo, Hami | [project_smart_home.md](project_smart_home.md) |

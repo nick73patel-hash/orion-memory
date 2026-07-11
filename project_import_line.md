@@ -1,13 +1,14 @@
 # Project 5 — Import Line — Windows
 
 ## What this is
-Importing premium windows from Canada (fiberglass) and Poland (aluminum-clad wood) for US resale and distribution. Targeting contractors, custom home builders, and high-end residential markets.
+Importing premium windows for US resale and distribution, targeting contractors, custom home builders, and high-end residential markets (Colorado mountain/resort focus). **Three-line strategy:** Canada (fiberglass) + Poland (aluminum-clad wood) confirmed, **Dubai (architectural aluminum) under exploration as a luxury-tier 3rd line.**
 
 ## Status
-🟢 Priority — product strategy defined, supplier research complete, business plan pending
+🟢 Priority — 3-line product strategy defined, supplier research complete (incl. Dubai revisit July 2026), business plan + supplier tracker built. Next: supplier outreach + LLC/import setup.
 
 ## Partners
 - Joaquin Lopez
+- Nour *(role/involvement — confirm; carried from earlier index entry)*
 
 ---
 
@@ -30,6 +31,14 @@ Importing premium windows from Canada (fiberglass) and Poland (aluminum-clad woo
 - **Warranty:** 5–10 years standard (negotiate enhanced terms for US market)
 - **Price vs. US brands:** 30–50% below Andersen 400 / Marvin Elevate (post-tariff)
 - **Target market:** Architects, custom builders, luxury residential, passive house projects
+
+### Line 3 — Architectural Thermally-Broken Aluminum (Dubai/UAE) — EXPLORATORY
+- **Suppliers to explore:** Ahmad Aluminium (ahmadaluminium.ae), Glass World Industries (glassworldindustries.ae), Swift Rooms LLC (swiftrooms.ae), Koemmerling Aluminium (koemmerlingaluminium.com)
+- **Material:** Thermally-broken aluminum — minimalist large-span architectural systems (Dubai fabricators build for 45°C+ climate, strong thermal-break expertise)
+- **Tariff (2026): HEAVY** — Section 232 aluminum ~50% + UAE reciprocal ~10% + MFN ~5.7%. **No wood-primary escape** (pure aluminum can't reclassify to HTS 4418). This is the core obstacle.
+- **Certifications: GAP** — no Dubai fabricator currently NFRC-certified or exporting to US. Would need to drive certification ourselves ($30–75K).
+- **Positioning:** Ultra-luxury / architect-specified ONLY — where tariff is absorbed by margin and the buyer is not price-driven. NOT a value play.
+- **Verdict:** Highest-risk, longest-horizon line. Phase 3+ exploration. Revisit if a Dubai fabricator will build to US spec + certify. Confirmed viable ONLY at true luxury tier.
 
 ---
 
@@ -168,3 +177,11 @@ All duty-free under USMCA. All NFRC/AAMA certified. All active US distribution.
 - Strategic roadmap built (4 phases)
 - Key suppliers identified: Accurate Dorwin, SILEX (fiberglass); Sokółka, Debesto (aluminum-clad)
 - Business plan document: pending (next session)
+
+### Session: July 11, 2026
+- **Revisited Dubai sourcing** at user request → added as **Line 3 (exploratory, luxury-tier)**. Research (2026): UAE aluminum tariff still ~50% Section 232 + ~10% reciprocal + ~5.7% MFN, no wood-primary escape; no NFRC-certified US-exporting Dubai fabricator found. Verdict: highest-risk line, viable only at true luxury tier with self-driven certification. Suppliers to explore: Ahmad Aluminium, Glass World Industries, Swift Rooms, Koemmerling Aluminium.
+- **Built business plan document** → `project_files/Windows_Import_Business_Plan.docx` (Google Docs-compatible)
+- **Built supplier outreach tracker** → `project_files/Windows_Import_Supplier_Tracker.xlsx` (Google Sheets-compatible)
+- Fixed stale MEMORY.md index (was "India/China/Dubai TBD" → now Canada + Poland + Dubai 3-line strategy)
+- Flagged partner mismatch: index lists Joaquin Lopez + Nour; detail file previously only Joaquin. Added Nour w/ confirm-role note.
+- Committed + pushed all to GitHub (orion-memory repo)
