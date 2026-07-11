@@ -35,3 +35,11 @@ Two target segments:
 Combined target: ~$2.88M ARR
 
 Marketing site to be built as a landing page within the existing Next.js app (separate from the app itself). Domain TBD. No product name chosen yet beyond "Condo Assistant".
+
+**Pricing model (updated July 11, 2026 — supersedes old $40/mo flat):**
+Per-unit/month with volume breaks at 3/10/20/50 units. Two products: Condo Assistant $15, Auto Email $15, Bundle (both) $25 (base). Discount curve ~12%/20%/30%/40% off bundle at each break (50+ = $15 bundle).
+
+**Financial model + plan built (July 11, 2026) — to show Alex:**
+- `project_files/Condo_Assistant_SaaS_Model.xlsx` — 5 tabs (Pricing, Revenue Model, Unit Economics, Rollout Ramp, Assumptions). At full 5,000-client penetration: 22,400 units, ~$391K/mo, **~$4.69M ARR**, 79% gross margin, LTV:CAC 13.8x. All inputs editable/illustrative.
+- `project_files/Condo_Assistant_Business_Plan.docx` — Google Docs-ready plan for Alex: product, pricing, revenue, unit economics, 3 rollout options (A referral-led / B paid / C channel-partner), phased ramp (Y1 500 → Y2 2,000 → Y3 5,000 clients).
+- Rollout recommendation: Option A (referrals, near-zero CAC) Y1 → layer C (partners) Y2 → add B (paid) Y3.
