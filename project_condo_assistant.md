@@ -1,14 +1,20 @@
 ---
-name: Condo Assistant Project
-description: AI virtual concierge web app for Winter Park Management vacation rentals — project location, stack, and status
-type: project
+name: condo-assistant-project
+description: "AI virtual concierge web app for Winter Park Management vacation rentals — project location, stack, and status"
+metadata: 
+  node_type: memory
+  type: project
+  originSessionId: 2f508bd7-8698-45f7-9fcc-37235f88587b
 ---
 
 Next.js 15 + Supabase + Claude API app at `C:\Users\ducat\Documents\condo-assistant`.
 
 Built as an AI concierge for **Winter Park Management** (Winter Park, CO). Guests get a time-limited link and chat with an AI about their stay.
 
-**Partners:** Rob, Eliot
+**Partners / Equity (as of July 11, 2026):**
+- **Alex** — partner
+- **Rob** — 10% equity, security & development expert; oversees and reviews Orion's (Claude Code) work *(tentative — "maybe" per user, confirm)*
+- *(Eliot — previously listed as a partner; confirm current involvement)*
 
 **Why:** Property management company needed a way to answer guest questions 24/7 without staff intervention. Unanswered questions email the admin automatically.
 

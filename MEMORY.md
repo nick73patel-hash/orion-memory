@@ -4,7 +4,7 @@
 
 | # | Project | Status | Partners | Memory File |
 |---|---|---|---|---|
-| 1 | **Condo Assistant** ⭐ | 🟢 **Active — Priority** | Alex | [project_condo_assistant.md](project_condo_assistant.md) |
+| 1 | **Condo Assistant** ⭐ | 🟢 **Active — Priority** | Alex; Rob (10%, security/dev) | [project_condo_assistant.md](project_condo_assistant.md) |
 | | *AI concierge SaaS for vacation rentals. Live at assistant.winterparkmanagement.com. Target: 5,000 individual owners @ $40/mo + 200 PM companies @ $99–$499/mo.* | | | |
 | 2 | **Barndominium Complex** ⭐ | 🟢 **Priority** | Jim Cavoto | [project_barndominium.md](project_barndominium.md) |
 | | *Barndominium-style complex development. Proof of concept site: 655 Mountain View Ln, Wolcott CO 81655. Budgets built for Grand County (~$1.45M) and Eagle County (~$1.61M).* | | | |
