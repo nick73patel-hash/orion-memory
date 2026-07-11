@@ -10,6 +10,8 @@ Last updated: 2026-07-08
 
 ## Active Tasks
 
+- [ ] **Set up a passkey** — (likely GitHub, tied to sorting out the memory-repo push auth when back in Denver)
+
 - [ ] **Push Orion memory to GitHub** — commit `f96b12f` is saved locally but not pushed. Run when back on solid internet: `cd "C:\Users\ducat\.claude\projects\C--Users-ducat--claude\memory"` then `git push` (may need to switch remote to SSH first)
 
 - [ ] **Email David & Derek** — update on Perpetual Blue listing status and what you've learned about self-management

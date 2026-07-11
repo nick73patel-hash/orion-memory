@@ -22,8 +22,8 @@
 | | *Home automation business using the Loxone platform — design, install, and manage smart home systems (lighting, HVAC, security, AV, energy).* | | | |
 | 9 | ADAS Calibration Business | 🟡 Starting | Jason | [project_adas.md](project_adas.md) |
 | | *Mobile ADAS sensor/camera calibration service targeting auto body shops, glass shops, and dealerships. Partner has deep auto body experience and existing industry relationships.* | | | |
-| 10 | Rent Cars | 🟡 Starting | Christian, Eduardo, Hami | [project_rent_cars.md](project_rent_cars.md) |
-| | *Car rental business targeting Colorado mountain/resort markets. Fleet includes 911 Cabriolets, Defenders, Supras, Corvettes, Jeep Wranglers, Lexus GX, and more.* | | | |
+| 10 | Rent Cars | 🟩 In Progress | Christian, Eduardo, Hami | [project_rent_cars.md](project_rent_cars.md) |
+| | *Own-website car rental, Denver / I-70 corridor. 16-car fleet financial model built (`Rent_Cars_Fleet_Model.xlsx`): $1.03M capital, ~$338K net/yr during loan, 231% 5-yr ROI. Fleet: 911 Cabs, Defenders, Supras, Corvettes, Wranglers, Lexus GX/LX, Grenadier, and more.* | | | |
 | 11 | Investor & Entrepreneur Network App | 🟡 Starting | Solo | [project_network_app.md](project_network_app.md) |
 | | *Curated matchmaking platform connecting investors, business owners seeking capital, and ambitious young people wanting to work with entrepreneurs. Think LinkedIn meets AngelList.* | | | |
 | 12 | Student Rentals (DU Denver + LCCC Cheyenne) | 🟡 Starting | Solo | [project_du_rentals.md](project_du_rentals.md) |

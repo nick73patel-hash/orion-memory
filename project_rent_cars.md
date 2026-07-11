@@ -1,10 +1,10 @@
 # Project 4 — Rent Cars
 
 ## What this is
-A car rental business. Details TBD — could be peer-to-peer (like Turo), a traditional fleet rental, or a hybrid model targeting specific markets (resort towns, airports, corporate, etc.).
+A car rental business. **Model locked (July 2026): rent direct through our own website** (no Turo/platform — budget ~3% merchant processing instead). **Based in Denver near the I-70 corridor.**
 
 ## Status
-🟡 Starting — concept defined, no work started yet
+🟢 In progress — business model + location locked, full fleet financial model built
 
 ## Partners
 - Christian
@@ -47,10 +47,35 @@ Assumptions: 0 down, 6% financing over 5 years, $2K/yr insurance, $8K/yr mainten
 | Lexus LX 600 | $95K | $425 | 12 | $27,160 | $49,200 |
 | Lexus LX 600 | $95K | $475 | 14 | $45,760 | $67,800 |
 
+## Fleet Financial Model (built July 11, 2026)
+**File:** `C:\Users\ducat\Projects\Rent_Cars_Fleet_Model.xlsx` — built with ExcelJS (Node), 3 tabs, all formulas live.
+- **Tab 1 — Fleet Model:** 16 vehicles × 35 columns. One row per car; edit any white input cell → row, FLEET TOTAL row, and Summary tab all recalc.
+- **Tab 2 — Fleet Summary:** capital deployed, gross/net revenue, tire refresh reserve, residual, mileage, 5-yr profit, ROI.
+- **Tab 3 — Assumptions & Notes:** every default documented.
+
+**Column flow:** purchase → financing (6% APR, 5yr, $0 down) → kit → kit amort → tire refresh → operating costs → rate/days → rental rev + camp rev = gross → net (during/post loan) → residual + mileage → 5-yr profit.
+
+**Vehicle kit line items (one-time, amortized 5yr):**
+- Winter tires + summer tires (all 16 cars — sports/exotic get $1,600 winter + $1,400 summer; SUV/truck studded $2,200 + AT/MT $1,600; van $1,400 + $1,000)
+- Roof box (Thule) $1,000, 12V AC fridge $900 — SUVs & vans only
+- Camping pack $1,500 (optional) — SUVs & vans only
+**Tire Refresh/Yr** = (winter+summer)/3-yr life — ongoing, hits during AND post-loan net.
+**Camping upsell revenue** = $35/day × 25% attach rate on rental days (SUVs/vans) → ~$1,300–1,575/yr/vehicle.
+
+**Headline results (full 16-car fleet):**
+- Total capital deployed: **$1,032,000** (cars $949K + kit $83K)
+- Gross revenue/yr: **$726,113** (incl. $13,493 camping upsell)
+- Net/yr during loan: **$338,101** · Net/yr post-loan: **$574,862**
+- Residual @ 5yr: $694,760 · Fleet mileage @ 5yr: 1,398,900 mi
+- **5-yr cumulative profit: $2,385,263 · ROI on capital: 231%**
+- Top earners: Lexus LX 600 ($46K/yr), Defender 130 / Grenadier (~$31–34K/yr), C8 Corvette ($28K/yr). Weakest: Mazda Miata ($2.4K/yr). 356 Spyder only car that appreciates (105% residual).
+
+⚠️ 10 of 16 cars use seeded assumptions (price/rate/days/residual/miles) — replace with real Denver-market data when available. Studded-tire wear at high utilization may need 2 refreshes in 5yr, not 1.
+
 ## Key questions to answer
-- What is the model? (own fleet, peer-to-peer marketplace, franchise?)
-- What market/location? (Winter Park area, Denver, broader Colorado?)
-- How do reservations, payments, and handoffs work?
+- ~~What is the model?~~ ✅ Own website, direct rental
+- ~~What market/location?~~ ✅ Denver / I-70 corridor
+- How do reservations, payments, and handoffs work? (build booking system next)
 - Insurance and liability structure?
 - How can AI help? (dynamic pricing, fleet management, customer support bot)
 
@@ -124,3 +149,10 @@ Assumptions: $10K cash purchase (no financing), 150 rental days/yr @ $150/day
 ### Session: June 15, 2026
 - Added 2012 Mercedes R-Class to fleet consideration: $10K cash, $150/day, 150 days/yr = $16,700 net/yr, ~7-month payback
 - Note: verify air suspension vs coil spring before purchase
+
+### Session: July 11, 2026
+- **Locked business model:** rent direct through own website (no Turo/platform), based in Denver near I-70 corridor
+- **Built full fleet financial model** → `Rent_Cars_Fleet_Model.xlsx` (16 cars × 35 cols, 3 tabs, live formulas). See Fleet Financial Model section above.
+- Added at user request: (1) tire refresh reserve line — (winter+summer)/3yr, hits during+post loan; (2) winter+summer tires for sports cars too (were $0 kit before); (3) camping pack upsell revenue line ($35/day × 25% attach)
+- Net dipped slightly vs first pass (tire refresh −$17.5K/yr outweighs camping +$13.5K/yr) — more honest ownership picture
+- Next: booking/reservation system, insurance & liability structure
