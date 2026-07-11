@@ -1,0 +1,146 @@
+<style>
+  :root{
+    --bg:#eef1f0; --surface:#ffffff; --ink:#12211d; --muted:#586b65;
+    --line:#dde4e1; --accent:#0e7c66; --accent-soft:#dcece7;
+    --amber:#b9701a; --amber-soft:#f4e6d2; --shadow:0 1px 2px rgba(18,33,29,.06),0 8px 28px rgba(18,33,29,.07);
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --bg:#0b1512; --surface:#12211d; --ink:#e9f1ee; --muted:#9cb0aa;
+      --line:#243731; --accent:#54c1a4; --accent-soft:#15302a;
+      --amber:#e0a44e; --amber-soft:#2a2113; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0b1512; --surface:#12211d; --ink:#e9f1ee; --muted:#9cb0aa;
+    --line:#243731; --accent:#54c1a4; --accent-soft:#15302a;
+    --amber:#e0a44e; --amber-soft:#2a2113; --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#eef1f0; --surface:#ffffff; --ink:#12211d; --muted:#586b65;
+    --line:#dde4e1; --accent:#0e7c66; --accent-soft:#dcece7;
+    --amber:#b9701a; --amber-soft:#f4e6d2; --shadow:0 1px 2px rgba(18,33,29,.06),0 8px 28px rgba(18,33,29,.07);
+  }
+  *{box-sizing:border-box}
+  .wrap{font-family:var(--sans);color:var(--ink);background:var(--bg);padding:28px 18px 40px;line-height:1.5}
+  .sheet{max-width:940px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .pad{padding:clamp(20px,4vw,40px)}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .hdr{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px;border-bottom:1px solid var(--line)}
+  .word{font-family:var(--serif);font-size:clamp(30px,5vw,44px);font-weight:700;letter-spacing:-.01em;margin:6px 0 4px;text-wrap:balance;line-height:1.05}
+  .tag{color:var(--muted);font-size:15px;max-width:46ch}
+  .meta{text-align:right;font-size:12.5px;color:var(--muted);line-height:1.6}
+  .meta b{color:var(--ink)}
+  /* stat tiles */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 16px;position:relative}
+  .tile::before{content:"";position:absolute;left:16px;right:16px;top:0;height:3px;border-radius:0 0 3px 3px;background:var(--accent)}
+  .tile.hero{background:var(--accent-soft);border-color:transparent}
+  .tile.warm::before{background:var(--amber)}
+  .num{font-size:clamp(26px,3.4vw,34px);font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .tile.hero .num{color:var(--accent)}
+  .lbl{font-size:12.5px;color:var(--muted);margin-top:3px}
+  /* sections */
+  .sec{margin-top:30px}
+  .sec h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 14px;display:flex;align-items:center;gap:10px}
+  .sec h2::after{content:"";height:1px;flex:1;background:var(--line)}
+  /* offer */
+  .offer{display:flex;flex-wrap:wrap;gap:12px}
+  .prod{flex:1;min-width:150px;border:1px solid var(--line);border-radius:12px;padding:16px}
+  .prod .p-name{font-weight:700;font-size:15px}
+  .prod .p-price{font-family:var(--serif);font-size:24px;color:var(--accent);margin-top:6px;font-variant-numeric:tabular-nums}
+  .prod .p-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .cap{margin-top:12px;background:var(--amber-soft);border-radius:10px;padding:12px 16px;font-size:14px;color:var(--ink)}
+  .cap b{color:var(--amber)}
+  /* rollout */
+  .ramp{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .step{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface)}
+  .step .yr{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  .step .cl{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;margin:6px 0 2px}
+  .step .arr{font-family:var(--serif);color:var(--muted);font-size:15px}
+  .step .note{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+  /* econ */
+  .econ{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 22px}
+  .kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+  .kv span{color:var(--muted)}
+  .kv b{font-variant-numeric:tabular-nums}
+  /* why */
+  .why{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 12px 12px 0;padding:16px 20px;font-size:15px}
+  .why b{color:var(--accent)}
+  .foot{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+  @media (max-width:680px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .ramp{grid-template-columns:1fr}
+    .econ{grid-template-columns:1fr}
+    .meta{text-align:left}
+  }
+</style>
+
+<div class="wrap">
+  <div class="sheet">
+    <div class="pad">
+      <div class="hdr">
+        <div>
+          <div class="eyebrow">SaaS Snapshot &middot; for Alex</div>
+          <div class="word">Condo Assistant</div>
+          <div class="tag">A 24/7 AI concierge &amp; auto-email for short-term rentals — live in production, already multi-tenant.</div>
+        </div>
+        <div class="meta">
+          <b>July 2026</b><br>Winter Park Management LLC<br>(DBA Condo Assistant)<br><span style="color:var(--amber)">Confidential &middot; illustrative</span></div>
+      </div>
+
+      <div class="stats">
+        <div class="tile hero"><div class="num">$4.4M</div><div class="lbl">ARR at full scale</div></div>
+        <div class="tile"><div class="num">78%</div><div class="lbl">Gross margin</div></div>
+        <div class="tile"><div class="num">12.7&times;</div><div class="lbl">LTV : CAC</div></div>
+        <div class="tile warm"><div class="num">5,050</div><div class="lbl">Target clients</div></div>
+      </div>
+
+      <div class="sec">
+        <h2>The Offer</h2>
+        <div class="offer">
+          <div class="prod"><div class="p-name">Condo Assistant</div><div class="p-price">$15</div><div class="p-sub">per unit / month</div></div>
+          <div class="prod"><div class="p-name">Auto Email</div><div class="p-price">$15</div><div class="p-sub">per unit / month</div></div>
+          <div class="prod"><div class="p-name">Bundle — both</div><div class="p-price">$25</div><div class="p-sub">per unit / month</div></div>
+        </div>
+        <div class="cap"><b>Capped at $500/month per client</b> (up to 100 units). The bill rises with units, then plateaus — it never cliffs. A 75-unit manager pays ≈ $6.67/unit.</div>
+      </div>
+
+      <div class="sec">
+        <h2>Rollout</h2>
+        <div class="ramp">
+          <div class="step"><div class="yr">Year 1</div><div class="cl">500</div><div class="arr">~$438K ARR</div><div class="note">Small owners via WPM referrals &amp; Colorado STR communities — near-zero CAC.</div></div>
+          <div class="step"><div class="yr">Year 2</div><div class="cl">2,000</div><div class="arr">~$1.75M ARR</div><div class="note">Land property managers (channel) — their adoption credentials &amp; refers small owners.</div></div>
+          <div class="step"><div class="yr">Year 3</div><div class="cl">5,050</div><div class="arr">~$4.4M ARR</div><div class="note">Paid acquisition + referral flywheel at full penetration.</div></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2>Unit Economics</h2>
+        <div class="econ">
+          <div class="kv"><span>Avg revenue / unit / mo</span><b>$16.63</b></div>
+          <div class="kv"><span>Gross profit / unit / mo</span><b>$13.05</b></div>
+          <div class="kv"><span>Avg units / client</span><b>4.4</b></div>
+          <div class="kv"><span>CAC</span><b>$150</b></div>
+          <div class="kv"><span>Monthly churn</span><b>3%</b></div>
+          <div class="kv"><span>Lifetime value</span><b>$1,908</b></div>
+          <div class="kv"><span>CAC payback</span><b>~2.6 mo</b></div>
+          <div class="kv"><span>Total units @ scale</span><b>22,150</b></div>
+          <div class="kv"><span>Monthly revenue</span><b>$368K</b></div>
+        </div>
+      </div>
+
+      <div class="sec">
+        <h2>Why It Works</h2>
+        <div class="why">The <b>under-5-unit owner</b> is the profit center — the biggest, most profitable-per-unit segment (4,000 of 5,050 clients). <b>Large property managers</b> are priced aggressively on purpose: they're a distribution channel whose adoption and referrals make the small, high-margin owners cheaper and easier to land.</div>
+      </div>
+
+      <div class="foot">
+        <span>Product built &amp; live · remaining work: billing, security, go-to-market.</span>
+        <span>Figures are a first-pass model — refine with real funnel data.</span>
+      </div>
+    </div>
+  </div>
+</div>
