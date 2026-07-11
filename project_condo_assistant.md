@@ -37,12 +37,14 @@ Combined target: ~$2.88M ARR
 Marketing site to be built as a landing page within the existing Next.js app (separate from the app itself). Domain TBD. No product name chosen yet beyond "Condo Assistant".
 
 **Pricing model (updated July 11, 2026 — supersedes old $40/mo flat):**
-Per-unit/month with volume breaks. Two products: Condo Assistant $15, Auto Email $15, Bundle (both) $25 base. Bundle per-unit: 1–2 $25 · 3–9 $22 · 10–19 $20 · 20–49 $14 (bigger discount at 20+). **Enterprise: 50–100 units = FLAT $500/mo** (≈$6.67/unit); 100+ = custom.
+Per-unit/month, two products: Condo Assistant $15, Auto Email $15, Bundle (both) $25 base. Bundle volume tiers: 1–2 $25 · 3–9 $22 · 10+ $20 per unit. **$500/mo cap per client (up to 100 units); 100+ = custom.** Cap smooths the curve (no cliff) — bill rises with units then plateaus at $500; big clients get deep effective discount (75 units ≈ $6.67/unit).
 
 **Client distribution (user's numbers, July 11):** 4,000 clients @ 1–2 units · 500 @ 3–9 · 300 @ 10–19 · 200 @ 20–49 · 50 @ 50–100 (seeded "rest") = 5,050 clients, 22,150 units.
 
+**Strategy (user, July 11):** Priority = under-5-unit owners (most profitable/unit, biggest segment). Large PM companies priced aggressively (capped) on purpose — their adoption + referrals make the small profitable owners cheaper/easier to land (channel play).
+
 **Financial model + plan built (July 11, 2026) — to show Alex:**
-- `project_files/Condo_Assistant_SaaS_Model.xlsx` — 5 tabs (Pricing, Revenue Model, Unit Economics, Rollout Ramp, Assumptions). At full ~5,050-client penetration: 22,150 units, ~$342K/mo, **~$4.1M ARR**, 77% gross margin, LTV:CAC 11.6x. All inputs editable/illustrative.
-- `project_files/Condo_Assistant_Business_Plan.docx` — Google Docs-ready plan for Alex: product, pricing (incl. $500 enterprise flat), revenue, unit economics, 3 rollout options (A referral-led / B paid / C channel-partner), phased ramp (Y1 500 → Y2 2,000 → Y3 5,050 clients).
-- Rollout recommendation: Option A (referrals, near-zero CAC) Y1 → layer C (partners) Y2 → add B (paid) Y3.
-- ⚠️ Pricing cliff noted: 49-unit client (per-unit) can pay more than 50-unit (flat $500) — intentional "graduate to enterprise," watch the boundary.
+- `project_files/Condo_Assistant_SaaS_Model.xlsx` — 5 tabs (Pricing, Revenue Model, Unit Economics, Rollout Ramp, Assumptions). At full ~5,050-client penetration: 22,150 units, ~$368K/mo, **~$4.42M ARR**, 78% gross margin, LTV:CAC 12.7x. All inputs editable/illustrative.
+- `project_files/Condo_Assistant_Business_Plan.docx` — Google Docs-ready plan for Alex: product, pricing (per-unit + $500 cap), revenue, unit economics, 3 rollout options (A referral-led / B paid / C channel-partner), phased ramp (Y1 500 → Y2 2,000 → Y3 5,050 clients).
+- Rollout recommendation: Option A (small owners via referrals, near-zero CAC) Y1 → layer C (land PM cos who credential small owners) Y2 → add B (paid) Y3.
+- Everything a first-pass guess — replace estimates with real data as it comes in.
