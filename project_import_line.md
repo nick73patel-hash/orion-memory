@@ -8,7 +8,7 @@ Importing premium windows for US resale and distribution, targeting contractors,
 
 ## Partners
 - Joaquin Lopez
-- Nour *(role/involvement — confirm; carried from earlier index entry)*
+- Nour
 
 ---
 
@@ -185,3 +185,5 @@ All duty-free under USMCA. All NFRC/AAMA certified. All active US distribution.
 - Fixed stale MEMORY.md index (was "India/China/Dubai TBD" → now Canada + Poland + Dubai 3-line strategy)
 - Flagged partner mismatch: index lists Joaquin Lopez + Nour; detail file previously only Joaquin. Added Nour w/ confirm-role note.
 - Committed + pushed all to GitHub (orion-memory repo)
+- **Confirmed Nour is a partner** (removed confirm-role note)
+- **Built landed-cost / margin financial model** → `project_files/Windows_Import_Financial_Model.xlsx` (3 tabs: Landed Cost & Margin, Annual P&L, Assumptions). Illustrative Phase 1/2 numbers: ~$910K revenue, 24% gross margin, ~$161K opex, **~$58K net operating profit (6.4%)**. All per-unit inputs are placeholders to replace with real supplier quotes.
