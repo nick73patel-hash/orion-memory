@@ -11,10 +11,9 @@ Next.js 15 + Supabase + Claude API app at `C:\Users\ducat\Documents\condo-assist
 
 Built as an AI concierge for **Winter Park Management** (Winter Park, CO). Guests get a time-limited link and chat with an AI about their stay.
 
-**Partners / Equity (as of July 11, 2026):**
+**Partners / Equity (confirmed July 11, 2026):**
 - **Alex** — partner
-- **Rob** — 10% equity, security & development expert; oversees and reviews Orion's (Claude Code) work *(tentative — "maybe" per user, confirm)*
-- *(Eliot — previously listed as a partner; confirm current involvement)*
+- **Rob** — 10% equity, security & development expert; oversees and reviews Orion's (Claude Code) work
 
 **Why:** Property management company needed a way to answer guest questions 24/7 without staff intervention. Unanswered questions email the admin automatically.
 
