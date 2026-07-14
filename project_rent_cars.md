@@ -156,3 +156,11 @@ Assumptions: $10K cash purchase (no financing), 150 rental days/yr @ $150/day
 - Added at user request: (1) tire refresh reserve line — (winter+summer)/3yr, hits during+post loan; (2) winter+summer tires for sports cars too (were $0 kit before); (3) camping pack upsell revenue line ($35/day × 25% attach)
 - Net dipped slightly vs first pass (tire refresh −$17.5K/yr outweighs camping +$13.5K/yr) — more honest ownership picture
 - Next: booking/reservation system, insurance & liability structure
+
+### Session: July 14, 2026 — fleet revision
+- **User revised the sheet** — those inputs are now the base (price/rate/days/residual tweaks; e.g. Land Cruiser $85K→$65K, GX $70K→$75K, LX $95K→$80K).
+- **Dropped** Toyota Supra; **renamed** Toyota Tacoma → **Ram Rebel** ($40K).
+- **Added 3 new cars at the top:** Mazda CX-90 ($50K, $160/day), Genesis GV70 ($58K, $200/day), Genesis GV80 ($70K, $240/day) — all SUV kit; seeded estimates (Genesis residuals ~62%, verify).
+- **Ineos Grenadier + Mercedes R-Class** moved to a **"MAYBES — Under Consideration"** section below the fleet total (amber-shaded, excluded from all totals).
+- **Confirmed fleet now 15 cars:** capital $940,600, gross rev $635K/yr, net/yr during loan $280,036, 5-yr cumulative profit $2.06M, 5-yr ROI 219%.
+- Backed up to GitHub (`project_files/Rent_Cars_Fleet_Model.xlsx`).
