@@ -10,6 +10,8 @@ Last updated: 2026-07-08
 
 ## Active Tasks
 
+- [ ] **Second-computer setup checklist** — get Orion running on the other PC: (1) git auth / Personal Access Token for the orion-memory repo (the current PAT is only in *this* machine's git config), (2) turn on smart auto-approve (`permissions.defaultMode: "auto"` in settings.json), (3) confirm memory-repo sync + pull-before-push habit so the two machines don't collide. Ask Orion to write the full checklist when ready.
+
 - [ ] **Set up a passkey** — GitHub login hardening (optional now — push auth is solved via PAT, but a passkey is still good account security)
 
 - [ ] **Email David & Derek** — update on Perpetual Blue listing status and what you've learned about self-management
