@@ -37,9 +37,11 @@ Running startup-expense log. **Plan:** once the business email (on `perpetualblu
 
 | Date | Item | Vendor | Amount | Category | Receipt |
 |---|---|---|---|---|---|
-| 2026-07-14 | Domain: **perpetualbluebvi.com** | registrar (TBD) | **$53.86** | Startup · Web & Software | pending email access |
+| 2026-07-14 | Domain: **perpetualbluebvi.com** — 1-yr registration (declined GoDaddy privacy + MS365 upsells) | GoDaddy | **$12.99** | Startup · Web & Software | pending email access |
 
-**Running total: $53.86**
+**Running total: $12.99**
+
+> Email plan: **Zoho Mail Free** (2 inboxes, e.g. `charters@` + `hello@perpetualbluebvi.com`) instead of GoDaddy's $71/yr MS365 upsell. WHOIS privacy: use free option, not GoDaddy's $13/yr add-on. Est. savings ~$84/yr.
 
 ---
 
