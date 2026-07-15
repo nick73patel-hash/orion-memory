@@ -31,6 +31,18 @@ Stack for the **Florida LLC** (US operating entity):
 
 ---
 
+## Expenses & Receipts (feeds CRM + QuickBooks)
+
+Running startup-expense log. **Plan:** once the business email (on `perpetualbluebvi.com`) is set up, user will grant Orion access to **scan receipts → categorize → push into the CRM and QuickBooks**. Until then, expenses are tracked here manually.
+
+| Date | Item | Vendor | Amount | Category | Receipt |
+|---|---|---|---|---|---|
+| 2026-07-14 | Domain: **perpetualbluebvi.com** | registrar (TBD) | **$53.86** | Startup · Web & Software | pending email access |
+
+**Running total: $53.86**
+
+---
+
 ## Corporate Structure — Decision Pending
 
 ### Advisor Recommendation
