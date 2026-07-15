@@ -41,7 +41,11 @@ Running startup-expense log. **Plan:** once the business email (on `perpetualblu
 
 **Running total: $13.19**
 
-> Email plan: **Zoho Mail Free** (2 inboxes, e.g. `charters@` + `hello@perpetualbluebvi.com`) instead of GoDaddy's $71/yr MS365 upsell. WHOIS privacy: use free option, not GoDaddy's $13/yr add-on. Est. savings ~$84/yr.
+> Email: **Zoho Mail Free** (2 inboxes, set up 2026-07-14):
+> - `charters@perpetualbluebvi.com` — **Nikunj** (owner; bookings/brokers)
+> - `captainsean@perpetualbluebvi.com` — **Sean Powell** (captain)
+>
+> Chosen over GoDaddy's $71/yr MS365 upsell; free WHOIS privacy instead of the $13/yr add-on → ~$84/yr saved. Free plan = webmail + mobile app only (no IMAP/desktop-client unless upgraded to Mail Lite ~$1/user/mo). DNS (MX/SPF/DKIM/DMARC) in GoDaddy.
 
 ---
 
