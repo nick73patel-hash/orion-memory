@@ -6,10 +6,11 @@ originSessionId: 857c0f78-789e-4084-88b5-28c6b177af4c
 ---
 # Personal To-Do List
 
-Last updated: 2026-07-08
+Last updated: 2026-07-14
 
 ## Active Tasks
 
+- [ ] **Install Zoho Mail app on phone + turn on notifications** — sign in as `charters@perpetualbluebvi.com` so you catch broker/guest emails on the go
 - [ ] **Second-computer setup checklist** — get Orion running on the other PC: (1) git auth / Personal Access Token for the orion-memory repo (the current PAT is only in *this* machine's git config), (2) turn on smart auto-approve (`permissions.defaultMode: "auto"` in settings.json), (3) confirm memory-repo sync + pull-before-push habit so the two machines don't collide. Ask Orion to write the full checklist when ready.
 
 - [ ] **Set up a passkey** — GitHub login hardening (optional now — push auth is solved via PAT, but a passkey is still good account security)
