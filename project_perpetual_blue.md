@@ -45,7 +45,9 @@ Running startup-expense log. **Plan:** once the business email (on `perpetualblu
 > - `charters@perpetualbluebvi.com` — **Nikunj** (owner; bookings/brokers)
 > - `captainsean@perpetualbluebvi.com` — **Sean Powell** (captain)
 >
-> Chosen over GoDaddy's $71/yr MS365 upsell; free WHOIS privacy instead of the $13/yr add-on → ~$84/yr saved. Free plan = webmail + mobile app only (no IMAP/desktop-client unless upgraded to Mail Lite ~$1/user/mo). DNS (MX/SPF/DKIM/DMARC) in GoDaddy.
+> Chosen over GoDaddy's $71/yr MS365 upsell; free WHOIS privacy instead of the $13/yr add-on → ~$84/yr saved. Free plan = webmail + mobile app only (no IMAP/desktop-client unless upgraded to Mail Lite ~$1/user/mo).
+>
+> **Fully configured & verified 2026-07-14.** DNS in GoDaddy: MX (mx/mx2/mx3.zoho.com), SPF (GoDaddy `_spfm` merge that resolves to `include:zoho.com include:zohomail.com`), DKIM (selector `zmail`, live + verified), DMARC currently `p=none` with rua→charters@ (**bump to `p=quarantine` after monitoring**). Domain ownership verified by charters@. TODO: get Sean signed in (was "never signed in"), enable 2FA, mobile apps, draft email signatures.
 
 ---
 
