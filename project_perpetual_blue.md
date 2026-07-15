@@ -3,12 +3,31 @@
 ## Overview
 - **Vessel:** 2013 Fountaine Pajot Sanya 57 Catamaran — "Perpetual Blue"
 - **Configuration:** 6 cabins, crewed charter
-- **Crew:** Captain + First Mate/Chef
+- **Crew:** Captain **Sean Powell** + Chef **Elise** (Sean's partner)
 - **Current ownership:** Florida LLC
 - **Target season:** 2026/2027
 - **Charter goal:** 15 charters minimum, up to 20
-- **Website:** Already live
+- **Website:** Already live · **Domain:** securing **www.perpetualbluebvi.com** (July 14, 2026)
 - **Related file:** [Grenada Itinerary](grenada_itinerary.md)
+
+---
+
+## Business Systems — Banking, Cards, Accounting & CRM (decided July 14, 2026)
+
+Stack for the **Florida LLC** (US operating entity):
+
+- **Banking: Mercury (Free plan).** Free checking/savings, unlimited free cards, free bill pay, free QuickBooks sync. **Skip Mercury Plus (~$30–35/mo)** — its recurring/ACH-debit invoicing doesn't fit charter cash flow (paid by broker wire + one-off deposit/balance invoices). Upgrade only if direct-to-guest bookings scale.
+- **Cards: Mercury IO business credit card** — $0 annual fee, 1.5% cash back, unlimited free employee cards (one each for owner, Captain Sean, Chef Elise) with per-card limits, native QuickBooks sync. Chose IO for ecosystem fit. Runner-up if a second issuer is wanted: **Chase Ink Business Cash** ($0 fee, 5% phone/internet/office + 2% gas/dining, big welcome bonus, Visa = better island acceptance).
+- **Accounting: QuickBooks Online Simple Start (~$35/mo, ~$420/yr) from day one.** Deliberately paying vs. DIY books — clean tax return, accountant-openable file, audit trail, and it handles depreciation of the $400K refit / deferred deposits / loan principal-vs-interest that a bank feed can't.
+- **CRM: to be built next.** Operational brain — charters → guests → brokers → commissions → deposits/payments — feeding clean categorized data into QuickBooks (and/or Mercury). Design principle: **CRM = system of record for operations; QuickBooks = statutory/tax books.** The charter calendar artifact is the first piece.
+
+> ⚠️ Earlier (July 6) note: Mercury suits the FL LLC; **Wise Business** was recommended for a BVI BC. If the entity re-flags to a BVI BC, US cards (Mercury IO / Chase) require **keeping the US LLC** — reconcile card entity with the final corporate structure.
+
+## Charter Calendar (visual artifact)
+- **Live:** https://claude.ai/code/artifact/95f010e0-f26e-4f86-a9f7-873bfdde8fb0
+- **Source:** currently only in session scratchpad `pb-calendar.html` — **TODO: copy to a permanent Projects folder + GitHub.**
+- 2026/2027 season, 7 charters (4 booked, 3 holds, **43 nights**). Nautical theme, theme-aware, monthly grids Dec 2026–Jun 2027. Header labeled "Perpetual Blue · BVI".
+- **Half-day turnover tiles:** pickup day = afternoon-only diagonal (morning open, guest boards PM); departure day = morning-only diagonal (guest off ~10am, afternoon open for turnaround). Full nights solid. Legend has a "Turnover ½-day" swatch.
 
 ---
 
