@@ -25,7 +25,7 @@ Stack for the **Florida LLC** (US operating entity):
 
 ## Charter Calendar (visual artifact)
 - **Live:** https://claude.ai/code/artifact/95f010e0-f26e-4f86-a9f7-873bfdde8fb0
-- **Source:** currently only in session scratchpad `pb-calendar.html` — **TODO: copy to a permanent Projects folder + GitHub.**
+- **Source (permanent):** `C:\Users\ducat\Projects\perpetual-blue\pb-calendar.html` · backed up to GitHub at `project_files/pb-calendar.html`. Redeploy: edit the file → Artifact tool with the same URL.
 - 2026/2027 season, 7 charters (4 booked, 3 holds, **43 nights**). Nautical theme, theme-aware, monthly grids Dec 2026–Jun 2027. Header labeled "Perpetual Blue · BVI".
 - **Half-day turnover tiles:** pickup day = afternoon-only diagonal (morning open, guest boards PM); departure day = morning-only diagonal (guest off ~10am, afternoon open for turnaround). Full nights solid. Legend has a "Turnover ½-day" swatch.
 

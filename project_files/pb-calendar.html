@@ -1,0 +1,200 @@
+<style>
+  :root{
+    --bg:#eaf1f4; --surface:#ffffff; --ink:#0f2733; --muted:#59727f;
+    --line:#d7e2e8; --sea:#0e7180; --sea-soft:#d3e9ec; --sea-ink:#0a5560;
+    --amber:#b5760f; --amber-soft:#f6e7cc; --accent:#1b83a8;
+    --shadow:0 1px 2px rgba(15,39,51,.06),0 10px 30px rgba(15,39,51,.08);
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root{
+    --bg:#081720; --surface:#0f2631; --ink:#e7eff3; --muted:#94aab5;
+    --line:#1e3a46; --sea:#41bccb; --sea-soft:#123138; --sea-ink:#7fd6e0;
+    --amber:#e0a54e; --amber-soft:#2b2112; --accent:#54b6db;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.4);
+  }}
+  :root[data-theme="dark"]{
+    --bg:#081720; --surface:#0f2631; --ink:#e7eff3; --muted:#94aab5;
+    --line:#1e3a46; --sea:#41bccb; --sea-soft:#123138; --sea-ink:#7fd6e0;
+    --amber:#e0a54e; --amber-soft:#2b2112; --accent:#54b6db;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 34px rgba(0,0,0,.4);
+  }
+  :root[data-theme="light"]{
+    --bg:#eaf1f4; --surface:#ffffff; --ink:#0f2733; --muted:#59727f;
+    --line:#d7e2e8; --sea:#0e7180; --sea-soft:#d3e9ec; --sea-ink:#0a5560;
+    --amber:#b5760f; --amber-soft:#f6e7cc; --accent:#1b83a8;
+    --shadow:0 1px 2px rgba(15,39,51,.06),0 10px 30px rgba(15,39,51,.08);
+  }
+  *{box-sizing:border-box}
+  .wrap{font-family:var(--sans);color:var(--ink);background:var(--bg);padding:26px 16px 40px;line-height:1.5}
+  .sheet{max-width:1040px;margin:0 auto}
+  .head{text-align:center;margin-bottom:20px}
+  .eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:700}
+  h1{font-family:var(--serif);font-size:clamp(28px,5vw,40px);margin:6px 0 4px;letter-spacing:-.01em;text-wrap:balance}
+  .sub{color:var(--muted);font-size:15px}
+  /* stat row */
+  .stats{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:20px 0 10px}
+  .tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 20px;text-align:center;box-shadow:var(--shadow)}
+  .tile .n{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .tile .l{font-size:12px;color:var(--muted);margin-top:2px}
+  .booked-c{color:var(--sea)} .hold-c{color:var(--amber)}
+  .legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:14px 0 22px;font-size:13px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:16px;height:16px;border-radius:5px;display:inline-block}
+  .sw.b{background:var(--sea-soft);border:1.5px solid var(--sea)}
+  .sw.h{background:var(--amber-soft);border:1.5px solid var(--amber)}
+  .sw.o{background:var(--surface);border:1.5px solid var(--line)}
+  .sw.t{background:linear-gradient(135deg,transparent 50%,var(--sea-soft) 50%);border:1.5px solid var(--sea)}
+  /* calendar grid */
+  #cal{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+  .month{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow)}
+  .mtitle{font-weight:700;font-size:15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline}
+  .mtitle .cnt{font-size:11px;color:var(--muted);font-weight:600}
+  .dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px}
+  .dow div{text-align:center;font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.03em}
+  .grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-variant-numeric:tabular-nums;border-radius:6px;color:var(--ink);position:relative}
+  .cell.empty{visibility:hidden}
+  .cell.booked{background:var(--sea-soft);color:var(--sea-ink);font-weight:700}
+  .cell.hold{background:var(--amber-soft);color:var(--amber);font-weight:700}
+  .cell.start{border-top-left-radius:11px;border-bottom-left-radius:11px}
+  .cell.end{border-top-right-radius:11px;border-bottom-right-radius:11px}
+  /* half-day turnovers: morning = top-left, afternoon = bottom-right; split runs top-right↔bottom-left */
+  .cell.booked.arrival{background:linear-gradient(135deg,transparent 49.5%,var(--sea-soft) 50.5%)}
+  .cell.booked.departure{background:linear-gradient(135deg,var(--sea-soft) 49.5%,transparent 50.5%)}
+  .cell.hold.arrival{background:linear-gradient(135deg,transparent 49.5%,var(--amber-soft) 50.5%)}
+  .cell.hold.departure{background:linear-gradient(135deg,var(--amber-soft) 49.5%,transparent 50.5%)}
+  .cell.star::after{content:"★";position:absolute;top:-2px;right:2px;font-size:8px;color:var(--amber)}
+  /* charter list */
+  .list{margin-top:26px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+  .row{display:flex;flex-direction:column;gap:5px;padding:14px 18px;border-bottom:1px solid var(--line);font-size:14px}
+  .row:last-child{border-bottom:none}
+  .pill{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:3px 10px;border-radius:999px;white-space:nowrap}
+  .pill.booked{background:var(--sea-soft);color:var(--sea)}
+  .pill.hold{background:var(--amber-soft);color:var(--amber)}
+  .rtop{display:flex;align-items:center;gap:12px}
+  .rtop .dates{font-weight:700;font-variant-numeric:tabular-nums}
+  .rtop .nights{margin-left:auto;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+  .rmid{font-size:14px}
+  .rmid strong{color:var(--ink)}
+  .rmeta{font-size:12.5px;color:var(--muted);line-height:1.5}
+  .rmeta .rate{color:var(--sea);font-weight:700}
+  .note{margin-top:16px;font-size:13px;color:var(--muted);text-align:center;line-height:1.6}
+  @media (max-width:520px){ .row{flex-wrap:wrap} .row .route{flex-basis:100%;order:5} }
+</style>
+
+<div class="wrap">
+  <div class="sheet">
+    <div class="head">
+      <div class="eyebrow">Perpetual Blue &middot; BVI</div>
+      <h1>2026 / 2027 Charter Calendar</h1>
+      <div class="sub">Fountaine Pajot Sanya 57 &middot; St. Thomas base</div>
+    </div>
+
+    <div class="stats">
+      <div class="tile"><div class="n booked-c">4</div><div class="l">Booked</div></div>
+      <div class="tile"><div class="n hold-c">3</div><div class="l">On hold</div></div>
+      <div class="tile"><div class="n">43</div><div class="l">Nights committed</div></div>
+      <div class="tile"><div class="n">7</div><div class="l">Charters</div></div>
+    </div>
+
+    <div class="legend">
+      <span><i class="sw b"></i> Booked</span>
+      <span><i class="sw h"></i> Hold ★ holiday week</span>
+      <span><i class="sw t"></i> Turnover &frac12;-day</span>
+      <span><i class="sw o"></i> Open</span>
+    </div>
+
+    <div id="cal"></div>
+
+    <div class="list" id="list"></div>
+
+    <div class="note">
+      Still open to fill: early December, February (outside 22–28), most of March, and April (outside 19–24).<br>
+      Three holds to convert: <strong>Dec 27–Jan 3</strong> New Year (highest rate), <strong>Jan 15–21</strong> Wilson, and <strong>Apr 19–24</strong> Crooke.<br>
+      <span style="opacity:.85">Turnover days are split diagonally — guests board in the afternoon and disembark by ~10 am, so the open half is free for a same-day turnaround.</span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var bookings = [
+    {s:[2026,11,27], e:[2027,0,3],  status:'hold',   from:'St Thomas, USVI', to:'St Thomas, USVI',     nights:7, holiday:true},
+    {s:[2027,0,5],   e:[2027,0,10], status:'booked', from:'Red Hook, St. Thomas', to:'Red Hook, St. Thomas', nights:5},
+    {s:[2027,0,15],  e:[2027,0,21], status:'hold', from:'BVI - Tortola', to:'BVI - Tortola', nights:6,
+      guest:'Wilson', broker:'Stephanie Reynolds', bookingNo:'PPB 011527',
+      rate:'$23,143', board:'Full-board (prorated $27K/wk × 6 nts)', cruising:'BVI'},
+    {s:[2027,0,23],  e:[2027,0,30], status:'booked', from:'Saint Thomas, USVI', to:'Saint Thomas, USVI', nights:7},
+    {s:[2027,1,22],  e:[2027,1,28], status:'booked', from:'St Thomas, USVI', to:'St Thomas, USVI',     nights:6},
+    {s:[2027,3,19],  e:[2027,3,24], status:'hold', from:'USVI - St. John', to:'USVI - Red Hook, STT', nights:5,
+      guest:'Crooke', broker:'Andrew Volpe', rate:'$23,334', board:'Full term charter · 8 pax'},
+    {s:[2027,4,27],  e:[2027,5,3],  status:'booked', from:'USVI - St. Thomas', to:'USVI - St. John', nights:7,
+      guest:'Lacie Clark', broker:'Jonna Duvernoy (AMWAX Prime)', bookingNo:'PYC PPB 052727',
+      rate:'$26,800', board:'Half-board (3 lunches + 4 dinners ashore, client expense)', cruising:'USVI + BVI'}
+  ];
+  var MN = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var MShort = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var DOW = ['S','M','T','W','T','F','S'];
+  function d(arr){return new Date(arr[0],arr[1],arr[2]);}
+  function within(day){
+    // Half-day turnovers: EMBARK day = morning free / afternoon aboard (guest boards PM);
+    // DEPARTURE day = morning aboard / afternoon free (guest off ~10am, crew turns the boat).
+    // Full nights in between are fully shaded. (First-match wins; no same-day back-to-backs in current data.)
+    for(var i=0;i<bookings.length;i++){
+      var s=d(bookings[i].s), e=d(bookings[i].e);
+      if(day>=s && day<=e){ // include the departure day now — shown as a morning-only half
+        var kind = (+day===+s) ? 'arrival' : (+day===+e) ? 'departure' : 'full';
+        return {b:bookings[i], kind:kind};
+      }
+    }
+    return null;
+  }
+  var months=[[2026,11],[2027,0],[2027,1],[2027,2],[2027,3],[2027,4],[2027,5]];
+  var cal=document.getElementById('cal');
+  months.forEach(function(ym){
+    var y=ym[0], m=ym[1];
+    var first=new Date(y,m,1).getDay();
+    var ndays=new Date(y,m+1,0).getDate();
+    var box=document.createElement('div'); box.className='month';
+    var cnt=0;
+    var cellsHTML='';
+    for(var i=0;i<first;i++){ cellsHTML+='<div class="cell empty"></div>'; }
+    for(var day=1;day<=ndays;day++){
+      var w=within(new Date(y,m,day));
+      var cls='cell', title='';
+      if(w){ cnt++; cls+=' '+w.b.status;
+        if(w.kind==='arrival') cls+=' start arrival';
+        else if(w.kind==='departure') cls+=' end departure';
+        if(w.b.holiday)cls+=' star';
+        var kindTxt = w.kind==='arrival' ? ' — board PM' : w.kind==='departure' ? ' — depart AM' : '';
+        title=w.b.status.toUpperCase()+': '+w.b.from+' → '+w.b.to+' ('+w.b.nights+' nts)'+kindTxt; }
+      cellsHTML+='<div class="'+cls+'"'+(title?' title="'+title+'"':'')+'>'+day+'</div>';
+    }
+    box.innerHTML='<div class="mtitle">'+MN[m]+' '+y+'<span class="cnt">'+(cnt?cnt+' days':'open')+'</span></div>'+
+      '<div class="dow">'+DOW.map(function(x){return '<div>'+x+'</div>';}).join('')+'</div>'+
+      '<div class="grid">'+cellsHTML+'</div>';
+    cal.appendChild(box);
+  });
+  // charter list
+  var list=document.getElementById('list');
+  function fmt(a){return MShort[a[1]]+' '+a[2]+', '+a[0];}
+  bookings.forEach(function(b){
+    var row=document.createElement('div'); row.className='row';
+    var route = b.from===b.to ? b.from+' ↺' : b.from+' → '+b.to;
+    var top='<div class="rtop"><span class="pill '+b.status+'">'+b.status+(b.holiday?' ★':'')+'</span>'+
+      '<span class="dates">'+fmt(b.s)+' – '+fmt(b.e)+'</span>'+
+      '<span class="nights">'+b.nights+' nts</span></div>';
+    var mid='<div class="rmid">'+(b.guest?'<strong>'+b.guest+'</strong> &middot; ':'')+route+'</div>';
+    var bits=[];
+    if(b.rate) bits.push('<span class="rate">'+b.rate+'</span>');
+    if(b.board) bits.push(b.board);
+    if(b.broker) bits.push('Broker: '+b.broker);
+    if(b.bookingNo) bits.push('#'+b.bookingNo);
+    if(b.cruising) bits.push(b.cruising);
+    var meta = bits.length ? '<div class="rmeta">'+bits.join(' &nbsp;&middot;&nbsp; ')+'</div>' : '';
+    row.innerHTML=top+mid+meta;
+    list.appendChild(row);
+  });
+})();
+</script>
