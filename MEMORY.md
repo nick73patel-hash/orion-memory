@@ -54,6 +54,7 @@
 
 ## Credentials
 - [Condo Assistant Admin Login](condo_assistant_credentials.md) — assistant.winterparkmanagement.com/admin
+- [Perpetual Blue Licenses & Credentials](pb_licenses.md) — BVI BC reg, CRVL, work permits, ship registry, insurance (template, fill in as numbers obtained)
 
 ## User Preferences (applies to all projects)
 - Goes by **"bro"** — keep it casual and collaborative

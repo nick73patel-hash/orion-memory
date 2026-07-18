@@ -37,9 +37,11 @@ Running startup-expense log. **Plan:** once the business email (on `perpetualblu
 
 | Date | Item | Vendor | Amount | Category | Receipt |
 |---|---|---|---|---|---|
-| 2026-07-14 | Domain: **perpetualbluebvi.com** — 1-yr registration (declined GoDaddy privacy + MS365 upsells) | GoDaddy | **$13.19** ($12.99 + tax) | Startup · Web & Software | pending email access |
+| 2026-07-14 | Domain: **perpetualbluebvi.com** — 1-yr registration (declined GoDaddy privacy + MS365 upsells) | GoDaddy | **$13.19** ($12.99 + tax) | Startup · Web & Software | pending |
+| 2026-07-28 | Captain Sean Powell — flight DOM (Dominica) → EIS (Tortola, BVI) | TBD | **$242.97** | Crew Travel | pending |
+| 2026-07-28 | Elise McNabb — flight SJU (Puerto Rico) → EIS (Tortola, BVI) | TBD | **$108.97** | Crew Travel | pending |
 
-**Running total: $13.19**
+**Running total: $365.13**
 
 > Email: **Zoho Mail Free** (2 inboxes, set up 2026-07-14):
 > - `charters@perpetualbluebvi.com` — **Nikunj** (owner; bookings/brokers)

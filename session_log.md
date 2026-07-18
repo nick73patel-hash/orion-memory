@@ -4,6 +4,39 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 18, 2026
+
+**Theme:** Master to-do list built + Perpetual Blue structure, licensing, and compliance deep-dive.
+
+### 📋 Master To-Do List
+- Built a full interactive to-do artifact (45 items, 6 categories) from scratch — pulled from memory + session log carry-forwards + user's paper notes.
+- Categories: Perpetual Blue & Charter (31), Condo Assistant (2), Winter Park Management (1), Financial & Tax (2), Personal (7), Tech & Dev (2).
+- Artifact lives at: https://claude.ai/code/artifact/1149007f-7c0c-4bb8-a608-af4970f4803f — checkboxes tick off live, badge counts update.
+- Deleted 9 completed/irrelevant items from prior list. Added ~30 new items from paper notes.
+- Notes panel at bottom of artifact: PB original structure record + new structure + verified CRVL fee table.
+- Placeholder credentials file created: `pb_licenses.md` — ready to fill in as numbers are obtained.
+
+### ⛵ Perpetual Blue — Structure & Compliance
+- **Current:** Florida LLC · BVI flag · Foreign-based (on record)
+- **Transitioning to (Nov 1):** BVI BC (LLC) · BVI flag · BVI-based · Work permits in process for South African captain (Sean Powell) + American chef (Elise)
+- **Owner status:** Nick = owner in transit — no BVI work permit required
+- **CRVL license fees (verified from official BVI amendment docs):**
+  - BVI-based, 50–60 ft (PB): **$1,600/year**
+  - Foreign-based restricted: $7,500 + $1,200/charter over 7 → $17,100 at 15 charters
+  - Foreign-based unlimited: $24,000 flat. Break-even ≈ 21 charters.
+- **Charter logistics:** All charters start in BVI. USVI arrivals use go-fast ferry to Soper's Hole (West End) → pick up on yacht.
+- **B1/B2 visa:** US visa category, relevant only for crew transiting US waters (USVI). Not applicable to BVI operations.
+- **DPNR registration (USVI):** on to-do list to research.
+- **PB website:** intention noted — put all PB info on public-facing website.
+
+### Carry-forward
+- Fill in `pb_licenses.md` as registration/permit numbers are obtained
+- Build PB public website
+- Condo Assistant Stripe billing (Step 3)
+- All items on master to-do artifact
+
+---
+
 ## Session: July 17, 2026
 
 **Theme:** Condo Assistant — Vercel deploy recovery, UX polish, AI behavior fixes, parking link/coupon code cleanup.
