@@ -4,7 +4,34 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
-## Session: July 18, 2026
+## Session: July 18, 2026 (continued — afternoon)
+
+**Theme:** Condo Assistant — Trailhead 414 unit built, dual-admin email, towel request SMS alerts.
+
+### 🏔️ Condo Assistant
+
+- **Dual-admin email for unanswered questions.** Unanswered question alerts now go to both `nick73patel@gmail.com` AND `admin@winterparkmanagement.com`. Added `ADMIN_EMAILS` constant + shared `sendEmail()` helper in `lib/email.ts`. Commit `b5ab647`.
+
+- **Towel request detection + email alerts.** New `isTowelRequest()` function detects when AI confirms it's notifying management about a towel request (checks for "towel" + action phrases in AI response). New `sendTowelRequestEmail()` sends teal-colored alert email to both admins. Wired into `app/api/chat/route.ts`. Tests updated, 204/204 pass.
+
+- **Free SMS via Verizon email-to-SMS gateway.** When a towel request fires, also sends a plain-text SMS to `3035200562` and `7202348172` via `@vtext.com` gateway (zero extra cost, uses existing Resend). SMS failure is non-fatal. Commit `3cb8acd`.
+
+- **Towel detector broadened.** Initial detection only caught "contact/contacting/let...know". AI was using "reach out" — missed. Extended trigger list to include: "reach out", "notify", "inform", "arrange". Live-tested and confirmed. Commit `c302a4a`.
+
+- **Trailhead 414 unit built.** Full property record created in Supabase under Trailhead Lodge building:
+  - Address: 401 Trailhead Circle, Unit 414, Winter Park CO 80482
+  - WiFi: Trailhead414 / 401trailhead · Sleeps 6 · Type: condo · Door code: 3845
+  - Full check-in instructions (driving directions, parking passes, pool card) + checkout instructions
+  - 20 unit-level Q&A pairs with OpenAI embeddings covering: address, directions, door code, parking, pool card, laundry, BBQ, fireplace, no A/C, max guests, kitchen supplies, house rules, fire restrictions, trash, floor/building, grocery delivery, rental discounts, restaurants
+  - Property ID: `9d225449-a6f8-4b2e-8fe3-3919d73a7e1b`
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+
+---
+
+## Session: July 18, 2026 (morning)
 
 **Theme:** Master to-do list built + Perpetual Blue structure, licensing, and compliance deep-dive.
 
