@@ -53,6 +53,43 @@ Running startup-expense log. **Plan:** once the business email (on `perpetualblu
 
 ---
 
+## Tax Structure — Key Findings (July 24, 2026)
+
+### Ownership Structure
+**Recommended: 3 US citizens → BVI BC directly (no FL LLC intermediary)**
+- FL LLC middle layer produces identical federal tax results at $3–10K more/year in cost
+- Both structures result in the BVI BC being classified as a CFC — the FL LLC changes nothing
+
+### Annual Compliance Cost
+**~$1,500–3,000/year total** — mostly BVI fees, not accounting:
+- BVI government fee: $550–1,350/year
+- BVI registered agent: ~$1,000–1,500/year (required by BVI law)
+- IRS forms (5471, FBAR, 8938, 8992): free to file yourself
+
+### Key Decision at Formation: CFC vs. Partnership
+File **Form 8832** at formation to elect partnership treatment OR do nothing (defaults to CFC/foreign corporation):
+- **CFC (default):** No self-employment tax. Losses stay trapped in entity (can't offset other income). Small profits taxed at ~12.6% with §962 election. Forms: 5471 + 8992.
+- **Partnership election:** Losses flow through to owners (but likely passive — can only offset passive income). SE tax risk if members are active. Forms: 8865 (cheaper/simpler than 5471).
+- **For a mostly break-even boat:** Either works. Partnership may be slightly simpler/cheaper to file.
+
+### Why Annual Tax Bill is Low for This Boat
+- At-or-below breakeven: no taxable income → no tax owed on inclusions
+- $60K retained for maintenance: ~$20K/person share → ~$2,500/person at 12.6% rate (trivial)
+- BVI 0% corporate tax = no foreign tax credits, but also no BVI tax bill
+
+### IRS Forms (all US-filed, nothing goes to BVI)
+- **Form 5471** — CFC annual reporting. Can DIY but complex. $10K penalty for missing it.
+- **Form 8992** — NCTI/GILTI calculation. Goes with 5471.
+- **FBAR (FinCEN 114)** — Free, online, 15 minutes. bsaefiling.fincen.treas.gov
+- **Form 8938** — FATCA. Bundled with 1040.
+- **Form 926** — One-time at formation when yacht transfers to BVI BC.
+- **Form 8832** — One-time at formation if electing partnership treatment.
+
+### BVI Economic Substance Act
+Charter yachts are **explicitly excluded** from BVI Economic Substance requirements (BVI ITA 2023 guidance). No BVI-resident directors, premises, or staff required. File annual declaration confirming no relevant activity.
+
+---
+
 ## Corporate Structure — Decision Pending
 
 ### Advisor Recommendation
@@ -242,12 +279,85 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 
 ---
 
+## Yacht Management Company (Sub-Project)
+
+**Partners:** Sean, Mason  
+**Model:** Manage fleet of crewed charter yachts for other owners — full-service: maintenance, crew, charters, compliance  
+**Target fleet:** 15 yachts  
+**Positioning:** Below-market fees, full financial transparency (all invoices uploaded to CRM so owners see every cost)
+
+### Pricing Structure (decided July 2026)
+- **Monthly retainer:** $1,000/yacht/month (flat management fee)
+- **Performance fee:** 10–15% of net profit per charter (after expenses)
+- **Positioning:** ~10% below market rate — market is 15–25% of gross; our model uses net = more owner-friendly
+- **Key differentiator:** Full receipt transparency via CRM — what makes "% of net" viable (owners can verify every expense)
+
+### Baseline Overhead (before first yacht)
+
+**One-time setup: $4,000–7,000**
+- Entity formation (USVI LLC or BVI BC): $500–1,500
+- Management agreement (maritime attorney): $2,000–4,000
+- Website: $500–1,500
+
+**Monthly fixed burn (~$1,400–2,500/month):**
+| Item | Monthly Est. |
+|---|---|
+| Professional liability / E&O insurance | $400–700 |
+| General liability | $75–150 |
+| CRM + receipt management software | $100–300 |
+| Bookkeeping / QBO | $50–100 |
+| Business banking | $50–100 |
+| Communication | $100–150 |
+| Website hosting | $30–50 |
+| **Total** | **$805–1,550/mo** |
+
+**Annual baseline: ~$25,000–35,000/year** (dominated by E&O insurance: $5,000–10,000/yr)
+
+### Regulatory Requirements
+- **USVI:** Business license via DLCA (~$250/yr)
+- **BVI:** FSC business registration if BVI entity (~$500–900/yr registered agent)
+- **Industry:** BVI Charter Yacht Society membership (~$500–1,000/yr)
+- No separate maritime license for *management company* — that's on captain/vessel
+
+### Unit Economics (per yacht, 15-charter season)
+- Management fee: $12,000/year
+- Performance fees @ 12% of ~$17K net/charter × 15 charters: ~$30,600/year
+- **Gross revenue per yacht: ~$42,600/year**
+- Variable cost per yacht (travel, inspections): ~$3,000/year
+- **Net contribution per yacht: ~$39,600/year**
+- Break-even: ~1 fully active yacht covers fixed overhead
+
+### Proforma Files
+- `C:\Users\ducat\Projects\Yacht_Mgmt_Proforma.xlsx` — scenarios: 1, 5, 10, 20 yachts (general overhead model)
+- `C:\Users\ducat\Projects\HeySea60_QuarterShare_Proforma.xlsx` — fractional ownership deal model (see below)
+
+### Hey Sea 60 — Quarter Share Fractional Program
+**Vessel:** HeySea Seaview 60  
+**Price:** $1,810,000  
+**Structure:** 4 quarter shares × $452,500/owner  
+**Charter type:** Full crewed (Captain + Chef/Mate) — NOT bareboat  
+**Positioning:** Lower-cost alternative to Leopard 58 (~$1.9M+) or Lagoon 55 (~$1.8–2M) in crewed charter space  
+**Target charter rate:** $35,000–55,000/week (crewed 60ft cat)  
+**Builder:** HeySea Yachts, Jiangmen China — semi-custom, superyacht heritage  
+**Depreciation assumption:** 55–65% residual at year 5 (no track record — conservative vs. Bali/Leopard's 60–70%)  
+**Securities law:** Must structure shares carefully — consult securities attorney before selling (Reg D or equivalent)  
+**Builder file:** `C:\Users\ducat\Projects\condo-assistant\perpetual-blue\build_heysea_proforma.js`
+
+### Office / Operations
+- Work-from-home initially
+- Eventually: small office + storage in **Red Hook, St. Thomas USVI** (~$2,000–3,500/month when needed)
+
+---
+
 ## Open Questions / Action Items
 
 - [x] Hire regulatory agent for BVI registration — **ABM Group hired (July 2026)**
 - [ ] Confirm ABM is handling CRVL + Charter Authorization Letter (not just company + vessel registration)
 - [ ] Open **Wise Business** account for BVI BC banking (primary); add Butterfield Bank BVI as secondary
-- [ ] Engage international tax attorney re: BVI BC structure (Form 5471, FBAR, GILTI)
+- [ ] **Tax:** Decide CFC vs. partnership treatment for BVI BC at formation — file Form 8832 (check-the-box election) if electing partnership. Do this before entity begins operating.
+- [ ] **Tax:** File Form 926 when yacht transfers into BVI BC (required if yacht value >$100K — it is)
+- [ ] **Tax:** Year 1 — get a one-time consult with international tax CPA to walk through Form 5471 setup; then DIY ongoing. Form 5471 can be filed yourself but is complex.
+- [ ] **Tax:** File FBAR free at bsaefiling.fincen.treas.gov annually if BVI BC has >$10K in foreign accounts
 - [ ] Confirm Florida LLC eligibility on VISMA jurisdictions list
 - [ ] Get commercial charter insurance quotes (Pantaenius, Suncoast, Anchor Marine, Markel)
 - [ ] Confirm captain holds RYA Yachtmaster Ocean + Commercial Endorsement + ENG1

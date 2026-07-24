@@ -4,6 +4,141 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 24, 2026
+
+**Theme:** Condo Assistant — guest link inline editing; Perpetual Blue — BVI charter yacht tax structure research.
+
+### 🏔️ Condo Assistant
+
+- **Guest links now editable after creation.** Pencil icon on each link card opens inline edit form pre-populated with current values. All 5 fields editable: guest name, door code, common area code, check-in date, departure date. PATCH API extended to accept all fields conditionally (toggle-active still works unchanged). Empty string coerces to null to allow clearing codes. Committed (ed890fd) and pushed to production.
+
+### ⛵ Perpetual Blue — BVI Tax Structure Research
+
+Researched two ownership structures for 3 US citizens operating a BVI crewed charter:
+- **Scenario A:** 3 US citizens → Florida LLC → BVI LLC → charter vessel
+- **Scenario B:** 3 US citizens → BVI LLC directly → charter vessel
+
+**Key findings:**
+- Both produce identical US federal tax results. FL LLC middle layer adds $3–10K/year in cost with zero benefit. **Scenario B wins.**
+- BVI LLC defaults to CFC (Controlled Foreign Corporation) for US tax purposes — both scenarios.
+- Charter income to unrelated parties likely escapes Subpart F. NCTI/GILTI applies to profits.
+- **At-or-below breakeven (our situation):** negligible tax exposure. $60K retained → ~$2,500/person at 12.6% rate.
+- **Annual compliance cost: ~$1,500–3,000** (BVI registered agent + government fee). All IRS forms (5471, FBAR, 8938, 8992) are free to file yourself.
+- FBAR: free online at bsaefiling.fincen.treas.gov.
+- Form 5471 is complex but DIY-able — get one-time CPA walkthrough in year 1, then handle in-house.
+- BVI Economic Substance Act: charter yachts explicitly excluded (BVI ITA 2023 guidance). No BVI substance requirements.
+- No US-BVI tax treaty. BVI 0% corporate tax = no foreign tax credits (but also no BVI tax).
+- **Key formation decision:** file Form 8832 (check-the-box) to elect partnership vs. default CFC — do before entity begins operating.
+- File Form 926 when yacht transfers into BVI BC (yacht value >$100K).
+- Updated `project_perpetual_blue.md` with full tax structure section + 4 new action items.
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+- Snow Mountain Ranch management proposal — draft when ready
+- WPM Portal: start Phase 1 when SMR contract signed
+- Perpetual Blue: confirm Form 8832 election decision with CPA before BVI BC formation
+
+---
+
+## Session: July 23, 2026
+
+**Theme:** Perpetual Blue — HeySea research saved to disk; Yacht management proforma; Condo Assistant — checkout calendar UX fix; Snow Mountain Ranch property management research.
+
+### ⛵ Perpetual Blue
+
+- **HeySea Seaview 60 quality research brief** saved to disk (`perpetual-blue/heysea_quality_research.md`) and pushed to GitHub. Full comparison vs. Fountaine Pajot and Bali: hull construction, CE Cat A Ocean cert, Bill Dixon pedigree, BVI charter market acceptance, resale risk, CRVL licensing, insurance questions, 10-point due diligence checklist.
+- **Proforma files confirmed built:** `HeySea60_QuarterShare_Proforma.xlsx` (4 sheets: Assumptions, Owner Economics, Mgmt Revenue, Operational P&L), `Yacht_Mgmt_Proforma.xlsx` (1/5/10/20 yacht scenarios).
+- **Charter rates benchmarked:** $38K low / $52K high (10% below ATLAS, the operating BVI HeySea 60 at $42K–$58K/week).
+- **Open item:** CRVL domestic vs. foreign rate — whether BVI-flagged, BVI-based vessel owned by FL LLC qualifies for domestic (lower) rate. ABM Group to confirm.
+
+### 🏔️ Condo Assistant
+
+- **Checkout calendar UX fix:** When check-in date is selected, departure date auto-populates to the next day (so native date picker opens to correct month). If check-in is last day of month, departure jumps to 1st of following month. Added `min` attribute to block selecting departure on/before check-in. File: `app/admin/properties/[id]/links/page.tsx`. Committed and pushed (4386b6f).
+
+### 🏠 Snow Mountain Ranch (new WPM opportunity)
+
+- 43 staff units, 12-month leases, each employee pays separately monthly.
+- Property management software evaluated: Buildium (~$55/mo, 150 units), Rentec Direct (~$45/mo, 100 units), DoorLoop ($270/mo for 43 units — too expensive), Cozy (free, bare bones).
+- **Recommendation:** Rentec Direct or Buildium — flat fee covering all 43 units, ACH tenant portal, professional PM company features.
+
+### Condo Assistant — UX Fixes
+- **Checkout calendar auto-scroll:** When check-in date is picked, departure auto-populates to next day so calendar opens to correct month. Last day of month → departure jumps to 1st of following month. Committed and pushed (4386b6f).
+- **Date picker click area:** Both check-in and departure date inputs now open calendar picker on any click anywhere in the box (showPicker() on click). Committed and pushed (cf136b2).
+
+### Snow Mountain Ranch (New WPM Opportunity)
+- YMCA of the Rockies, Granby CO — 43 staff units, 12-month leases, each employee pays separately.
+- PM software evaluated: Buildium ($55/mo), Rentec Direct ($45/mo), DoorLoop ($270/mo for 43 — too expensive), Cozy (free).
+- **Recommendation:** Rentec Direct or Buildium when contract is signed.
+
+### WPM Property Management Portal — Full Build Plan
+- Decision: build custom CRM to replace Buildium/Rentec. Own it forever. ~20 hours with Orion.
+- 5-phase plan: Foundation → Payments + SMS → Maintenance → Bookkeeping → Staff Housing Features.
+- **Key differentiators identified (research-backed):** SMS reminders (no competitor has them), flexible custom reports (biggest complaint), maintenance calendar + recurring tasks, staff/employer split billing + payroll deduction export (nobody builds this — real gap in resort/hospitality markets).
+- Tech stack: Next.js + Supabase + Tailwind + Stripe + Plaid + Twilio. Running cost ~$45/mo vs. $45–$280/mo SaaS.
+- **Trigger to start:** Snow Mountain Ranch management contract signed → begin Phase 1 + submit Stripe/Plaid applications same day.
+- Full plan saved: `C:\Users\ducat\Projects\wpm-portal-plan.md`
+- Build plan artifact published: https://claude.ai/code/artifact/6ccd6a1f-3121-4441-a757-67826e5afe42
+- Memory file created: `project_wpm_portal.md`
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+- PYM dispute: reconcile double-count flags before finalizing combined total
+- Pull itemized receipt for PYM13459 ($1,268.56 bundled Aug 2024)
+- Snow Mountain Ranch management proposal — draft when ready
+- WPM Portal: start Phase 1 when SMR contract signed (submit Stripe + Plaid apps same day)
+
+---
+
+## Session: July 20, 2026
+
+**Theme:** Perpetual Blue — R&M Supplies ledger cross-reference, updated category reports, dinghy 2026 report, buyer inquiry Q&A.
+
+### ⛵ Perpetual Blue — Maintenance Analysis (PYM Dispute Support)
+
+**New document processed:** R&M Supplies Transactions (Account 574 — Xero), 15 pages, $49,647.47 net, covering Jul 2021–Jul 2026. Saved to scratchpad alongside original 183-page R&M transactions document.
+
+**Key discovery:** `PYMSF2846` ($18,515.98 — Nov 2023, "Parts for Air con replacement") existed ONLY in the Supplies ledger — entirely absent from the main R&M document. This is the largest single entry in the Supplies doc and pushes the AC category total from $26,143.49 → **$44,670.47**.
+
+**All 5 category reports updated with Supplies doc entries:**
+
+| Category | Prior Total | Added | Updated Total |
+|---|---|---|---|
+| Engines & Drivetrain | $158,109.75 | +$5,209.67 | $163,319.42 |
+| Batteries & Electrical | $72,716.25 | +$1,887.76 | $74,604.01 |
+| Air Conditioning | $26,143.49 | **+$18,526.98** | **$44,670.47** |
+| Sails & Rigging | $24,499.86 | +$764.01 | $25,263.87 |
+| Generator | $22,764.25 | +$320.83 | $23,085.08 |
+| Gelcoat/Painting/Hull | $32,932.61 | $0 | $32,932.61 |
+| **COMBINED** | **$337,166.21** | **+$26,709.25** | **$363,875.46** |
+
+**Watermaker identified as new category:** $135.03 (Rainman impeller kits + membrane filter from Supplies doc).
+
+**Flags requiring owner action:**
+- PYM13459 ($1,268.56 bundled Aug 2024) — Yanmar + Onan + supplies mixed invoice, needs itemized receipt to split
+- PYM1775 ($961.50) appears in both Engine AND Generator reports — possible double-count, verify in Xero
+- VI Custom Refits #00285 rudder work ($5,927.05) appears in both Engine and Gelcoat reports — assign to one category only
+- Unconfirmed oil purchases ($742.57 across 8 entries) — engine or generator, need receipts
+- Battery pk27/PYM2184 ($202.96) — starter battery, confirm category (Engine vs Battery)
+
+**Additional reports produced:**
+- **Gelcoat, Painting & Hull Cleaning** ($32,932.61) — clean formatted version with 3 groups: Hull Cleaning ($1,397.16), Haul-Out/Bottom Paint 2025 ($14,511.90), Gelcoat & Topside Repairs 2026 ($17,023.55)
+- **Dinghy Repairs & Maintenance 2026** — $3,375.38 confirmed 2026 / $4,886.32 including Nov 2025 carry-over. Key finding: davit strongpoint failure caused cascade damage to outboard cowl — $850+ in preventable downstream repairs
+
+**Buyer inquiry Q&A:** Subagent dispatched to answer 17 buyer questions (engines, generator, rigging, electrical, watermaker, electronics, history, logistics) from both maintenance documents. Pending at session save.
+
+**Buyer Q&A Word document created:** `perpetual_blue_buyer_qa.docx` — 17 questions across 8 sections (Layout, Engines, Generator, Rigging & Sails, Electrical, Watermaker & Electronics, History & Condition, Logistics). Saved to `C:\Users\ducat\Projects\perpetual-blue\perpetual_blue_buyer_qa.docx`. Professional Navy/blue styling, vessel summary table, running header, page numbers, disclaimer. 4 items flagged for captain confirmation (engine hours, panel count, MultiPlus model, radar/AIS inventory).
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+- PYM dispute: reconcile the double-count flags before finalizing combined total
+- Pull itemized receipt for PYM13459 ($1,268.56 bundled Aug 2024)
+- Set up git repo for memory files + Projects/perpetual-blue so "back up and push" works (no git remote currently configured)
+
+---
+
 ## Session: July 18, 2026 (continued — afternoon)
 
 **Theme:** Condo Assistant — Trailhead 414 unit built, dual-admin email, towel request SMS alerts.

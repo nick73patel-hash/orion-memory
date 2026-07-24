@@ -49,6 +49,9 @@
 ## Personal
 - [Personal To-Do List](personal_todo.md) — daily tasks, updated ongoing
 
+## WPM Tools
+- [WPM Property Management Portal](project_wpm_portal.md) — Custom PM CRM to replace Buildium. First property: Snow Mountain Ranch (43 staff units). Build starts when SMR contract signed. Full plan at `C:\Users\ducat\Projects\wpm-portal-plan.md`
+
 ## Integrations
 - [Escapia → QuickBooks Integration](project_escapia_qb.md) — daily sync of reservation financials to QBO. Starting Monday 2026-05-04 — user checking API access.
 
