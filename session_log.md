@@ -4,6 +4,121 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 27, 2026 (continued — evening)
+
+**Theme:** Condo Assistant — inspection checklist restructured room-based, multi-photo, edit button. Perpetual Blue — Grenada itinerary updated with Canouan SLYCR night.
+
+### 🏔️ Condo Assistant — Inspection Overhaul (commit `202e06a`)
+
+**Room-based checklist (`new/page.tsx` full rewrite):**
+- Sections in order: Safety → Exterior → Living/Dining → Fireplace → Kitchen → Bedrooms → Bathrooms → Laundry → Garage → BBQ → General
+- Safety: amber header, expandable smoke/CO detector entries (up to 4 each) with per-entry location + notes + checked state. Optional; renders first.
+- Exterior door locks: expandable with + button (default "Front door"); add back door / side door etc.
+- Bathroom: added "Check for mold" line item
+- Garage: added "Spray lubricant on rollers and track" with green $5 billable badge; "Billable add-ons: $5" line at card bottom
+- Optional sections (Fireplace, Garage, BBQ): N/A toggle preserved
+
+**Multi-photo (`new/page.tsx` + `edit/page.tsx`):**
+- `itemPhotos` state changed from `Record<string, File | null>` → `Record<string, File[]>`
+- Camera button captures multiple photos per line item; thumbnails all shown with × to remove
+- Upload loop iterates all files per key; DB `photo_url` stores JSON array string `'["url1","url2"]'`
+- Edit page: parses existing `photo_url` — JSON array or legacy plain string on load; merges existing + new on save
+
+**Edit button fix (`page.tsx`):**
+- Was gated to `{insp.status === "in_progress" && ...}` — completed inspections had no edit access
+- Fixed: button shows for all inspections; label `"Resume"` for in-progress, `"Edit"` for completed
+
+### ⛵ Perpetual Blue — Grenada Itinerary Updated
+
+Artifact updated (same URL): https://claude.ai/code/artifact/23c607f8-29df-4b6a-a4fe-0b5c081e3b82
+
+**Change:** Dropped Aug 13 as a Grand Anse rest day. Inserted **Sandy Lane Yacht Club & Residences, Canouan** on Aug 15 (Day 4). Route is now:
+- Day 1 (Aug 12): Grand Anse Bay → evening arrival
+- Day 2 (Aug 13): BBC Beach + Black Bay stop → Bathway (was Day 3)
+- Day 3 (Aug 14): Bathway → Tyrrel Bay, Carriacou (was Day 4)
+- Day 4 (Aug 15): Sandy Island + Sculptures → Union Island customs (into SVG) → SLYCR Canouan ★
+- Day 5 (Aug 16): Canouan → Salt Whistle Bay, Mayreau (~12nm south)
+- Days 6–10: unchanged (Tobago Cays × 2, Tyrrel Bay, Grand Anse, depart Aug 21)
+
+SVG customs note: now clears in at Union Island on Day 4 (before Canouan), out on Day 8.
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+- Snow Mountain Ranch management proposal — draft when ready
+- WPM Portal: start Phase 1 when SMR contract signed
+- Perpetual Blue: confirm Form 8832 election decision with CPA before BVI BC formation
+- 274 Lions Gate Dr — verify bedroom count (3 or 4) with property record
+- **Perpetual Blue CRM** — needs API keys pasted into `.env.local`, run migrations 001 + 002, launch 6 parallel build agents
+
+---
+
+## Session: July 27, 2026
+
+**Theme:** Condo Assistant — bug fixes, Karim inspection features (camera + Spanish toggle), guest double-send fix, notification system overhaul.
+
+### 🏔️ Condo Assistant — Bug Fixes
+
+**Login page hang (fixed):**
+- Root cause: `router.push("/admin")` is client-side navigation — doesn't send session cookies to server. Middleware couldn't see the Supabase session until manual refresh.
+- Fix: replaced with `window.location.href = "/admin"` in `app/admin/login/page.tsx`. Also removed unused `useRouter` import. Commit `ea08fd2`.
+
+**Guest chat double-send (fixed):**
+- Root cause: Chrome fires a final `onresult` event after `stop()` is called on continuous speech recognition (buffered audio). This re-populated the transcript and started a second silence timer → second `sendMessage` call 2s later.
+- Fix 1: `hasSentRef` — set to `true` before sending; `onresult` handler checks it and ignores late events.
+- Fix 2: `isSendingRef` — ref-based guard in `sendMessage` (not React state) so stale closures can't slip through.
+- File: `app/guest/[token]/page.tsx`. Commit `146c798`.
+
+**Vercel build failure (fixed):**
+- Root cause: subagent added `// @ts-expect-error` above `capture` attribute, but TypeScript already accepts `capture` on file inputs. An unused `@ts-expect-error` is itself a build error in strict mode.
+- Fix: removed the comment. Commit `441df1d`.
+
+### 🏔️ Condo Assistant — Karim Inspection Features
+
+**Camera icon per line item:**
+- Camera button added to the right of every Notes field across all section types (static, bedroom, bathroom) in `app/admin/properties/[id]/inspections/new/page.tsx`.
+- On mobile: `capture="environment"` opens rear camera directly. Selecting a photo shows thumbnail with X to clear.
+- On submit: photos upload to Supabase Storage bucket `inspection-photos` before API call; public URLs stored in `inspection_items.photo_url`.
+- View page (`[inspectionId]/page.tsx`): clickable thumbnail renders next to notes when `photo_url` is present.
+- API route (`app/api/inspections/route.ts`): `photo_url` included in bulk insert.
+- Migration: `supabase/migration_008_inspection_photos.sql` — `ALTER TABLE inspection_items ADD COLUMN IF NOT EXISTS photo_url TEXT;` (run in Supabase SQL editor). Storage bucket `inspection-photos` created (Public: ON).
+
+**Spanish → English toggle:**
+- "Translate to English" button added to inspection view header (`[inspectionId]/page.tsx`).
+- Calls new `app/api/translate/route.ts` — free MyMemory API, no API key required.
+- One-tap translates all notes fields; tap again reverts to original Spanish. Spinner shown during request.
+- Commit: `58a306b`.
+
+**Summer inspection season:**
+- Added `"summer"` option to inspection new/view pages and DB constraint. Migration `migration_007`. Commit `e0db369` (prior session, logged here for completeness).
+
+### 🏔️ Condo Assistant — Notification System Overhaul
+
+**Problem:** maintenance requests (clogged toilet, broken appliance, leak, etc.) triggered zero notifications. Towel SMS had empty subject (Resend rejection). Unanswered questions got email only.
+
+**Fixes in `lib/email.ts` and `app/api/chat/route.ts` (commit `d2f21b6`):**
+- `sendSMS()` subject fixed: `""` → `"WPM Alert"`.
+- Added `isMaintenanceRequest()`: detects AI responses mentioning an issue keyword (clog, leak, broken, HVAC, pest, appliance, wifi, etc.) AND an action keyword (contacting, notify, arrange, etc.).
+- Added `sendMaintenanceAlertEmail()`: red-header email to both admins + SMS to both Verizon numbers (3035200562, 7202348172 via `@vtext.com` gateway).
+- `sendUnansweredQuestionEmail()`: now also sends SMS after email.
+- `chat/route.ts`: new `isMaintenanceRequest` check calls `sendMaintenanceAlertEmail` before the existing towel check.
+
+**SMS trigger summary (all send to both Verizon numbers):**
+- Maintenance request → email + SMS ✅ (new)
+- Towel request → email + SMS ✅ (was broken, now fixed)
+- Unanswered question → email + SMS ✅ (SMS is new)
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+- Snow Mountain Ranch management proposal — draft when ready
+- WPM Portal: start Phase 1 when SMR contract signed
+- Perpetual Blue: confirm Form 8832 election decision with CPA before BVI BC formation
+- 274 Lions Gate Dr — verify bedroom count (3 or 4) with property record
+- **Perpetual Blue CRM** — foundation built; needs API keys pasted into `.env.local`, then run migrations 001 + 002, then launch 6 parallel build agents
+
+---
+
 ## Session: July 26, 2026
 
 **Theme:** Condo Assistant — native inspection checklist system built end-to-end for Karim; all 60 properties fully enriched.
