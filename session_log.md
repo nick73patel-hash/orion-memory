@@ -49,6 +49,21 @@ Built a full native inspection module — no third-party app, zero new dependenc
 - WPM Portal: start Phase 1 when SMR contract signed
 - Perpetual Blue: confirm Form 8832 election decision with CPA before BVI BC formation
 - 274 Lions Gate Dr — verify bedroom count (3 or 4) with property record
+- **Perpetual Blue CRM — foundation agent kicked off (see below)**
+
+### ⛵ Perpetual Blue CRM — Build Plan Locked
+
+Full CRM designed for Perpetual Blue — standalone Next.js + Supabase app, same stack as Condo Assistant.
+
+**12 modules:** Vessel & Fleet · Charter Calendar (integrate existing) · Financial Management · Monthly Task Checklist · Credit Cards & Bank Reconciliation · Guest Management + Preference Forms · Maintenance Log · Inventory · Itineraries & Quoting · Crew & Payroll · Broker Management · Operations & Services (Starlink/subs, fuel, captain's log)
+
+**8 additions I proposed:** Crew cert expiry tracker · Fuel log · Document vault · Post-charter guest survey · Annual maintenance schedule · Receipt photo capture · Port & marina directory · Rate card manager
+
+**Build strategy:** Foundation agent first (schema, auth, vessel model, project setup — ~1 hr), then 6 parallel agents owning 2 modules each (~2–2.5 hrs), then integration pass (~45 min). Target: 4 hrs wall-clock.
+
+**Artifact:** https://claude.ai/code/artifact/323aaf61-706b-482c-89db-a98da3ba3627
+
+**Status:** Foundation agent launched this session.
 
 ---
 
