@@ -63,7 +63,15 @@ Full CRM designed for Perpetual Blue — standalone Next.js + Supabase app, same
 
 **Artifact:** https://claude.ai/code/artifact/323aaf61-706b-482c-89db-a98da3ba3627
 
-**Status:** Foundation agent launched this session.
+**Status:** Foundation complete. Supabase project created (udmndiuasxgglqvskxua). Stopped before pasting API keys — resume tomorrow.
+
+**Resume checklist:**
+1. Open `.env.local` in `perpetual-blue-crm`
+2. Paste 3 keys from Supabase → Settings → API Keys → "Legacy anon, service_role API keys" tab: URL = `https://udmndiuasxgglqvskxua.supabase.co`, anon key, service_role key
+3. Run `supabase/migration_001_foundation.sql` in Supabase SQL Editor
+4. Run `supabase/migration_002_seed.sql`
+5. Launch 6 parallel agents
+6. Also review where Condo Assistant API keys are stored
 
 ---
 
