@@ -4,6 +4,54 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 26, 2026
+
+**Theme:** Condo Assistant — native inspection checklist system built end-to-end for Karim; all 60 properties fully enriched.
+
+### 🏔️ Condo Assistant — Inspection Checklist System (Karim)
+
+Built a full native inspection module — no third-party app, zero new dependencies, fully integrated into Condo Assistant.
+
+**Database (migrations run in Supabase):**
+- `migration_005_inspections.sql` — added `inspector` role to `org_users`, created `inspections` table (id, org_id, property_id, inspector_name, season, status, completed_at) and `inspection_items` table (inspection_id, section, item_label, repeat_index, checked, notes, sort_order).
+- `migration_006_property_room_counts.sql` — added `bedroom_count` and `bathroom_count` columns to `properties`.
+
+**Auth:**
+- Added `requireOrgOrInspector()` and `getUserRole()` helpers to `lib/auth-helpers.ts`. Inspector role has scoped access to `/admin/inspector` only.
+- Created Karim's login: `maintenance@winterparkmanagement.com`.
+
+**API routes:**
+- `app/api/inspections/route.ts` — GET (list by property, includes item counts) + POST (create inspection + bulk insert all items).
+- `app/api/inspections/[id]/route.ts` — GET (full detail with items) + PATCH (status completion, item updates).
+
+**UI pages:**
+- `app/admin/inspector/page.tsx` — inspector-scoped dashboard listing all properties.
+- `app/admin/properties/[id]/inspections/page.tsx` — inspection history with season, date, inspector, status badge, % complete.
+- `app/admin/properties/[id]/inspections/new/page.tsx` — full 14-section checklist form with dynamic bedroom/bathroom sections, N/A toggles on optional sections (Fireplace, Furniture, Garage, BBQ), Save Progress and Complete Inspection buttons.
+- `app/admin/properties/[id]/inspections/[inspectionId]/page.tsx` — read-only detail view.
+- `app/admin/properties/[id]/inspections/[inspectionId]/print/page.tsx` — print/PDF export with Unicode checkboxes, auto window.print() trigger. Zero new packages.
+
+**Bedroom section items:** Inspect bed frame and slats · Check mattress condition · Clean and check ceiling fan · Check closet doors · Inspect closet rods and shelves · Check window treatments · Check outlets and light switches · Inspect baseboards and trim.
+
+**Room counts bulk-loaded:**
+- First pass: 38 properties populated from existing DB descriptions via Node.js admin script.
+- Second pass: scraped all 5 pages of bookwinterparkmanagement.escapia.com — 24 more properties updated. All 60 properties fully configured.
+
+**Property descriptions bulk-updated:**
+- 22 properties had empty descriptions. Bulk-updated all with Escapia listing copy (BR/BA/sleeps in the lead) via Node.js admin script. All 60 properties now fully enriched.
+
+**Note:** 274 Lions Gate Dr — Escapia lists 3BR/3BA; written description says "4-bedroom." Set to 3BR/3BA (trusting structured data). Flag to confirm with owner.
+
+### Carry-forward
+- Condo Assistant Stripe billing (Step 3) — still pending
+- PB website + all 45 to-do items from artifact
+- Snow Mountain Ranch management proposal — draft when ready
+- WPM Portal: start Phase 1 when SMR contract signed
+- Perpetual Blue: confirm Form 8832 election decision with CPA before BVI BC formation
+- 274 Lions Gate Dr — verify bedroom count (3 or 4) with property record
+
+---
+
 ## Session: July 24, 2026
 
 **Theme:** Condo Assistant — guest link inline editing; Perpetual Blue — BVI charter yacht tax structure research.
