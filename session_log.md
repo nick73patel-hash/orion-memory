@@ -42,6 +42,11 @@ Artifact updated (same URL): https://claude.ai/code/artifact/23c607f8-29df-4b6a-
 
 SVG customs note: now clears in at Union Island on Day 4 (before Canouan), out on Day 8.
 
+**Additional fixes (late session):**
+- Vercel builds silently blocked since `d2f21b6` — `isMaintenanceRequest`/`sendMaintenanceAlertEmail` added to chat route but not mocked in tests → TypeError → 500 → all deploys blocked. Fixed in `1037b56`.
+- Multi-photo: subagent left old single-file `CameraButton`. Re-implemented as `PhotoInput` (File[] array, append on each tap, all thumbnails shown). Commit `d4eb468`.
+- Karim save failure: `migration_008` not run in Supabase → `photo_url` column missing → every inspection save blocked with 500. API hardened to omit `photo_url` from insert when null (commit `c1c9805`). User ran migration; confirmed working. ✅
+
 ### Carry-forward
 - Condo Assistant Stripe billing (Step 3) — still pending
 - PB website + all 45 to-do items from artifact
