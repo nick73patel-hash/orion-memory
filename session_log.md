@@ -4,6 +4,37 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 29, 2026 (continued) — CRM UX polish + Preference Sheet pipeline (Phases 1 & 2a)
+
+**Theme:** After go-live, a big feature/polish push on the Perpetual Blue CRM — calendar & nav UX, then built the guest Preference Sheet pipeline through Phase 2a (public guest self-service form). Work delegated to subagents; one stalled mid-task and was finished by hand. All pushes to `perpetual-blue-crm` succeeded (that repo's pushes aren't classifier-blocked; only `orion-memory` is).
+
+### ⛵ Perpetual Blue CRM — feature work
+
+**Calendar (commits `d7d0916`, `79c9265`, `89ff907`):**
+- Charter tiles + list rows are now clickable → `/charters/[id]` (onClick+useRouter to preserve the diagonal half-day tile design; hover tooltip = guest name).
+- Shows all 12 months of the season (removed the summer-hiding logic; dropped `monthHasCharters`).
+- Under each month grid, a compact list of that month's charters (color dot + guest name + date range, clickable, timezone-safe formatting).
+
+**Nav / lists:**
+- Sidebar nav groups (Financials, Maintenance, Operations, Vessel) are now **collapsible** — chevron is a real toggle button; children render only when expanded; active group auto-expands (commit `085317f`).
+- Charters list: **entire row clickable** (extracted to a client component `ChartersTable.tsx`; the old "View" link is now a visual cue) (commit `1eec0c7`).
+
+**Preference Sheet pipeline (the big one):**
+- **Phase 1** (commit `e3e5d45`) — `guest_preferences` table (**migration_013**), MULTIPLE sheets per charter (one per guest). Section on the charter detail page: add/edit/delete inline, allergies flagged in a red critical box, print route (`/charters/[id]/preferences/print`) with print-isolation CSS + auto-print. Components: `PreferenceSheetForm/View/Manager`, API routes under `app/api/charters/[id]/preferences/`. NOTE: the subagent stalled on an API error at the final wiring step — Orion finished the page fetch/render + the missing print route by hand.
+- Extra fields (commit `55a41fe`, **migration_014**): `alcoholic_drinks_per_day` (None/1–2/3–4/5+) and `meal_portion_size` (Light/Medium/Heavy) as selects.
+- **Phase 2a** — public guest self-service form (commit `60a46a5`, **migration_015**). Secret unguessable `preference_token` per charter → public page `/preference-form/[token]` (outside the (crm) group, no login) + public POST API. Security: charter resolved FROM THE TOKEN server-side (never body), strict field whitelist, service-role insert, insert-only, returns `{ok:true}` (no data echoed); page exposes only guest name + dates; `proxy.ts` allowlists the two public routes. Charter page gets a **Copy guest link** button + "X via guest form" received count. Built on Opus 5; security surfaces reviewed by Orion before deploy.
+- Optional contact fields (commit `fa78c04`, **migration_016**): `guest_email` + `guest_phone` on both forms, whitelisted in the public API, shown as a contact line (mailto/tel) in view + print.
+
+**Migrations run by user in Supabase (all success):** 013, 014, 015, 016.
+
+**Rob to review (Phase 2a security trade-offs, all conscious/acceptable-for-now):** no rate limiting on the public submit; tokens never expire / no rotation UI yet; no CSRF (fine for a public session-less insert-only endpoint).
+
+**Roadmap (see [project_perpetual_blue.md](project_perpetual_blue.md) → Provisioning Pipeline):** ⏭️ Phase 2b = one-click Resend email invites (needs Resend acct); Phase 3 = recipe library + photo→recipe AI; Phase 4 = consolidate → **editable visual weekly menu** → shopping list (Phases 3–4 need Anthropic key, run on Opus 5).
+
+**Model preference set:** Opus 4.8 default, bump to Opus 5 when it helps — see [pref_model_opus5.md](pref_model_opus5.md).
+
+---
+
 ## Session: July 29, 2026 — Perpetual Blue CRM Goes Live (3 bug fixes)
 
 **Theme:** Created admin Auth account, linked it to the CRM, and squashed three separate bugs that were blocking login and navigation. CRM is now live and fully navigable.

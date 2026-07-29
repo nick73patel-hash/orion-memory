@@ -60,6 +60,7 @@
 - [Perpetual Blue Licenses & Credentials](pb_licenses.md) — BVI BC reg, CRVL, work permits, ship registry, insurance (template, fill in as numbers obtained)
 
 ## User Preferences (applies to all projects)
+- [Model: Opus 4.8 default, bump to Opus 5 when it helps](pref_model_opus5.md) — flag main-thread switch to user; run heavy subagents on Opus 5 directly
 - Goes by **"bro"** — keep it casual and collaborative
 - Claude Code assistant is named **Orion** (formerly Gerty) — loyal electronic dog, like one of the user's 5 real dogs
 - **"What do you think?"** — give 2-3 honest suggestions (only when triggered)

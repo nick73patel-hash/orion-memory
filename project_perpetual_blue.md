@@ -37,6 +37,18 @@ Stack for the **Florida LLC** (US operating entity):
 - [ ] **Full click-through test** of all 20 modules to confirm seeded data renders and nothing else throws.
 - [ ] ⚠️ **Rotate the GitHub token** — a PAT (`ghp_...`) is embedded in the git remote URLs for both `perpetual-blue-crm` and `orion-memory`. Not pushed to the repos (local `.git/config` only), but rotate it and switch to a credential helper. Flag to Rob (security).
 
+### Provisioning Pipeline — phased roadmap (guest prefs → AI menu → shopping list)
+
+The big vision: turn the preference sheet into a full pre-charter provisioning pipeline so Elise (chef) walks off the boat with a week's menu + shopping list.
+
+- **Phase 1 (BUILDING now):** Preference Sheet. `guest_preferences` table scoped per-charter, **multiple sheets per charter** (one per guest). Section on the charter detail page. Allergies highlighted red. Print view. Manual entry.
+- **Phase 2:** Email cascade + collection. Send a preference-sheet invite to the **broker → primary guest → all other guests**. Each guest fills a **public (no-login) tokenized web form**; answers land back on the charter. "X of Y sheets received" tracker. Needs an **email service** (recommend Resend; verify perpetualbluebvi.com — Zoho SPF/DKIM already set). Rob to review public-form token security.
+- **Phase 3:** New **Galley / Menus module** — Elise's recipe library, built over time. Killer feature: **snap a photo/screenshot of a recipe → AI extracts structured recipe** (title, ingredients, qty, servings, steps). Manual entry too. Needs Claude API + Supabase Storage (already used).
+- **Phase 4:** **Consolidate** button on a charter → AI merges all guest sheets (combined allergies/hard-no's/likes) → generates a **full week menu** from Elise's recipe library respecting all constraints → generates a **shopping list** scaled to pax. Needs Claude API.
+  - **Presentation requirement (user, 2026-07-29):** the generated week menu must render as a **polished visual weekly menu that Elise can easily edit inline** — not a plain text dump. She can override/edit anything before it's final.
+
+External deps to set up before Phases 2–4: **Anthropic (Claude API) billing + key**, **Resend (or other email) account**. AI-feature work should run on **Opus 5** (see [[pref-model-opus5]]).
+
 ---
 
 ## Charter Calendar (visual artifact)
