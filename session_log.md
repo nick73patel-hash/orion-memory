@@ -4,6 +4,102 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 28, 2026 (continued) — CRM Deployment & Build Fix
+
+**Theme:** Ran all 11 SQL migrations + 3 seed files in Supabase. Fixed Vercel build failures. Deployed CRM to Vercel. Set up custom domain DNS.
+
+### ⛵ Perpetual Blue CRM — Deployed (commit `e724aca`)
+
+**Live URL (pending DNS propagation):** crm.perpetualbluebvi.com
+**Vercel project:** perpetual-blue-crm
+
+**Migrations run in Supabase (all success):**
+- fix_foundation_conflicts.sql → 001_schema → 003_vessel_ops → 004_crew → 005_maintenance → 006_itineraries → 007_tasks_surveys → 008_docs_ports → 010_roles → 011_fuel
+- Seeds: seed_charters.sql (18 brokers + 19 charters), seed_expenses.sql (10 expenses), migration_002_seed.sql (vessels, accounts, bank, credit cards)
+
+**Build fix:** Next.js 16 (Turbopack) rejected `next/headers` being imported via `lib/roles.ts` into a `'use client'` component (RoleProvider). Fixed by splitting roles into two files:
+- `lib/roles.ts` — pure types + permission matrix (client-safe)
+- `lib/roles-server.ts` — server-only functions (getCurrentCrmUser, requireEditPermission, requireAdmin)
+- Updated ~40 API routes to import from `roles-server.ts`
+
+**proxy.ts:** renamed from middleware.ts (Next.js 16 breaking change), function renamed to `proxy`
+
+**DNS:** CNAME added in GoDaddy — `crm` → `2c5d4e4d92d7c459.vercel-dns-017.com.`
+
+**Next steps (tomorrow):**
+1. Create Supabase Auth accounts for Nick (nick73patel@gmail.com), Sean (sean@perpetualbluebvi.com), Elise (elise@perpetualbluebvi.com)
+2. Run `UPDATE crm_users SET supabase_uid = '<uuid>' WHERE email = '...'` for each
+3. Log in and test all 20 modules
+
+---
+
+## Session: July 28, 2026 — Perpetual Blue CRM Full Build
+
+**Theme:** Built the entire Perpetual Blue Charter CRM from scratch using 13 parallel subagents. 20 modules, 175 files, 32,000+ lines of code. Pushed to GitHub. Multi-user login with 5-role RBAC designed and implemented.
+
+### ⛵ Perpetual Blue CRM — Full Build (commit `3fab74d`)
+
+**GitHub repo:** https://github.com/nick73patel-hash/perpetual-blue-crm (private)
+**Stack:** Next.js 15 App Router · TypeScript strict · Supabase SSR · Supabase Storage · 10 migrations
+
+**20 Modules completed:**
+| # | Module | Notes |
+|---|---|---|
+| 1 | Dashboard | KPI tiles, upcoming charters, recent expenses, alerts panel |
+| 2 | Charters | Full CRUD, season tabs, discrepancy flags, 19 historical charters seeded |
+| 3 | Charter Calendar | Matches pb-calendar.html design exactly — diagonal half-day tiles, sea/amber CSS |
+| 4 | Guests | Charter history, ILIKE search, preferences |
+| 5 | Brokers | 18 brokers seeded, aggregated commission/revenue stats |
+| 6 | Analytics | Pure CSS bar charts, broker leaderboard, season summaries |
+| 7 | Expenses | Receipt upload (Supabase Storage), 10 expenses seeded incl. water weights, autopilot parts, Centennial Accounting |
+| 8 | Maintenance + Schedule | 21 FP Sanya 57 tasks seeded, overdue highlighting, auto next-due recalculation |
+| 9 | Inventory | Stock tracking, low-stock alerts |
+| 10 | Crew + Payroll + Certs | Sean Powell + Elise McNabb seeded, cert expiry color badges |
+| 11 | Captain's Log | Engine hours delta, charter linking, NM tracking |
+| 12 | Fuel Log | Fill-up log, YTD gallons/cost, avg price/gal, Nanny Cay/Road Town seeded |
+| 13 | Operations + Subscriptions | PYM/Starlink/MGH seeded, 30-day renewal alerts, vessel profile |
+| 14 | Vessel + Fleet | FP Sanya 57 specs, insurance/CRVL expiry alerts |
+| 15 | Itineraries + Rate Cards | 6 rate cards seeded (2025–2027), BVI 7-night template, Quote Calculator |
+| 16 | Monthly Tasks | 19 task templates seeded, month navigator, progress bars |
+| 17 | Post-charter Surveys | 5-KPI star ratings, rebook badge, submit endpoint (public) |
+| 18 | Document Vault | Private Supabase Storage bucket, signed-URL downloads |
+| 19 | Port Directory | 20 BVI/USVI/SVG/Grenada ports seeded, territory tabs, amenity icons |
+| 20 | Bank Reconciliation | Monthly charter revenue vs expenses, Mercury balance tracker |
+| + | Notifications + Alerts | Aggregates cert expiry, maintenance overdue, upcoming charters, subscription renewals |
+| + | User Access (RBAC) | 5 roles: Admin (Nick), Owner Read-only (×2 partners), Captain (Sean), Crew (Elise) |
+
+**Role access matrix:**
+- **Admin (Nick):** full edit access to all 20 modules
+- **Owner Read-only (2 partners):** see everything, zero edit buttons — safe viewing
+- **Captain (Sean):** edit maintenance/captain's log/tasks/inventory; see charter totals + guest names; no financials/payroll
+- **Crew (Elise):** calendar, charters, guests, itineraries, galley inventory (view + edit)
+
+**Supabase project:** https://udmndiuasxgglqvskxua.supabase.co
+**Target domain:** crm.perpetualbluebvi.com (Vercel deploy — next step)
+
+**Migrations to run in Supabase SQL Editor (in order):**
+001_schema → 001_foundation → 002_receipts_storage → 002_seed → 003_vessel_ops → 004_crew → 005_maintenance → 006_itineraries → 007_tasks_surveys → 008_docs_ports → 010_roles → 011_fuel
+
+**Seeds to run after migrations:**
+- `seed_charters.sql` (18 brokers + 19 charters)
+- `seed_expenses.sql` (10 expenses)
+
+### 🏔️ Condo Assistant — Mobile Photo Fix (commit `e21082c`)
+- Root cause 1: `inspection-photos` bucket had no INSERT RLS policy → 403 silently swallowed
+- Root cause 2: iOS page eviction when `capture="environment"` launches native camera
+- Fix: removed `capture` attribute, immediate upload on file select, `alert()` on error, `migration_009` RLS policies
+- User ran migration SQL: confirmed success ✅
+
+### Carry-forward
+- **PB CRM:** Run all migrations in Supabase SQL Editor, run seed files, deploy to Vercel at crm.perpetualbluebvi.com
+- **PB CRM:** Create Supabase Auth accounts for Nick, Sean, Elise (+ 2 partners when ready), then link supabase_uid in crm_users table
+- Condo Assistant Stripe billing (Step 3) — still pending
+- Snow Mountain Ranch management proposal — draft when ready
+- WPM Portal: start Phase 1 when SMR contract signed
+- Perpetual Blue: confirm Form 8832 election decision with CPA before BVI BC formation
+
+---
+
 ## Session: July 27, 2026 (continued — evening)
 
 **Theme:** Condo Assistant — inspection checklist restructured room-based, multi-photo, edit button. Perpetual Blue — Grenada itinerary updated with Canouan SLYCR night.
