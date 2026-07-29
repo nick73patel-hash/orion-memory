@@ -4,6 +4,39 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 29, 2026 — Perpetual Blue CRM Goes Live (3 bug fixes)
+
+**Theme:** Created admin Auth account, linked it to the CRM, and squashed three separate bugs that were blocking login and navigation. CRM is now live and fully navigable.
+
+### ⛵ Perpetual Blue CRM — Live (commits `6240769`, `ae59cb7`)
+
+**Auth setup:**
+- Created Supabase Auth user for Nick (`nick73patel@gmail.com`), UID `fae3ca42-a6c1-40ca-8e3d-12feb4a18e0c`
+- The migration_010 seed row hadn't landed, so linked via upsert: `INSERT INTO crm_users (...) VALUES ('Nick','admin',...) ON CONFLICT (email) DO UPDATE SET supabase_uid = EXCLUDED.supabase_uid`
+- Sean & Elise Auth accounts still TODO
+
+**Bug 1 — `crm_users` RLS infinite recursion (500 on login):**
+- migration_010 admin policies used inline `EXISTS (SELECT 1 FROM crm_users ...)` — a policy on crm_users that queries crm_users → Postgres 42P17 infinite recursion → 500.
+- Fix: rewrote the 4 admin policies to use the `is_admin()` SECURITY DEFINER helper (bypasses RLS). Saved as `supabase/migration_012_fix_rls_recursion.sql`, applied manually in Supabase SQL editor.
+
+**Bug 2 — Server components self-fetching their own API routes (500 after login):**
+- Dashboard, Calendar, Alerts pages did `fetch('https://${host}/api/...')`. Server-side fetches carry no auth cookie → `proxy.ts` middleware redirected them to `/login` → fetch followed redirect to a 200 HTML page → `res.json()` threw on HTML → 500.
+- Fix: extracted each route's query logic into `lib/data/{dashboard,calendar,alerts}.ts`, called directly from both the page (no HTTP) and a thin API-route wrapper. Routes re-export their types so existing `import type` lines keep working.
+
+**Bug 3 — Sidebar/dashboard nav 404s:**
+- Nav was scaffolded with a `/financials/*` and `/vessel/{profile,documents,subscriptions}` structure that was never built.
+- Repointed to real pages: Financials → `/expenses`, `/tasks`, `/reconciliation`, `/analytics`; Vessel → `/vessel`, `/documents`, `/operations`. Dashboard quick-links fixed too.
+- Dropped **Balance Sheet** (no page) and **Cards & Bank** (no page, though bank/cards data IS seeded — buildable later).
+
+**Still TODO:**
+1. Sean & Elise Auth accounts + linking SQL
+2. (Optional) build Cards & Bank page + Balance Sheet page
+3. Full click-through test of all 20 modules
+
+**Security note:** GitHub PAT (`ghp_...`) is embedded in the git remote URLs for both `perpetual-blue-crm` and `orion-memory`. Not pushed to the repos (lives in local `.git/config`), but worth rotating + moving to a credential helper. Flag to Rob.
+
+---
+
 ## Session: July 28, 2026 (continued) — CRM Deployment & Build Fix
 
 **Theme:** Ran all 11 SQL migrations + 3 seed files in Supabase. Fixed Vercel build failures. Deployed CRM to Vercel. Set up custom domain DNS.
