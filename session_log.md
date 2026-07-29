@@ -4,6 +4,24 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 29, 2026 (continued 2) — Recipe Galley + AI photo→recipe extraction (Phases 3a & 3b)
+
+**Theme:** Continued the Perpetual Blue CRM provisioning pipeline — added guest contact fields, built the chef's recipe library ("Galley"), and shipped the first live AI feature: snap a recipe photo → Claude reads it → auto-fills the recipe form. Anthropic API wired into the deployed app. All commits pushed to `perpetual-blue-crm`.
+
+### ⛵ Perpetual Blue CRM — commits `fa78c04`, `38d2a0e`, `559dd2c`
+
+- **Preference sheet — optional contact fields** (`fa78c04`, **migration_016**): added `guest_email` + `guest_phone` to the internal + public forms and the view/print contact line. Optional everywhere.
+- **Phase 3a — Galley recipe library** (`38d2a0e`, **migration_017**): new `recipes` table (title, category, servings, `ingredients` jsonb `[{quantity,unit,item}]`, `steps` jsonb string[], `tags` text[], `source_image_url`, notes). New **Galley** module under `/galley` (ChefHat sidebar nav): card-grid list, add/edit form with repeatable ingredient rows + steps textarea, detail view, photo upload. **Photos reuse the existing `pb-receipts` Storage bucket** under a `recipes/` path (same as expense receipts — no new bucket).
+- **Phase 3b — photo→recipe AI extraction** (`559dd2c`): added `@anthropic-ai/sdk`. Server-side route `app/api/recipes/extract/route.ts` calls **Claude Sonnet 5** (`claude-sonnet-5`) with the recipe photo (base64 image block) + **structured JSON output** (`output_config.format` json_schema) → returns a validated recipe object. An "✨ Extract from photo" panel in the recipe form pre-fills every field; the chef reviews/edits then saves. Refusal → 422; missing key → clear 500. Key read server-side only.
+
+**API key setup (done by user):** created an `ANTHROPIC_API_KEY` in the Anthropic Console (existing account — API billing is separate from a claude.ai subscription; $2.55 credit + auto-reload), added it to **Vercel → Environments → Environment Variables** (Production), and redeployed. Feature tested — **working**. Model runtime cost ≈ 2–3¢ per photo on Sonnet 5.
+
+**Migrations run by user (all success):** 016, 017.
+
+**Still open:** Phase 4 — **Consolidate** guest prefs + Elise's recipe library → AI-generated **editable visual weekly menu** → **shopping list** scaled to pax (uses the now-configured Claude API; run heavy build agents on Opus 5). Also outstanding from before: Sean & Elise CRM logins; optional Cards & Bank / Balance Sheet pages; Phase 2b one-click Resend email invites (optional — copy-link works today); rotate the GitHub PAT (flag Rob).
+
+---
+
 ## Session: July 29, 2026 (continued) — CRM UX polish + Preference Sheet pipeline (Phases 1 & 2a)
 
 **Theme:** After go-live, a big feature/polish push on the Perpetual Blue CRM — calendar & nav UX, then built the guest Preference Sheet pipeline through Phase 2a (public guest self-service form). Work delegated to subagents; one stalled mid-task and was finished by hand. All pushes to `perpetual-blue-crm` succeeded (that repo's pushes aren't classifier-blocked; only `orion-memory` is).
