@@ -18,10 +18,26 @@ Stack for the **Florida LLC** (US operating entity):
 
 - **Banking: Mercury (Free plan).** Free checking/savings, unlimited free cards, free bill pay, free QuickBooks sync. **Skip Mercury Plus (~$30–35/mo)** — its recurring/ACH-debit invoicing doesn't fit charter cash flow (paid by broker wire + one-off deposit/balance invoices). Upgrade only if direct-to-guest bookings scale.
 - **Cards: Mercury IO business credit card** — $0 annual fee, 1.5% cash back, unlimited free employee cards (one each for owner, Captain Sean, Chef Elise) with per-card limits, native QuickBooks sync. Chose IO for ecosystem fit. Runner-up if a second issuer is wanted: **Chase Ink Business Cash** ($0 fee, 5% phone/internet/office + 2% gas/dining, big welcome bonus, Visa = better island acceptance).
-- **Accounting: QuickBooks Online Simple Start (~$35/mo, ~$420/yr) from day one.** Deliberately paying vs. DIY books — clean tax return, accountant-openable file, audit trail, and it handles depreciation of the $400K refit / deferred deposits / loan principal-vs-interest that a bank feed can't.
-- **CRM: to be built next.** Operational brain — charters → guests → brokers → commissions → deposits/payments — feeding clean categorized data into QuickBooks (and/or Mercury). Design principle: **CRM = system of record for operations; QuickBooks = statutory/tax books.** The charter calendar artifact is the first piece.
+- **Accounting: Digits** — AI-powered ledger. CRM will integrate with Digits as the general ledger (not QuickBooks). Receipts will be uploaded via CRM → categorized → pushed to Digits.
+- **CRM: to be built next.** Operational brain — charters → guests → brokers → commissions → deposits/payments → expenses + receipt photos — feeding clean categorized data into Digits. Design principle: **CRM = system of record for operations; Digits = statutory/tax books.**
 
 > ⚠️ Earlier (July 6) note: Mercury suits the FL LLC; **Wise Business** was recommended for a BVI BC. If the entity re-flags to a BVI BC, US cards (Mercury IO / Chase) require **keeping the US LLC** — reconcile card entity with the final corporate structure.
+
+---
+
+## Perpetual Blue CRM — Live (status + to-do)
+
+**Live at:** crm.perpetualbluebvi.com · **Repo:** github.com/nick73patel-hash/perpetual-blue-crm (private) · **Stack:** Next.js 16 + Supabase + Vercel · 20 modules
+**Status (as of July 29, 2026):** Deployed and working. Nick's admin login is live. Three launch bugs fixed (RLS recursion, self-fetch 500s, nav 404s). See session log for detail.
+
+**CRM To-Do:**
+- [ ] **Create Sean & Elise logins** — add Supabase Auth users (`sean@perpetualbluebvi.com` = captain, `elise@perpetualbluebvi.com` = crew), then link each with `UPDATE crm_users SET supabase_uid = '<uuid>' WHERE email = '...'`
+- [ ] **Build Cards & Bank page** — bank accounts + credit cards are already seeded (migration_002_seed), just needs a UI page. Was removed from the sidebar nav on July 29 (pointed to a 404).
+- [ ] **Build Balance Sheet page** — was scaffolded in nav but never built; removed July 29.
+- [ ] **Full click-through test** of all 20 modules to confirm seeded data renders and nothing else throws.
+- [ ] ⚠️ **Rotate the GitHub token** — a PAT (`ghp_...`) is embedded in the git remote URLs for both `perpetual-blue-crm` and `orion-memory`. Not pushed to the repos (local `.git/config` only), but rotate it and switch to a credential helper. Flag to Rob (security).
+
+---
 
 ## Charter Calendar (visual artifact)
 - **Live:** https://claude.ai/code/artifact/95f010e0-f26e-4f86-a9f7-873bfdde8fb0
@@ -35,13 +51,36 @@ Stack for the **Florida LLC** (US operating entity):
 
 Running startup-expense log. **Plan:** once the business email (on `perpetualbluebvi.com`) is set up, user will grant Orion access to **scan receipts → categorize → push into the CRM and QuickBooks**. Until then, expenses are tracked here manually.
 
+### Mercury Business Account
+Transactions funded directly through the Mercury account:
+
 | Date | Item | Vendor | Amount | Category | Receipt |
 |---|---|---|---|---|---|
-| 2026-07-14 | Domain: **perpetualbluebvi.com** — 1-yr registration (declined GoDaddy privacy + MS365 upsells) | GoDaddy | **$13.19** ($12.99 + tax) | Startup · Web & Software | pending |
-| 2026-07-28 | Captain Sean Powell — flight DOM (Dominica) → EIS (Tortola, BVI) | TBD | **$242.97** | Crew Travel | pending |
-| 2026-07-28 | Elise McNabb — flight SJU (Puerto Rico) → EIS (Tortola, BVI) | TBD | **$108.97** | Crew Travel | pending |
+| 2026-07-24 | Initial deposit | Nick (owner) | **$100.00** | Owner Contribution | — |
 
-**Running total: $365.13**
+**Mercury balance: $100.00**
+
+---
+
+### Personal Funds — Boat Expenses (not yet in Mercury)
+Paid personally by owners — to be reimbursed or recorded as owner contributions:
+
+| Date | Item | Vendor | Amount | Category | Receipt |
+|---|---|---|---|---|---|
+| 2026-07-14 | Domain: **perpetualbluebvi.com** — 1-yr registration | GoDaddy | **$13.19** | Startup · Web & Software | pending |
+| 2026-07-28 | Captain Sean Powell — flight DOM → EIS (Tortola, BVI) | TBD | **$242.97** | Crew Travel | pending |
+| 2026-07-28 | Elise McNabb — flight SJU → EIS (Tortola, BVI) | TBD | **$108.97** | Crew Travel | pending |
+| 2026-07-24 | Crew pay | — | **$11,654.30** | Crew Wages | pending |
+| 2026-07-24 | MGH Insurance payment | MGH | **$10,782.00** | Insurance | pending |
+| 2026-07-24 | Nick — flight to BVI (deliver boat to Grenada) | TBD | **TBD** | Owner Travel | pending |
+| 2026-07-28 | Water weights | TBD | **$64.90** | Boat Equipment | pending |
+| 2026-07-28 | Sand weights | TBD | **$33.99** | Boat Equipment | pending |
+| 2026-07-28 | Autopilot parts | TBD | **$2,193.49** | Maintenance & Repairs | pending |
+| 2025 | Centennial Accounting — 2025 tax filings | Centennial Accounting | **$1,000.00** | Professional Fees | pending |
+
+**Personal expenses total: $26,093.81** (+ Nick's flight TBD)
+
+> **Receipts:** Physical/photo receipts exist for all personal expenses above. Will be uploaded into the CRM once it's built — receipt photo → expense record linkage is a required CRM feature.
 
 > Email: **Zoho Mail Free** (2 inboxes, set up 2026-07-14):
 > - `charters@perpetualbluebvi.com` — **Nikunj** (owner; bookings/brokers)
@@ -389,8 +428,19 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 
 ---
 
+## Shareable Artifacts (permanent links)
+
+| Artifact | URL |
+|---|---|
+| **Grenada Itinerary** — Aug 12–21 2026, 10-day sailing itinerary | https://claude.ai/code/artifact/23c607f8-29df-4b6a-a4fe-0b5c081e3b82 |
+| **HeySea Seaview 60 Research Brief** — BVI charter evaluation, build quality, risks, due diligence | https://claude.ai/code/artifact/f0c44b26-02a1-46bc-be5e-2bf7ea6e8427 |
+
+> Note: Both source HTML files are also in the scratchpad. To update, re-publish with the `url` parameter to keep the same link.
+
+---
+
 ## Research Notes
-- Research conducted: June 2026 (110 agents, 27 sources, 25 claims adversarially verified)
+- BVI charter research (HeySea vs. FP vs. Bali): conducted July 2026 — 18 sources, full report published as artifact above
 - BVI charter law overhauled June 1, 2025 — re-verify fees annually
 - Primary legal source: O'Neal Webster BVI analysis of Commercial Recreational Vessels Licensing Amendment Act No. 13 of 2025
 
