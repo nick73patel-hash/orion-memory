@@ -4,6 +4,33 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: July 29, 2026 (continued 3) — Phase 4 provisioning pipeline + auth/reviews/charter fixes
+
+**Theme:** Same rolling session. Shipped the **Phase 4 provisioning pipeline** (the whole consolidate → AI menu → shopping list vision), plus password reset, a Surveys→Reviews rename with a public review form, preference-sheet refinements, and charter form/caching fixes. Many pieces built by parallel background subagents; a couple stalled on API errors and were finished by hand.
+
+### ⛵ Perpetual Blue CRM — commits `36cc5c1` → `05811d2`
+
+- **Forgot/Reset password** (`36cc5c1`) — Supabase Auth reset flow. Login page "Forgot password?" link → `/forgot-password` (sends the email) → `/reset-password` (PKCE code exchange / recovery event → `updateUser`). Both public routes allowlisted in `proxy.ts`. **User must add the reset-password URL to Supabase Auth → URL Configuration → Redirect URLs.**
+- **Surveys → Reviews** (`cbef285`) — renamed the module user-facing (route `/surveys` → `/reviews`, labels), and BUILT the missing **public guest review form** at `/review` (star ratings + rebook/recommend + comments) posting to the existing `/api/surveys/submit`; allowlisted `/review` + `/api/surveys/submit` in proxy (precise match so internal `/reviews` stays auth-gated). Internal table `guest_surveys` + `/api/surveys/*` names kept.
+- **Preference sheet refinements** (`8e85473`, `55a41fe`, `fa78c04`, `fa836a8`, **migrations 014/016/018**): added drinks/day + meal-portion selects (014), optional guest_email/guest_phone (016), coffee_preference (018); hid Cabin Preference from the UI (column kept for reuse); renamed "Alcohol Preferences" → **"Alcohol Preferences and Mixers"** and reordered drinks (alcohol → drinks/day → non-alcoholic → coffee). Static "Available on board" gear list (snorkels, BOTE paddleboard, inflatable kayak, BOTE Water Island, 2 water scooters) above the activities fields on both forms.
+- **Charter form UX** (`a230083`, `05811d2`): **nights auto-calculated** from start/end dates; **season auto-derived** from the start-date year (was causing new charters to miss the calendar when left blank); end-date picker nudges to the start date (`min` + auto-fill).
+- **Bug fix — new charters not showing** (`05811d2`): the charters list + calendar served STALE cached snapshots. Added `export const dynamic = 'force-dynamic'` to the `(crm)` layout (covers all list pages) + the charters/calendar pages. Root cause combined with the null-season issue above.
+
+### 🍽️ Phase 4 — Provisioning pipeline (the big finale)
+- Backend (`648df43`, **migration_019** `charter_menus` table; shared `lib/provisioning/types.ts` + `meal-counts.ts`): three **Opus 5** endpoints under `app/api/charters/[id]/` — `consolidate` (merges all guest sheets into one master; **allergies unioned as absolute vetoes**), `menu` (builds the week from Elise's Galley recipes first + suggestions, respects allergies/diet, hits meal-count targets), `provision` (categorized shopping list scaled to pax). All use structured JSON output; streamed for large outputs.
+- **Meal-count defaults (approved):** whole numbers, nights 4–7. Half board 7=7/4/3, 6=6/3/3, 5=5/3/2, 4=4/2/2. Full board 7=7/7/5, 6=6/6/4, 5=5/5/4, 4=4/4/3. "2 meals/day" folds breakfast+lunch into one brunch. Chef can override any count.
+- UI (`b7cdf32`): `ProvisioningManager` on the charter page — Consolidate button → red-flagged master summary → meal-plan picker → **editable weekly menu** (add/edit/remove, Save persists via new `menu/save` endpoint) → shopping list → **Copy** button (menu + list as text). Email export deferred to Phase 2b.
+- **Deferred:** live web-search recipe research inside menu-gen (kept structured/allergy-safe for v1).
+
+### Notes / decisions
+- **New user preference:** delegate build tasks to BACKGROUND subagents so Orion stays free to converse — see [pref_delegate_subagents.md](pref_delegate_subagents.md).
+- **"Orion assistant" write-endpoint** (so Orion can add expenses/recipes directly) — spec'd but DEFERRED pending Rob's review; the auto-mode safety classifier blocked auto-building it (intentional). On the CRM to-do in [project_perpetual_blue.md](project_perpetual_blue.md).
+- Expense logged: carbon fiber roll $15 (personal boat-expenses table).
+- My Caribbean Charters (MCC) — reputable BVI brokerage, potential broker partner (research done, not saved as a file).
+- **Migrations the user must run for full function:** 014, 016, 018 (preference fields), 019 (charter_menus). 013/015/017 already run.
+
+---
+
 ## Session: July 29, 2026 (continued 2) — Recipe Galley + AI photo→recipe extraction (Phases 3a & 3b)
 
 **Theme:** Continued the Perpetual Blue CRM provisioning pipeline — added guest contact fields, built the chef's recipe library ("Galley"), and shipped the first live AI feature: snap a recipe photo → Claude reads it → auto-fills the recipe form. Anthropic API wired into the deployed app. All commits pushed to `perpetual-blue-crm`.

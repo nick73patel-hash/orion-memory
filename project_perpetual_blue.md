@@ -31,6 +31,7 @@ Stack for the **Florida LLC** (US operating entity):
 **Status (as of July 29, 2026):** Deployed and working. Nick's admin login is live. Three launch bugs fixed (RLS recursion, self-fetch 500s, nav 404s). See session log for detail.
 
 **CRM To-Do:**
+- [ ] **Build "Orion assistant" write-endpoint (co-work automation)** — token-protected `POST /api/assistant`, **insert-only** whitelist (`add_expense`, `add_recipe`, `ping`) + a local `scripts/orion.mjs` CLI so Orion can add records for Nick. **Design decision:** the USER generates & holds the secret token (adds it to Vercel env + gitignored `.env.local`); Orion writes code only and never generates/handles the credential; CLI reads the token from `.env.local` at call time. Guardrail: confirm-before-write on anything financial. **Review with Rob first** — grants an AI scoped write access to prod. *(Auto-mode safety classifier blocked auto-building this 2026-08-02 pending a human decision — intentional pause; resume when Rob's available.)*
 - [ ] **Create Sean & Elise logins** — add Supabase Auth users (`sean@perpetualbluebvi.com` = captain, `elise@perpetualbluebvi.com` = crew), then link each with `UPDATE crm_users SET supabase_uid = '<uuid>' WHERE email = '...'`
 - [ ] **Build Cards & Bank page** — bank accounts + credit cards are already seeded (migration_002_seed), just needs a UI page. Was removed from the sidebar nav on July 29 (pointed to a 404).
 - [ ] **Build Balance Sheet page** — was scaffolded in nav but never built; removed July 29.
@@ -89,8 +90,9 @@ Paid personally by owners — to be reimbursed or recorded as owner contribution
 | 2026-07-28 | Sand weights | TBD | **$33.99** | Boat Equipment | pending |
 | 2026-07-28 | Autopilot parts | TBD | **$2,193.49** | Maintenance & Repairs | pending |
 | 2025 | Centennial Accounting — 2025 tax filings | Centennial Accounting | **$1,000.00** | Professional Fees | pending |
+| 2026-08-02 | Carbon fiber roll | TBD | **$15.00** | Maintenance & Repairs | pending |
 
-**Personal expenses total: $26,093.81** (+ Nick's flight TBD)
+**Personal expenses total: $26,108.81** (+ Nick's flight TBD)
 
 > **Receipts:** Physical/photo receipts exist for all personal expenses above. Will be uploaded into the CRM once it's built — receipt photo → expense record linkage is a required CRM feature.
 
@@ -402,6 +404,7 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 
 ## Open Questions / Action Items
 
+- [ ] **Change the credit card info on Sean's computer** (update the saved payment method)
 - [x] Hire regulatory agent for BVI registration — **ABM Group hired (July 2026)**
 - [ ] Confirm ABM is handling CRVL + Charter Authorization Letter (not just company + vessel registration)
 - [ ] Open **Wise Business** account for BVI BC banking (primary); add Butterfield Bank BVI as secondary
