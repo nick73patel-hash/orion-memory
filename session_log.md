@@ -4,6 +4,39 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 2, 2026 — Data durability + live-use CRM fine-tuning (backups, maintenance to-do, receipt AI)
+
+**Theme:** First real-use session — Nick is now actively using the CRM (logging receipts, adding to-dos). Focus split between **data durability/backups** and a batch of live-use refinements. Nearly everything delegated to background subagents per [pref_delegate_subagents.md](pref_delegate_subagents.md); Orion committed/pushed each as it landed. All `perpetual-blue-crm` pushes succeeded.
+
+### 💾 Data backup / disaster recovery (the headline)
+- Explained the two layers: **code is safe in GitHub**; the **live data lives only in Supabase** and had no backup. On Supabase Free there are no automatic DB backups → real risk is human error (bad delete/migration).
+- **Built Option B — free automated nightly DB backup** (`.github/workflows/db-backup.yml`): GitHub Action runs nightly `pg_dump` → **GPG-symmetric AES-256 encrypts** → commits `backups/perpetual-blue-YYYY-MM-DD.sql.gz.gpg` (ciphertext) to the private repo, 30-day retention. **Encryption was added after the first version committed plaintext PII** (safety classifier flagged it — good catch; do NOT commit unencrypted guest data). Fail-safe guards (pipefail + empty-file) so bad dumps never commit.
+- **Push gotcha:** the local PAT lacks `workflow` scope, so git can't push `.github/workflows/*`. Docs pushed via git (`3551568`); **Nick added the workflow file via the GitHub web UI** (which bypasses the scope limit) — confirmed in repo (`e23b1b2`).
+- **⏳ REMAINING (tomorrow, ~5 min):** add 2 GitHub secrets — `SUPABASE_DB_URL` (Supabase **green "Connect" button** → direct/session URI; the gear→Database path moved) + `BACKUP_ENCRYPTION_KEY` (strong passphrase, save in password manager FIRST) → run the workflow once to test. Full steps in repo `BACKUP_SETUP.md` and on the CRM to-do (marked ▶ RESUME HERE).
+- **Option A (Supabase Pro $25/mo, daily auto-backups + PITR)** logged as low-priority (~couple months out).
+
+### 🔧 Maintenance To-Do List — new module (migrations `020` + `021`)
+- **`020`** — `maintenance_todos` punch-list table, separate from the maintenance LOG. 4 priority levels (Low/Medium/High/Critical), a "Planned Work" **cost roll-up** of open items, **dashboard alerts** (Critical→critical, High/overdue→warning via new `alerts.ts` section 2b), sidebar child under Maintenance.
+- **Complete → Maintenance Log flow, refined per Nick:** completing an item opens an inline **"Actual cost"** input (pre-filled with the estimate) + a **"Log it → Maintenance Log"** button. Logs to `maintenance_log` with the **actual** price (`actual_cost ?? estimated_cost`), marks done, drops to the dimmed Completed section showing "Logged: $X." (`021` adds the `actual_cost` column.)
+- Added **"Tools"** and (separately) the module respects the Show-Prep category.
+
+### ⛵ Charters
+- **Avg Nightly Rate KPI** (5th tile): shows **gross headline** (revenue÷nights, colored green ≥ goal / amber below) + **net after broker fees** underneath + goal line. Goal set to **$4,000/night** (Nick lowered from 4,250).
+- Charters list now **defaults to the 2027 season** (`?season=all` still shows every year).
+
+### 🧾 Expenses — receipt capture + AI auto-fill
+- **Live webcam "Take Photo"** added to `ReceiptUpload` (getUserMedia, rear camera on mobile) alongside file upload → saves to `pb-receipts`. (Existing "Attach Receipt" already gave phone camera.)
+- **AI receipt scanning** (`app/api/expenses/extract` — cloned from the working recipe extractor, **Claude Sonnet 5** vision + structured JSON): after a receipt photo, auto-fills **vendor / description / amount / date / category** (empty fields only, never auto-submits). Uses existing `ANTHROPIC_API_KEY`. Receipt field-lives-inside-the-expense-form (not the list) — reached via ✏️ edit or Add Expense.
+- Added **"Meals"** expense category (form dropdown + list filter + warm-amber badge + taught the AI scanner about it).
+
+### Notes / decisions
+- **Login:** Nick forgot the CRM password; reset email never arrived because the account email is his **Gmail** (not charters@). Reset page shows "success" even for a non-matching email (anti-enumeration). He got back in on his computer. **To-do: set up real email delivery (Zoho/Resend SMTP)** so Supabase auth emails actually send.
+- **Migrations run by user this session (all success):** 014, 016, 018, 019 (bundled), then 020 + 021.
+- Commits: `eaab667`, `1e25ca7`, `3c1c0a0`, `863f07c`, `3551568`, `be8fe9c`, `633e46d`, `52259d8`, `d3e2c93`.
+- Nice moment: costed the CRM vs. hiring a dev shop — ~**500–800 human-dev hours / $40K–$140K** equivalent, built in ~3–6 hrs of active Orion time for the cost of a subscription + pennies of API.
+
+---
+
 ## Session: July 29, 2026 (continued 3) — Phase 4 provisioning pipeline + auth/reviews/charter fixes
 
 **Theme:** Same rolling session. Shipped the **Phase 4 provisioning pipeline** (the whole consolidate → AI menu → shopping list vision), plus password reset, a Surveys→Reviews rename with a public review form, preference-sheet refinements, and charter form/caching fixes. Many pieces built by parallel background subagents; a couple stalled on API errors and were finished by hand.
