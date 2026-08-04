@@ -27,6 +27,11 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 - **Calendar defaults to 2027** (`3c79da7`); **"Tools"** added to maintenance to-do categories (`be8fe9c`).
 - Charters KPI/2027 default + Meals category shipped the prior day.
 
+### 🍸 Bar Inventory — new voice-driven module (`626db9c`, migration `022`)
+- New **Bar Inventory** module under **Galley** (`/galley/bar`; sidebar: Galley → Recipes + Bar Inventory) for the **Captain** to manage **liquor / wine / beer** stock. Table `bar_inventory` (name, category, quantity numeric, unit bottle/case/can/keg, notes) — migration `022` (RUN by user, success).
+- **Voice capture:** mic button (Web Speech API) → Captain speaks the bottles → editable transcript → **"Add to Inventory"** → server route `/api/bar-inventory/parse` (`claude-sonnet-5`, structured JSON) parses free speech into clean line items (spoken numbers→digits, brand normalization, Liquor/Wine/Beer classification, unit inference) → **preview/confirm** (editable, catches mis-hears) → **Confirm & Add**. Web Speech API is Chromium/Safari-only → graceful fallback to keyboard 🎤 dictation / typing / manual add form.
+- **Three ways to manage a count:** voice/manual = **ADD** (accumulate, case-insensitive name+unit match); per-item **−/+ buttons** = one-tap used/bought-one (− clamps at 0; 40px touch targets for iPhone); inline number editor = **SET** exact value (full stock-take). Endpoints: `bar-inventory/route.ts` (GET+POST accumulate), `bar-inventory/[id]/route.ts` (PATCH set/adjust + DELETE). Reason for +/−: Captain needs to reduce stock after usage AND top up after shopping, not just re-count.
+
 ### 🛥️ Research (not saved as files — summarized here)
 - **New ~80ft sail cats, delivered Tortola BVI:** **Lagoon EIGHTY 2** (real 81'9" flagship sail cat, replaced Seventy 7) — base €6.95M / on-water €7.9M, all-in delivered ~$8.8–9.8M. **HeySea SV60/SeaView 60** — turns out it's a **sailing** cat (Bill Dixon rig), base €1.399M(~$1.52M)/charter-kitted $1.81M, all-in ~$2.0–2.35M. **HeySea Seaview 80** power cat ~$7–8.7M all-in.
 - **~60ft sail cats:** **HeySea SV60** (~$2.0–2.35M all-in) vs **Fountaine Pajot Samana 59** (base €1.838M, all-in ~$2.6–2.9M). FP is the fleet-consistency pick (Nick already runs an **FP Sanya 57**). HeySea ~$550k cheaper.
