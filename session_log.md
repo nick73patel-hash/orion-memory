@@ -4,6 +4,42 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 3, 2026 — Provisioning pipeline overhaul + AI-key unblock + yacht/Navionics research
+
+**Theme:** Deep live-use refinement of the Phase-4 provisioning pipeline (menu → shopping list → chef workflow), plus a critical bug unblock and two research asks. All build work delegated to background subagents per [pref_delegate_subagents.md](pref_delegate_subagents.md); Orion verified + committed/pushed each. All `perpetual-blue-crm` pushes succeeded.
+
+### 🔑 THE critical fix — AI features were all silently broken (`1678f72`)
+- Consolidate returned *"missing ANTHROPIC_API_KEY."* Root cause: the Vercel env var was named **`Anthropic_API_Key`** (mixed case) but env names are **case-sensitive** and the code reads `ANTHROPIC_API_KEY`. Vercel **won't let you rename** a var, and the value is Sensitive/unreadable, so instead of re-entering the key, Orion fixed it **code-side**: new `lib/anthropic.ts` with `getAnthropicApiKey()` (reads `ANTHROPIC_API_KEY ?? Anthropic_API_Key`) + `makeAnthropic()`; wired into all 5 AI routes (consolidate, menu, provision, recipes/extract, expenses/extract). This unblocked **every** AI feature at once (they share the key). Tolerant lookup, so a future proper-named var still works.
+
+### 🍽️ Menu pipeline overhaul (`fa6119e`) — one big coherent build
+- **Date-aware days:** new `lib/provisioning/days.ts` (`buildCharterDays`, `allowedMealsForDay`, `normalizeMenu`). Menu lays out against the real charter calendar (start_date→end_date inclusive); **check-in day = no breakfast/brunch**, **checkout day = no dinner**. `normalizeMenu` defensively stamps dates/labels, drops meals on disallowed days, and **trims to the exact meal counts** (4 dinners → exactly 4).
+- **Per-meal UI:** each meal now has a **"View recipe"** toggle (Galley recipes, expand/collapse inline) OR a **web source link** (internet suggestions), plus a **"Make new suggestion"** button → new endpoint `app/api/charters/[id]/menu/regenerate-meal` regenerates ONE meal (avoids the rejected dish, leaves the rest).
+- **Sourcing = Galley first, then internet:** menu route + regenerate use a **two-step** call (web_search `web_search_20260209` gathers real recipe ideas w/ source URLs, then structured-output assembles the Menu JSON — the two can't combine in one call). Galley meals carry `recipe_id`; web meals carry `source_url`. `MenuItem` gained `source`/`recipe_id`/`source_url`. Galley is ~empty now so most suggestions are web-sourced to start.
+- **Note:** the build subagent stalled on the stream watchdog (web_search is slow) but had finished all files; Orion verified tsc-clean + shipped. Menu gen is now slower + adds a small per-search API cost — expected.
+
+### 🛒 Provisioning fixes
+- **Headcount fix (`8853172`):** shopping list now scales to `max(charter.pax, sheets) + 2 crew` (Captain + Chef), NOT the returned-sheet count — so 8 guests / 6 sheets provisions for **10**. Menu still reflects the sheets' tastes; groceries feed everyone aboard. Shows "Provisioned for N people (X guests + 2 crew)".
+- **Copy Full Brief + checkable list (`3df7733`):** new `lib/provisioning/format.ts` (shared text formatting). **"Copy Full Brief"** button = one email-ready text bundle (preference sheets → consolidated → menu → shopping list). **Checkable mobile shopping list** — checkbox left of each item → strikethrough + dim when found; **persists per-charter in localStorage** (`pb-provision-checked-<charterId>`) so a reload mid-shop survives; "Clear checks" + "X of Y found". UI-only, never touches the DB.
+
+### Smaller CRM tweaks
+- **`ANTHROPIC` aside:** also confirmed the receipt scanner + recipe extract now work (same key fix).
+- **Copy All Preference Sheets** button on the charter page (`2b0cdb3`).
+- **Calendar defaults to 2027** (`3c79da7`); **"Tools"** added to maintenance to-do categories (`be8fe9c`).
+- Charters KPI/2027 default + Meals category shipped the prior day.
+
+### 🛥️ Research (not saved as files — summarized here)
+- **New ~80ft sail cats, delivered Tortola BVI:** **Lagoon EIGHTY 2** (real 81'9" flagship sail cat, replaced Seventy 7) — base €6.95M / on-water €7.9M, all-in delivered ~$8.8–9.8M. **HeySea SV60/SeaView 60** — turns out it's a **sailing** cat (Bill Dixon rig), base €1.399M(~$1.52M)/charter-kitted $1.81M, all-in ~$2.0–2.35M. **HeySea Seaview 80** power cat ~$7–8.7M all-in.
+- **~60ft sail cats:** **HeySea SV60** (~$2.0–2.35M all-in) vs **Fountaine Pajot Samana 59** (base €1.838M, all-in ~$2.6–2.9M). FP is the fleet-consistency pick (Nick already runs an **FP Sanya 57**). HeySea ~$550k cheaper.
+- **BVI duty angle (big):** since **June 1 2025**, a **BVI-Company-owned, BVI-registered** vessel imports **duty-free** (vs 5% standard) — Perpetual Blue's planned BVI BC + re-flag route could zero the duty; then just CRVL ~$2k/yr home-based. **Zero US tariff** (never enters US customs) — matters for China-built HeySea.
+- **Navionics:** region-based subscription; BVI = **Caribbean & South America ~$49.99/yr** (Navionics+). Platinum+ (satellite/3D/aerial, ~$65–100+) worth it for BVI reef-spotting. One sub covers **iPhone + iPad** (2 devices, same Navionics account, Apple-to-Apple). Price ~doubled from $24.99 a couple years back.
+
+### Notes / still open
+- **⏳ DB backup STILL not activated** — the 2 GitHub secrets (`SUPABASE_DB_URL` + `BACKUP_ENCRYPTION_KEY`) + test run remain (▶ RESUME HERE on the CRM to-do). Orion cannot run it (no DB credentials by design). Nick paused it (couldn't find Supabase "Connect" button; tired).
+- **Set up real email delivery** (Zoho/Resend SMTP) still open — reset emails don't send (Supabase default mailer); Nick's CRM login email is his **Gmail**.
+- Housekeeping someday: recreate the Vercel var with the standard `ANTHROPIC_API_KEY` name (the tolerant helper makes this non-urgent).
+
+---
+
 ## Session: August 2, 2026 — Data durability + live-use CRM fine-tuning (backups, maintenance to-do, receipt AI)
 
 **Theme:** First real-use session — Nick is now actively using the CRM (logging receipts, adding to-dos). Focus split between **data durability/backups** and a batch of live-use refinements. Nearly everything delegated to background subagents per [pref_delegate_subagents.md](pref_delegate_subagents.md); Orion committed/pushed each as it landed. All `perpetual-blue-crm` pushes succeeded.
