@@ -398,6 +398,13 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 **Securities law:** Must structure shares carefully — consult securities attorney before selling (Reg D or equivalent)  
 **Builder file:** `C:\Users\ducat\Projects\condo-assistant\perpetual-blue\build_heysea_proforma.js`
 
+### Yacht Financing — BVI-LLC + Charter (research Aug 3 2026; general info, not advice)
+**Deal profile researched:** 4 US co-owners → **BVI LLC** → ~60ft **HeySea** (~$2.2M, Chinese-built) → likely **BVI-flagged** → **commercial charter** in BVI. Ask was 25% down / ~73% LTV / 20yr.
+- **Feasibility (honest):** 73% LTV is a long shot. **Plan for ~40–50% down (50–60% LTV), 10–15yr term.** Four hurdles stack: (1) **charter/commercial use** = biggest LTV killer (specialist charter lenders cap ~50% LTV, FICO 760+, ~10yr term); (2) **newer Chinese builder** = collateral/resale discount → lower advance; (3) **BVI flag** = needs a lender who'll perfect a **BVI ship mortgage** (not USCG); (4) **BVI LLC** = corporate loan to SPV + **personal guarantees from all 4 owners**.
+- **Loan ~$1.6M is a "tweener"** — above consumer boat lenders (~$100k cap: Medallion, LightStream) but BELOW superyacht-bank floors (~$3.5M: Excel Credit; European private banks). Sweet spot = **US specialist marine lenders + a broker**.
+- **Best contacts to call (lead with brokers, not banks):** **Newcoast Financial** (explicitly does foreign-registered + charter — closest match), **Sterling Acceptance** (Annapolis, large-yacht specialist), **Trident Funding** (big marine broker), **Coastal / coastalboatloan.com** (dedicated charter program), **Enness Global** (int'l arranger across 500+ lenders + European private banks, serves US clients). **Excel Credit** = the published rulebook (accepts BVI flag + charter but max 50% LTV, 760+ FICO, 10yr, **$3.5M min** so likely too small). **Moorings/Essex/LaVictoire** do 25%-down charter loans but only for **managed fleets w/ approved (non-Chinese) builders** → HeySea doesn't fit.
+- **Path:** lead with a broker; give full picture (BVI LLC + flag + charter + HeySea) day 1; they underwrite the **4 guarantors' personal credit + a commercial charter business plan** (several programs IGNORE projected charter income); budget 40–50% down; get **survey/valuation early** (blunt the Chinese-builder discount); **maritime attorney** for BVI mortgage; **CPA** for CFC/interest-deductibility. If owners have investable assets, a **private-bank / lombard** loan may be the only route to higher advance + 15–20yr term.
+
 ### Office / Operations
 - Work-from-home initially
 - Eventually: small office + storage in **Red Hook, St. Thomas USVI** (~$2,000–3,500/month when needed)
