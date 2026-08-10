@@ -41,6 +41,7 @@
 ## Vessels
 - [Grenada Itinerary](grenada_itinerary.md) — Perpetual Blue, Fountaine Pajot Sanya 57 · Aug 12–21 2026 · 10 days/9 nights · 6 guests + Captain Sean Powell · Grand Anse (2 nights) → Bathway NE Grenada → Tyrrel Bay Carriacou → Sandy Island + Sculptures → Salt Whistle Bay → Tobago Cays (2 nights) → Tyrrel Bay → Grand Anse
 - HTML guest-share page: `C:\Users\ducat\Projects\grenada-itinerary\index.html` — drag folder to drop.netlify.com for instant shareable link
+- [Grenada→BVI Passage (draft)](passage_grenada_to_bvi.md) — 11-day repositioning passage, late Oct/early Nov, 2 overnight runs + Marigot Bay + Pitons, sell whole-boat or by cabin @ $4,500. Rough shape approved; polish later.
 
 ## Personal Health
 - [Daily Food Baseline](food_baseline.md) — say "food list" to recall daily intake baseline
