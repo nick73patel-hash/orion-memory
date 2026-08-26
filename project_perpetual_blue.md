@@ -38,7 +38,17 @@ Stack for the **Florida LLC** (US operating entity):
 
 **P&L modeling — clearing-house basis CONFIRMED 2026-08-26:** the "Management Expense - Clearing House" line is **2% of GROSS Charter Income + $200/month**. Nick's confirmation: *"it's 2% of charter gross."* On the **HeySea SV60** sheet this is **row 57**, formula `=B27*0.02+200*12` (B27 = gross Charter Income, i.e. **before** the 15% broker fee) → **$11,800 / $16,500 / $21,200** at 10/15/20 charters. Already built on gross — no change was needed.
 
-> ❓ **Open:** the **P&L sheet (Perpetual Blue / FP Sanya 57)** still carries the OLD **flat** clearing-house figures at **row 36** ($5,000 / $7,500 / $10,000). Ask Nick whether the 2% + $200/mo formula should replace those too, or whether that deal applies only to the HeySea / new-boat scenario. Left untouched deliberately — changing it shifts every downstream number on that sheet.
+**Applied to the Perpetual Blue P&L sheet too (2026-08-26, Nick's call).** Row 36 flipped from flat inputs to `=B7*0.02+200*12` (black font per that sheet's *blue = input / black = calculated* legend; note in E36). Row 7 is gross Charter Income, so the basis matches the HeySea sheet. Effect at 10/15/20 charters:
+
+| Line | Was | Now |
+|---|---|---|
+| Clearing House (row 36) | $5,000 / $7,500 / $10,000 | **$7,800 / $10,500 / $13,200** |
+| Total OpEx (row 54) | $286,650 / $338,100 / $397,200 | **$289,450 / $341,100 / $400,400** |
+| Net Income (row 58) | ($56,400) / $7,275 / $63,300 | **($59,200) / $4,275 / $60,100** |
+
+> ⚠️ **The 15-charter case is now razor-thin — $4,275 net, down from $7,275.** Breakeven is still between 10 and 15 charters but has moved materially closer to 15. Worth remembering before treating 15 charters as a "safe" plan.
+
+**Backup before the edit:** `C:\Users\ducat\Projects\Perpetual_Blue_PnL_backup_2026-08-26.xlsx` (pre-change state, in case the 2% needs reverting).
 
 **CRM To-Do:**
 - [ ] **📌 THIS AFTERNOON (2026-08-26) — commit the `db-backup.yml` prune fix.** The Aug 24 audit agent corrected the backup retention logic (the delete step's file scoping); the fixed file is sitting **uncommitted** in `C:\Users\ducat\Projects\perpetual-blue-crm`. The local PAT lacks `workflow` scope, so it can't be pushed with git — it has to go up through the **GitHub web UI**, same as the original workflow file. Already audited safe: it only ever deletes `backups/perpetual-blue-*.sql.gz.gpg` files past the cutoff (never README/.gitkeep), with `nullglob` guarding the empty case.
