@@ -4,6 +4,62 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 26, 2026 — Log recovery after the restart, Grenada page goes live, P&L clearing-house fix, website/DNS diagnosis
+
+**Theme:** Recovery-and-close-out morning. The overnight machine restart had killed the Aug 25 session before anything was logged, so the first job was reconstructing it from the transcript. Then three loose ends got closed — the Grenada guest page finally got a public link, the clearing-house basis was confirmed and applied, and the "paused website" turned out to be a much bigger finding than a paused deployment.
+
+### 🔁 Session-log recovery (the restart)
+- Nick restarted the session after the computer rebooted overnight Aug 25→26. Last recorded log entry was **August 3** (committed Aug 10, `aa5cdb1`); **Aug 14, 24, and 25 were all unlogged** and three memory files sat uncommitted for two days.
+- Reconstructed the whole Aug 24–25 session by reading back the raw transcript (`642ebd38….jsonl`) — user messages, assistant messages, timestamps. **Nothing had been lost:** the last assistant message landed 4:21 PM local with the HeySea P&L rebuild written, verified, and reported. Only the log was missing.
+- Wrote the 66-line Aug 24–25 entry + committed the pending memory edits (`6474429`).
+- **Gotcha worth remembering:** writing `session_log.md` with .NET `WriteAllLines` converts the file to **CRLF**, and this repo is **LF** — it turned a +66-line diff into a 1,622-line whole-file rewrite. Normalized back to LF before committing. Always check `git diff --stat` looks proportional after a scripted edit.
+- **Bash tool is broken on this machine** (`bash.exe not found` — Git Bash path resolution). Everything went through **PowerShell** instead. Also re-confirmed: **no Python**, so xlsx work runs on **Node + ExcelJS** from `Projects\project-budgets\` (that's where the deps live — `node` from elsewhere can't resolve `exceljs`).
+
+### ⛵ Grenada guest page — PUBLISHED (the original Aug 14 ask, finally closed)
+- **Live:** https://claude.ai/code/artifact/d4bc1f8b-9241-4723-9418-4573175cd7fd — **private by default**, Nick shares it from the page's share menu.
+- **Why Artifact instead of Netlify Drop:** Netlify's anonymous drop URLs need an account to claim before they persist, and account creation isn't something Orion does on Nick's behalf. Artifact = permanent link, no signup, republishable in place.
+- Ported Nick's approved design faithfully (navy→sky hero, Playfair/Inter, gold flex card, 10 day cards, customs box). Only mechanical changes: Google Fonts `@import` → `<link>` (CSP-safe), and the At-a-Glance table got its own `overflow-x` container so phones don't side-scroll the body. Source: `Projects\grenada-itinerary\artifact.html` (republish that path to update the same URL); `index.html` untouched as the standalone/Netlify build.
+- **⚠️ Not visually verified** — the Browser pane in this session can't composite frames (screenshots time out) and isn't signed into claude.ai, so a private artifact can't be opened there. Verified structurally instead: tag balance clean, no stray document-level tags, 10 day-cards / 10 glance rows / 4 customs rows / 11 beach blocks present, fonts.googleapis.com the only external host. **Nick still needs to eyeball it.**
+
+### 📊 P&L — clearing house confirmed AND applied to the second sheet
+- Nick confirmed the basis: **2% of charter GROSS + $200/month**. The **HeySea SV60** sheet was already correct (row 57 — it had moved from 47 when the payroll rebuild added rows) — `=B27*0.02+200*12` off gross charter income, before the 15% broker fee. No change needed there.
+- Found that the **P&L sheet (Perpetual Blue / FP Sanya 57) still had the OLD flat figures** at row 36. Flagged it as a question rather than changing it unilaterally; **Nick said apply it**, so it was applied.
+- Row 36 → `=B7*0.02+200*12`, black font per that sheet's own *blue = input / black = calculated* legend, note in E36. Rows 54/56/58 recomputed **from the sheet's own cells** (not delta arithmetic), then read back off disk and cross-checked per column — all three reconcile. HeySea sheet untouched (still 142 rows).
+
+  | Line | Was | Now |
+  |---|---|---|
+  | Clearing House (row 36) | $5,000 / $7,500 / $10,000 | **$7,800 / $10,500 / $13,200** |
+  | Total OpEx (row 54) | $286,650 / $338,100 / $397,200 | **$289,450 / $341,100 / $400,400** |
+  | Net Income (row 58) | ($56,400) / $7,275 / $63,300 | **($59,200) / $4,275 / $60,100** |
+
+- **⚠️ The 15-charter case is now razor-thin — $4,275 net, down from $7,275.** Breakeven has moved materially closer to 15 charters; 15 is no longer a comfortable plan number. Pre-change backup: `Projects\Perpetual_Blue_PnL_backup_2026-08-26.xlsx`.
+
+### 🌐 "The website is paused" → a much bigger finding
+- Nick reported `perpetual-blue-website.vercel.app` paused. Live check returned **503 `DEPLOYMENT_PAUSED`** — "paused by the owner." Key deduction: a **503, not a 404**, proves the project still exists (a deleted project returns `DEPLOYMENT_NOT_FOUND`), so it was never a deletion.
+- Nick couldn't find the project under any dashboard scope. **Answer: his son built it on his own Vercel account** — so it can never appear in Nick's dashboard, and only his son can resume it.
+- **The bigger finding — checked the real domain and it isn't running that site at all.** `perpetualbluebvi.com` + `www` resolve to **13.248.243.5 / 76.223.105.230 = GoDaddy's Airo site builder**, serving a placeholder headed *"PERPETUAL BLUE BVI — Simplifying Offshore Success"* (generic builder copy, not charter content). **That's what brokers and guests see today.** Memory's "Website: Already live" note from July 14 was stale and has been corrected. Unpausing the Vercel project would only restore the `.vercel.app` URL — two separate problems.
+- `crm.perpetualbluebvi.com` → Vercel, healthy. Unaffected.
+- **🚩 Single point of failure logged:** a live business asset sits on a family member's personal account with **no source copy on this machine** (`Projects\perpetual-blue` holds only research files — charter data, HeySea notes, buyer Q&A docx, calendar HTML — no repo). The durable fix is a **transfer** of both the Vercel project and its GitHub repo to Nick's own accounts, not just a resume.
+
+### 🛠️ Cutover prep — Nick decided to move the domain the same day
+- **⛔ THE landmine: Zoho Mail is live on this domain.** Confirmed by live lookup — MX ×3 (`mx.zoho.com` 10 / `mx2` 20 / `mx3` 50), SPF (`v=spf1 include:dc-8e814c8572._spfm.perpetualbluebvi.com ~all`), Zoho verification TXT, DKIM at `zmail._domainkey`, DMARC at `_dmarc`. DNS is hosted at **GoDaddy** (`ns35`/`ns36.domaincontrol.com`).
+- **Vercel will offer to take over DNS for the domain — that offer must be DECLINED.** Moving nameservers abandons every record GoDaddy holds, which kills `charters@perpetualbluebvi.com` — and inbound mail **bounces** rather than queues. Safe path: add the domain in Vercel, take the records it returns, enter them by hand in GoDaddy.
+- **Rollback record saved:** `Projects\perpetual-blue\dns-snapshot-2026-08-26.md` — full pre-change DNS state incl. the complete DKIM key, captured from live lookups before any change. Undo is three values (apex A ×2 + `www` CNAME).
+- **Runbook published** (shareable with the son, split by who does what): https://claude.ai/code/artifact/2d00dae9-7c07-421a-b16f-6e887a28711e — Son: resume project, add both domains in Vercel, send back the DNS records. Nick: **detach the GoDaddy Websites+Marketing site from the domain first** (the step people skip — while attached it owns the apex records and will refuse or silently restore them), edit exactly three records, verify.
+- **Verify list after cutover:** apex + www → Vercel; **MX still the three Zoho hosts**; `crm` still `…vercel-dns-017.com`; padlock on https; and a live test email to `charters@perpetualbluebvi.com` from an outside address.
+- **Ask the son why it paused** — if *Vercel* paused it (spend limit, or commercial use on a free Hobby plan, which a charter business site is) it will re-pause after the domain is pointed at it; that needs Pro (~$20/mo) or another host.
+
+### Notes / still open
+- 📌 **THIS AFTERNOON:** commit the `db-backup.yml` prune fix — still uncommitted in `Projects\perpetual-blue-crm`, must go up via the **GitHub web UI** (local PAT lacks `workflow` scope).
+- 🔲 **Nick to eyeball the Grenada page** (never visually rendered here) and share it if it looks right.
+- 🔲 **Confirm the son's site is worth pointing the domain at** before cutting over — otherwise Orion builds a proper charter site (fleet specs, as-sailed itinerary, and rate-card data are all already on hand).
+- 🔲 **Transfer** the Vercel project + GitHub repo off the son's account.
+- ⏳ DB backup activation (2 GitHub secrets + test run) — unchanged since Aug 2, still Nick's.
+- 🔒 **Security housekeeping:** the `orion-memory` remote URL carries the **GitHub PAT in plaintext** in `.git/config`. Works fine, but anyone with that file gets push access to memory. Offered to move it to a credential helper — Nick hasn't taken it up yet.
+
+---
+
+
 ## Session: August 24–25, 2026 — Post-trip Grenada v2 itinerary + CRM recovery/seed + HeySea P&L rebuild (BVI payroll taxes)
 
 **Theme:** Nick sailed the real Grenada charter in August and came back with corrections — so the itinerary got rebuilt from as-sailed reality (memory + working copy + guest HTML page + seeded into the CRM). Along the way the CRM appeared dead and turned out to be a paused Supabase DB, and the day closed on a heavy rebuild of the HeySea SV60 P&L (dictated opex edits + BVI payroll taxes). Session ended abruptly when the **computer restarted overnight Aug 25→26** — see "Interrupted" at the bottom; no work was lost.
