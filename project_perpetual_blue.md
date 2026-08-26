@@ -11,7 +11,9 @@
   - `perpetualbluebvi.com` + `www` → **A 13.248.243.5 / 76.223.105.230 = GoDaddy's Airo site builder**, serving a placeholder headed "PERPETUAL BLUE BVI — Simplifying Offshore Success" (generic builder copy, not charter content). **This is what brokers and guests see today.**
   - `perpetual-blue-website.vercel.app` → **503 `DEPLOYMENT_PAUSED`** ("paused by the owner"). The 503 (not a 404) proves the Vercel project still EXISTS — but Nick **cannot see it in his Vercel dashboard**, which points to a different account/team scope, not a deletion.
   - `crm.perpetualbluebvi.com` → CNAME `2c5d4e4d92d7c459.vercel-dns-017.com` = **Vercel, working fine.** So the CRM and the marketing site are on different hosts.
-  - **Open:** find which Vercel account/team owns `perpetual-blue-website`, and decide whether to resume it and point the apex domain at it, or rebuild. **No local source exists on this machine** (`Projects\perpetual-blue` holds only research files — charter data, HeySea notes, buyer Q&A docx, calendar HTML — no repo).
+  - **Owner: Nick's son** — the Vercel project lives on **his son's personal account**, which is why it never appears in Nick's dashboard under any scope. Nick has no access to resume, redeploy, or transfer it himself.
+  - ⚠️ **Single point of failure:** a business asset (the charter marketing site) sits on a family member's personal account, with **no source copy on this machine** (`Projects\perpetual-blue` holds only research files — charter data, HeySea notes, buyer Q&A docx, calendar HTML — no repo). **Fix = transfer the Vercel project + its GitHub repo to Nick's own accounts**, don't just resume it.
+  - **Ask the son WHY it paused** — if Vercel flagged it as commercial use on a free Hobby plan (their ToS bars commercial sites), resuming won't stick and it needs a Pro plan or a different host.
 - **Related file:** [Grenada Itinerary](grenada_itinerary.md)
 
 ---
