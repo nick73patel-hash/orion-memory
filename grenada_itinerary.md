@@ -5,6 +5,7 @@
 **Guests:** 6 · **Total aboard:** 7
 **Length:** 9 days · 8 nights (with 1 built-in flex day)
 **Provisioning:** Self-catering aboard + dining ashore at stops
+**Live guest page:** https://claude.ai/code/artifact/d4bc1f8b-9241-4723-9418-4573175cd7fd (published 2026-08-26 — private until shared from the page's share menu)
 **Source:** Rebuilt from the real August 2026 charter (Nick sailed it). Full working copy: `C:\Users\ducat\Projects\grenada-itinerary\itinerary-v2-as-sailed.md`
 
 > **Lessons baked in from the real trip:**

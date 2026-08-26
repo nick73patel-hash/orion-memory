@@ -40,7 +40,7 @@
 
 ## Vessels
 - [Grenada Itinerary](grenada_itinerary.md) — Perpetual Blue, FP Sanya 57 · **As-Sailed v2** (rebuilt from real Aug 2026 charter) · 9 days/8 nights + 1 flex day · 6 guests + Capt. Sean Powell · BBC/Morne Rouge → Ronde Island (black-sand ⭐) → Paradise Beach Carriacou (clear out Grenada) → Chatham Bay Union (clear into SVG) → Mayreau → Tobago Cays/Palm/Petite Martinique → Ronde → BBC. Lessons: BBC calmer than Grand Anse; Bathway has NO anchorage; Ronde is the star. Working copy: `Projects\grenada-itinerary\itinerary-v2-as-sailed.md`
-- HTML guest-share page: `C:\Users\ducat\Projects\grenada-itinerary\index.html` — drag folder to drop.netlify.com for instant shareable link
+- **Grenada guest page — LIVE (published 2026-08-26):** https://claude.ai/code/artifact/d4bc1f8b-9241-4723-9418-4573175cd7fd — **private by default**; share it from the page's share menu. Sources: `Projects\grenada-itinerary\artifact.html` (the published build — republish that same path to update, same URL) and `index.html` (standalone build, still Netlify-droppable if a non-Claude host is ever wanted).
 - [Grenada→BVI Passage (draft)](passage_grenada_to_bvi.md) — 11-day repositioning passage, late Oct/early Nov, 2 overnight runs + Marigot Bay + Pitons, sell whole-boat or by cabin @ $4,500. Rough shape approved; polish later.
 
 ## Personal Health
