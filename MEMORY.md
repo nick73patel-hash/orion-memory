@@ -39,7 +39,7 @@
 | | ↳ **Sub: Yacht Management Company** — manage fleet of 15 yachts for other owners. Full-service management: maintenance, crew, charters, compliance. Partners: Sean, Mason | | | |
 
 ## Vessels
-- [Grenada Itinerary](grenada_itinerary.md) — Perpetual Blue, Fountaine Pajot Sanya 57 · Aug 12–21 2026 · 10 days/9 nights · 6 guests + Captain Sean Powell · Grand Anse (2 nights) → Bathway NE Grenada → Tyrrel Bay Carriacou → Sandy Island + Sculptures → Salt Whistle Bay → Tobago Cays (2 nights) → Tyrrel Bay → Grand Anse
+- [Grenada Itinerary](grenada_itinerary.md) — Perpetual Blue, FP Sanya 57 · **As-Sailed v2** (rebuilt from real Aug 2026 charter) · 9 days/8 nights + 1 flex day · 6 guests + Capt. Sean Powell · BBC/Morne Rouge → Ronde Island (black-sand ⭐) → Paradise Beach Carriacou (clear out Grenada) → Chatham Bay Union (clear into SVG) → Mayreau → Tobago Cays/Palm/Petite Martinique → Ronde → BBC. Lessons: BBC calmer than Grand Anse; Bathway has NO anchorage; Ronde is the star. Working copy: `Projects\grenada-itinerary\itinerary-v2-as-sailed.md`
 - HTML guest-share page: `C:\Users\ducat\Projects\grenada-itinerary\index.html` — drag folder to drop.netlify.com for instant shareable link
 - [Grenada→BVI Passage (draft)](passage_grenada_to_bvi.md) — 11-day repositioning passage, late Oct/early Nov, 2 overnight runs + Marigot Bay + Pitons, sell whole-boat or by cabin @ $4,500. Rough shape approved; polish later.
 

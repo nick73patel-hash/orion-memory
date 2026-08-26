@@ -4,6 +4,72 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 24–25, 2026 — Post-trip Grenada v2 itinerary + CRM recovery/seed + HeySea P&L rebuild (BVI payroll taxes)
+
+**Theme:** Nick sailed the real Grenada charter in August and came back with corrections — so the itinerary got rebuilt from as-sailed reality (memory + working copy + guest HTML page + seeded into the CRM). Along the way the CRM appeared dead and turned out to be a paused Supabase DB, and the day closed on a heavy rebuild of the HeySea SV60 P&L (dictated opex edits + BVI payroll taxes). Session ended abruptly when the **computer restarted overnight Aug 25→26** — see "Interrupted" at the bottom; no work was lost.
+
+### ⛵ Grenada & Grenadines — "As-Sailed v2" itinerary (the headline)
+- **Trip happened, weather forced changes.** Nick dictated the real route; the old planned v1 was **replaced** (his call: "replace the old"). New shape: **9 days / 8 nights + 1 floating FLEX day**, 6 guests + Capt. Sean Powell.
+- **Route:** BBC/Morne Rouge → (6am sail, Black Bay breakfast stop) Ronde Island → Paradise Beach Carriacou (**clear OUT of Grenada**) → Clifton Union (**clear INTO St Vincent**) then overnight **Chatham Bay** → Mayreau/**Carenage Bay** (dinner at Windward Mayreau resort restaurant, walk out/cab back) → southern Grenadines pick (Tobago Cays / Palm / Petite Martinique) → ★FLEX → Ronde again → BBC/Grand Anse → departure.
+- **Lessons baked in:** **BBC/Morne Rouge is far less rolly than the Grand Anse mooring balls** (use as start/end base); **Ronde Island was the surprise star** (remote, black-sand, great snorkel — hit twice, north- and south-bound); **Bathway Beach has NO charted anchorage** (removed); Grooms Bay dropped; route now runs **island-to-island up the middle** instead of hugging Grenada's west coast. No favorite-weighting needed — the as-sailed route *is* Nick's favorites.
+- **Files:** memory [grenada_itinerary.md](grenada_itinerary.md) rewritten (351-line diff, mostly deletions — v1 gone); full working copy `C:\Users\ducat\Projects\grenada-itinerary\itinerary-v2-as-sailed.md`.
+- **Guest HTML page rebuilt to v2** (background agent) — `C:\Users\ducat\Projects\grenada-itinerary\index.html`, ~690 lines (was 820). Same nautical design, now **date-agnostic**, 10 day-cards (9 + gold FLEX badge), corrected customs flow, and the **All Passages / Dinghy Times tables were dropped** rather than fabricate distances. The agent died on an API connection error *while narrating its verification* — the file was already written; Orion verified it himself (balanced tags, no stale v1 content, flex badge styled) and did **not** relaunch.
+- **🔲 Still open:** the page has never been given a **public link**. It's ready to deploy — drag the `grenada-itinerary` folder to **drop.netlify.com** for an instant shareable URL. This was Nick's *original* ask back on Aug 14.
+
+### 🔌 CRM "Failed to fetch" — root cause: Supabase auto-pause (important gotcha)
+- Nick couldn't log into **crm.perpetualbluebvi.com**; password reset also failed with **"Failed to fetch."** Orion health-checked the live site: page + all assets HTTP 200, auth guard redirecting correctly, zero console errors — **the front door was fine.**
+- Reproduced the failure in the browser pane and caught the smoking gun: **`net::ERR_BLOCKED_BY_CLIENT`**. Initial read was an ad-blocker/privacy extension; the incognito isolation test pointed elsewhere — **the Supabase project was PAUSED.** Hitting **Resume** fixed everything, and Nick's **old password still worked** (no reset needed).
+- **⚠️ This WILL recur:** Supabase **free tier auto-pauses after ~7 days of inactivity**, and when paused the login page still renders fine while *every* auth call dies. Saved to [project_perpetual_blue.md](project_perpetual_blue.md) as a flagged gotcha. Admin email = **charters@perpetualbluebvi.com**. Permanent fixes: **Supabase Pro ($25/mo — no auto-pause + daily backups)** once the CRM carries live data, or a free-but-hacky scheduled keep-alive ping.
+
+### 🗃️ Seeding the v2 itinerary into the CRM — and the SQL-paste gremlin
+- The CRM already has a full **Itineraries module** (`itineraries` parent + `itinerary_stops`, `migration_006_itineraries.sql`, statuses `draft`/`sent`/`confirmed`, stops ordered by `sort_order`) with a "BVI Standard 7-Night" template seeded the same way — so this was exactly what it's built for. Orion can't write to the DB (no creds, by design), so he wrote an **idempotent paste-ready SQL seed** for Nick to run: `Projects\grenada-itinerary\grenada-v2-crm-seed.sql`.
+- **It took four attempts** — a genuinely useful debugging story:
+  1. **Em-dashes (—)** got mangled on paste → *"unterminated quoted string"* on the Ronde Island line.
+  2. ASCII rewrite still failed: escaped apostrophes **`''`** in `L''Esterre` / `Union''s` were **flattened to a single `'`** on copy, breaking the string early.
+  3. Postgres then read leftover text — the words **`INTO SVG`** — as `SELECT ... INTO SVG`, inventing a phantom table (Supabase helpfully auto-appended `ALTER TABLE "SVG" ENABLE RLS`) → *`relation "SVG" does not exist`*.
+  4. Final fix: **pure ASCII, zero apostrophes, "St Vincent" spelled out, no standalone `INTO` before a capitalized word**, plus *clear the editor completely* before re-pasting. **Worked.** ✅
+- **Result:** itinerary `11111111-1111-1111-1111-111111111111` + 9 stops now live in the CRM alongside the BVI template. Rule saved to [project_perpetual_blue.md](project_perpetual_blue.md).
+
+### 💾 Backup workflow audit (background agent)
+- Agent audited `.github/workflows/db-backup.yml` and **fixed a real bug in the prune logic** (`git rm` could have over-reached). Orion eyeballed the fix: it only ever removes files matching `backups/perpetual-blue-*.sql.gz.gpg` past the cutoff — never README/.gitkeep — with `nullglob` guarding the empty case. Safe.
+- **⏳ The 3 credential-gated steps remain Nick's** (2 GitHub secrets + one test run) — unchanged since Aug 2. Orion never handles the DB password or encryption key. Checklist is ready.
+- **Note:** the fixed `db-backup.yml` is **still uncommitted** in `Projects\perpetual-blue-crm` — and the local PAT lacks `workflow` scope, so it must go up via the **GitHub web UI**, same as last time.
+
+### 📊 Perpetual Blue / HeySea SV60 P&L — big rebuild (`Perpetual_Blue_PnL.xlsx`)
+- **Tooling note (reconfirmed):** no real Python on this machine (the `python`/`python3` on PATH are Microsoft Store stubs). **Node + ExcelJS** is the way — and the on-disk build script had drifted stale (~58 rows vs the live file), so the *actual xlsx* had to be read, not the script.
+- **Line 47 — "Management Expense · Clearing House"** changed from a flat input to a live formula: **2% of Charter Income + $200/month** (`=B21*0.02+200*12`). 10/15/20 charters: $5,000/$7,500/$10,000 → **$11,800/$16,500/$21,200**. Flagged that this is 2% of **gross** charter income (row 21), the standard clearing-house basis — *confirm with Nick if he meant post-broker*. Side effect: at 10 charters the 50%-down/20-yr scenario tipped from **+$6,562 to ≈ −$238** (break-even).
+- **Line 63 explained** — the professional-management fee (flat + performance), per Nick's question.
+- **Scenario 4 paste declined (correctly).** Nick pasted a block of Scenario-4 figures to hard-code. Orion refused to overwrite the formulas: those cells are **calculated outputs** off row 67 (NOI), and the pasted numbers implied **$35K/$49K/$34K more opex** than the file — a non-constant gap that couldn't be reverse-engineered to one line item. Hard-coding would have (a) frozen Scenario 4 and (b) put it in disagreement with Scenarios 1/2/3/5. Reconciled through the real inputs instead.
+- **Dictated opex edits applied:** boat cleaning exterior **doubled**; cleaning interior **$400/charter**; crew pay **$80K/$90K/$100K** at 10/15/20 charters; diesel **+25%**; gas **doubled**; insurance **$45K** (the 60-footer, replacing the old FP $23K placeholder); laundry **$225/charter**; provisioning **$4,000/charter**; management fee **split into two line items** (flat $1,000/mo and performance-based).
+- **🆕 BVI payroll taxes added** as employer/owner-cost lines off Crew Pay, all formula-driven, with new editable assumptions up top (# Crew = 2, three tax rates, $10K threshold):
+
+  | Line | Formula | 10 ch | 15 ch | 20 ch |
+  |---|---|---|---|---|
+  | BVI Social Security (employer 4.5%) | Crew Pay × 4.5% | $3,600 | $4,050 | $4,500 |
+  | National Health Insurance (3.75%) | Crew Pay × 3.75% | $3,000 | $3,375 | $3,750 |
+  | Payroll income tax (6% over $10K/crew) | (Crew Pay − $10K×2) × 6% | $3,600 | $4,200 | $4,800 |
+  | Payroll filing — Vivett ($100/mo/crew) | $100 × 12 × 2 | $2,400 | $2,400 | $2,400 |
+  | **Added payroll cost** | | **$12,600** | **$14,025** | **$15,450** |
+
+  (Employee-side rates for reference: SS 4%, NHI 3.75%, income tax 8% over the $10K tax-free threshold; NHI + SS apply from dollar one.)
+- All values hand-checked against the recomputed engine and verified in the saved file; the **P&L sheet was left untouched** — only the HeySea SV60 sheet was rebuilt.
+
+### 🗓️ Aug 14 mini-session (also unlogged until now)
+- "How do I find the Grenada itinerary again" → pointed at the shareable web page. Plus two pre-trip questions: **customs when heading north to Sandy Island** (Grenada → SVG clearance), and whether **Sauteurs Bay** has a safe anchorage with a dinghy-able white-sand beach nearby.
+
+### ⏹️ Interrupted — how this session ended
+- The machine **restarted overnight Aug 25→26**, killing the session (transcript `642ebd38…`, last assistant message 2026-08-25 4:21 PM local). **Nothing was lost:** the P&L rebuild had already been written, verified, and reported before the crash. The only casualty was the session log itself, which is what this entry repairs (recovered Aug 26 by reading back the transcript).
+
+### Notes / still open
+- 🔲 **Publish the v2 Grenada guest page** (drop.netlify.com) — the original Aug 14 ask, still the top loose end.
+- 🔲 **Commit the `db-backup.yml` prune fix** via the GitHub web UI (PAT lacks `workflow` scope).
+- ⏳ **DB backup activation** — 2 GitHub secrets + test run, still Nick's (unchanged since Aug 2).
+- ❓ **Confirm the line-47 clearing-house basis** — 2% of gross charter income vs post-broker.
+- 🔲 Day 9 of the itinerary: name of the pay-to-depart marina (ask Sean).
+- Real email delivery (Zoho/Resend SMTP) for the CRM still open.
+
+---
+
 ## Session: August 3, 2026 — Provisioning pipeline overhaul + AI-key unblock + yacht/Navionics research
 
 **Theme:** Deep live-use refinement of the Phase-4 provisioning pipeline (menu → shopping list → chef workflow), plus a critical bug unblock and two research asks. All build work delegated to background subagents per [pref_delegate_subagents.md](pref_delegate_subagents.md); Orion verified + committed/pushed each. All `perpetual-blue-crm` pushes succeeded.
