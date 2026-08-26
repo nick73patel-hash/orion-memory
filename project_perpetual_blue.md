@@ -7,7 +7,11 @@
 - **Current ownership:** Florida LLC
 - **Target season:** 2026/2027
 - **Charter goal:** 15 charters minimum, up to 20
-- **Website:** Already live · **Domain:** securing **www.perpetualbluebvi.com** (July 14, 2026)
+- **Website:** ⚠️ **NOT actually live — corrected 2026-08-26** (the old "already live" note from July 14 2026 was stale). Verified state:
+  - `perpetualbluebvi.com` + `www` → **A 13.248.243.5 / 76.223.105.230 = GoDaddy's Airo site builder**, serving a placeholder headed "PERPETUAL BLUE BVI — Simplifying Offshore Success" (generic builder copy, not charter content). **This is what brokers and guests see today.**
+  - `perpetual-blue-website.vercel.app` → **503 `DEPLOYMENT_PAUSED`** ("paused by the owner"). The 503 (not a 404) proves the Vercel project still EXISTS — but Nick **cannot see it in his Vercel dashboard**, which points to a different account/team scope, not a deletion.
+  - `crm.perpetualbluebvi.com` → CNAME `2c5d4e4d92d7c459.vercel-dns-017.com` = **Vercel, working fine.** So the CRM and the marketing site are on different hosts.
+  - **Open:** find which Vercel account/team owns `perpetual-blue-website`, and decide whether to resume it and point the apex domain at it, or rebuild. **No local source exists on this machine** (`Projects\perpetual-blue` holds only research files — charter data, HeySea notes, buyer Q&A docx, calendar HTML — no repo).
 - **Related file:** [Grenada Itinerary](grenada_itinerary.md)
 
 ---
