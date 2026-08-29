@@ -4,6 +4,97 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 29, 2026 — Aug 27–28 reconstructed from transcripts; Bash breakage root-caused
+
+**Theme:** Short recovery session. Nick opened by asking why a new session had started again; the answer turned into recovering two more unlogged days, then into finding out why routine git work keeps getting blocked on this machine.
+
+### 🔁 Reconstruction (see the Aug 27–28 entry above for the substance)
+- Aug 27 and 28 were unlogged. Rebuilt from `7d1f254d` (which ran Aug 26 → Aug 28 10:55 AM without ever closing out) and `e99167e2` (Aug 28 afternoon). The 10 MB `ebf25fc6` file looked promising but is a stale **July 29 – Aug 11** session — ignore it.
+- Memory corrected: **three owners** (Nick, David Brandt, Derek Yurosek), **SVFP57 LLC**, PYM terminated, website now live, MHG-not-MGH capital-credit fix so the $10,782 isn't double-counted.
+- **Domain re-verified live from this machine:** `www` 200 from Vercel, apex 308, MX still Zoho.
+- Backups written to `Projects\orion-memory-backups\` (`*_2026-08-29.md`).
+
+### 🚧 Root cause: why git commits keep getting blocked
+- **`Bash(git commit *)` was already in the allow list.** It never applied, because **every permission rule is scoped `Bash(...)`** and Bash is broken — so everything runs through **PowerShell**, which has no rules and falls through to the auto-mode classifier.
+- **Found the Bash bug:** Claude Code resolves `C:\Program Files\Git\bin\..\usr\bin\bash.exe` → `C:\Program Files\Git\usr\bin\bash.exe`, **which doesn't exist**. The real binary is `C:\Program Files\Git\bin\bash.exe`. Fix = `CLAUDE_CODE_GIT_BASH_PATH` in the `env` block of `settings.json`. Full detail in [Windows Machine Quirks](env_windows_machine.md).
+- **Orion cannot apply either fix** — editing `settings.json` to widen its own permissions is blocked by design, and working around that block would defeat its purpose. Nick makes those edits himself.
+- Also flagged: the `orion-memory` remote URL carries a **GitHub PAT in plaintext**, visible to anything that runs `git remote -v`. Rotate it and move to a credential helper.
+
+### ⏭️ PENDING — first thing next session
+- 🔲 **The Aug 27–28 and Aug 29 log entries are written and STAGED but NOT COMMITTED.** If `git status` shows staged memory changes, that's why — commit and push them, don't re-do the work.
+- 🔲 Confirm the `CLAUDE_CODE_GIT_BASH_PATH` fix took (Bash tool should work; if it does, the existing Bash rules cover commits again).
+- 🔲 Rotate the GitHub token and strip it from the remote URL.
+
+---
+
+## Session: August 27–28, 2026 — PYM termination package, the escrow conflict, partner capital reconciliation, domain cutover confirmed live
+
+**Theme:** Two days of adversarial-letter work and forensic accounting on Perpetual Blue. Nick moved to terminate Paradise Yacht Management; the work was drafting and critiquing the termination and escrow letters, then reconciling three owners' capital contributions against QuickBooks. *Reconstructed Aug 29 from transcripts `7d1f254d` (which ran Aug 26 → Aug 28 10:55 AM without ever being logged) and `e99167e2` (Aug 28, 1:17–4:18 PM). Nothing was lost — only the log.*
+
+### ⚖️ Terminating Paradise Yacht Management
+- Counsel: **James Perry, yacht lawyer** (`perry@yachtlawyer.com`). His advice was to send on his letterhead. Agreed — but the draft was doing three incompatible jobs at once (venting / a $45K claim / an operational handover), so it got **split into two letters**. Jobs 2 and 3 fight each other: you need PYM's cooperation to transfer escrow, novate charter contracts, and hand over records.
+- **Centerpiece corrected mid-session:** the case is the **billing forensics, not the vessel condition.** "The boat was dirty and the steering was bad" is contestable — crew responsibility, judgment calls. "You charged $15,838 for the aircon replacement twice, once under Maintenance and once under R&M Supplies" is arithmetic. Double-billing doesn't have two sides.
+- **🚩 Caught a $3,000 overstatement before it went out.** The line items summed to **$42,477.34**; the letter claimed **$45,477.34**. A letter whose entire argument is *"your arithmetic is wrong"* cannot carry a $3,000 error two inches above that sentence — it would have tainted the sixteen items that were correct. Nick fixed it; re-verified at **$45,477.34 exactly, ten items, zero variance.**
+- Three line items still had **narrative text that didn't match the claimed figure** — $1,300 claimed vs. "refund of $3,400"; $7,405.40 vs. "$9,312.26 charged May 31 2024"; $15,838 vs. a ledger showing $18,515.98 billed twice. Flagged twice; **unconfirmed whether they were fixed before sending.**
+- Reworded "routine false and dishonest billing" into an observation rather than an accusation of intent: *"Errors of this frequency and size, all running in your favor, are not something we are prepared to treat as coincidence."* Says exactly what he means without asserting a state of mind he'd have to prove.
+- The **$3,000 exterior-washing line** is grounded in the captain's employment agreement — advised citing the clause inside the line itself, which converts a judgment call into a contract breach (the strongest category on the list).
+- **Correction I made to my own advice:** a set-off clause runs in the direction of what the *holder* is owed, so Nick's $45K claim does not by itself hand Hank a lever. I'd stated it too loosely the message before.
+- Deadline in the final draft: **Sept 4** — a date they can actually be held to (replacing "NOTHING less"). The Marines line got cut.
+
+### 🚩 The escrow conflict — the finding that changed the risk picture
+- Charter deposits sit with **Paradise Yacht Clearing**, a **separate LLC** acting as fiduciary between the charter guest and the boat LLC. Real protection: a contract dispute with PYM gives PYM no claim on money held by Clearing, and Clearing's duties run to the owners, not to its affiliate.
+- **Then Nick said Hank is a partner in Clearing.** That mostly evaporates the practical protection. One of the fiduciary's partners is the counterparty in a ~$75K dispute — **a live conflict of interest sitting directly on top of the money.** The mechanism to watch is the **set-off clause**: if the clearing agreement lets Clearing withhold funds for sums claimed by an affiliate, the charter deposits become collateral the moment the demand lands.
+- Hence the sequencing Nick chose (and I agreed with): **Clearing letter first** — revoke PYM's disbursement authority effective immediately, demand a full statement of account, CC Perry and both partners — **then the termination** on Perry's letterhead. Both were drafted in full.
+- Open questions to put to Clearing: who owns and controls it, and does the agreement contain a set-off or affiliate-claim clause.
+
+### 💰 Partner capital reconciliation — new tracker file
+- Reconciled QuickBooks **acct 340 (Owner Share Capital)** and **acct 350 (Owner Contribution)** across all three owners. Acct 340 nets to $0 (the $100 PYM deposit that opened the BoA account was returned Jan 2, 2024).
+- **⚠️ Ownership corrected — Perpetual Blue has THREE owners: Nick Patel, David Brandt, Derek Yurosek.** Vessel LLC is **SVFP57 LLC**. Memory had never recorded the other two.
+- **Framing is Nick's explicit call: the highest contributor is the baseline**, the other two are "behind" — not an equal-thirds average. (Both views were computed; they tell different stories, and the baseline view is the one he wanted.)
+
+  | Partner | Booked (ledger) | Unbooked out-of-pocket | **Total** | Behind baseline |
+  |---|---:|---:|---:|---:|
+  | **Nick** ⭐ baseline | $261,615.00 | $24,826.81 | **$286,441.81** | — |
+  | Derek | $278,833.00 | $0.00 | **$278,833.00** | **$7,608.81** |
+  | David | $265,833.00 | $0.00 | **$265,833.00** | **$20,608.81** |
+  | | | | **$831,107.81** | **$28,217.62** to level |
+
+- On **booked figures alone Nick is last**; he leads only because of what he fronted personally. Derek's lead comes from **$40,000 in five weeks** (Jun 16 and Jul 21, 2026). David is the one behind in every view.
+- **MHG correction (important, prevents a double-count):** the **$10,782.00 insurance payment** (vendor is **MHG Services Inc**, not "MGH" as memory had it) came back **as a capital credit to acct 350, not as cash** — Jul 23, 2026. It is already inside Nick's booked $261,615 and must not be counted as out-of-pocket. Itemized $15,326.81 + MHG $10,782.00 = the old $26,108.81 figure. ✔
+- **⚠️ $9,500 of the $24,826.81 is unsubstantiated** — a $7,500 credit-card estimate and a $2,000 rough cash outlay, both placeholders. Every table above moves when they firm up.
+- **⚠️ Nothing logged after 2026-08-02** — three-plus weeks of Grenada delivery, provisioning, fuel, and crew permits are likely still missing from the total.
+- Built: `Projects\perpetual-blue\partner-capital-tracker.md` — standing, equal-share view, itemized detail, sensitivity table, open items.
+
+### 📧 Partner update email → artifact with a working Copy button
+- Wrote the partner-facing update (booked figures for all three, Nick's out-of-pocket, full itemization so nothing is taken on faith). Nick had the "nobody has done anything wrong" line removed. **Nothing was sent — sending is his.**
+- Also asked: get **David or Derek to deposit $1,000 into the new Mercury account** so Sean has cash for the week.
+- **Why the artifact exists:** Gmail strips `<style>` blocks, so a table copied out of chat arrives naked. Every element in this version is styled **inline**, which is what Gmail keeps. A **"Copy for Gmail"** button also writes a plain-text version to the clipboard as a fallback. Fixed a bug in the fallback path (it called the copy routine twice and the error flag never went true) before publishing.
+- **Live (private):** https://claude.ai/code/artifact/dee80d2d-c918-467a-b024-189ba0274769
+
+### 🌐 Domain cutover — DONE, verified live
+The Aug 26 runbook executed successfully. Re-verified Aug 29 from this machine:
+- `www.perpetualbluebvi.com` → **200 from Vercel**, title *"Perpetual Blue | Caribbean Yacht Charter"* — the real charter site, not the GoDaddy Airo placeholder
+- apex → **308** redirect to www; A record `216.198.79.1` (Vercel); `www` CNAME `23f538f04cffe0f0.vercel-dns-017.com`
+- **MX still `mx`/`mx2`/`mx3.zoho.com`** — `charters@perpetualbluebvi.com` survived the cutover, which was the landmine. `crm.` untouched.
+- Still true and still worth fixing: the Vercel project lives on **Nick's son's personal account** with no source copy on this machine. Transfer, don't just leave it.
+
+### 🛠️ Environment / gotchas
+- Two **API `ENOTFOUND`** errors mid-session on Aug 28, and the machine slept mid-task once. Work resumed cleanly from where it left off both times.
+- **Bash is still broken on this machine** (`bash.exe not found`) — PowerShell for everything.
+- New one: **`Invoke-WebRequest` needs `-UseBasicParsing`** in this non-interactive shell, or it fails with *"PowerShell is in NonInteractive mode"* trying to use the IE engine.
+- Two artifact live-update watches dropped their connections. Cosmetic — the pages and links are unaffected.
+
+### ⏭️ Open items
+- Itemize the **$7,500 credit-card charges** and substantiate the **$2,000 cash outlay** — replace both estimates
+- Add the **BVI flight** cost (still TBD since July)
+- Book the out-of-pocket to **acct 350** so QuickBooks is the single source of truth
+- Decide with David and Derek: **cash settlement or tracked equity** for the true-up
+- Confirm the **three unreconciled claim line items** were corrected before the termination letter went out
+- Put the **ownership and set-off questions to Clearing**, and get the statement of account
+- Log the three-plus weeks of Grenada-trip expenses missing since Aug 2
+
+---
+
 ## Session: August 26, 2026 — Log recovery after the restart, Grenada page goes live, P&L clearing-house fix, website/DNS diagnosis
 
 **Theme:** Recovery-and-close-out morning. The overnight machine restart had killed the Aug 25 session before anything was logged, so the first job was reconstructing it from the transcript. Then three loose ends got closed — the Grenada guest page finally got a public link, the clearing-house basis was confirmed and applied, and the "paused website" turned out to be a much bigger finding than a paused deployment.

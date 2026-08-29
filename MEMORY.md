@@ -34,8 +34,8 @@
 | | *Bulk produce Ronnie's top 10 Danish pastry products at one central kitchen, distribute to 30–50 Denver cafes/hotels/offices. No retail storefront. Target: $1K/day/location.* | | | |
 | 14 | Tiny Homes — Granby | 🟡 Starting | Mike Mahonin | [project_tiny_homes.md](project_tiny_homes.md) |
 | | *Build 40 tiny homes near Granby, CO for low-income rentals. Mission-driven affordable housing in a high cost-of-living mountain community.* | | | |
-| 15 | **Perpetual Blue — BVI Charter Yacht** | 🟩 **In Progress** | Solo | [project_perpetual_blue.md](project_perpetual_blue.md) |
-| | *Self-managed crewed charter on 2013 Fountaine Pajot Sanya 57 (6 cabin). Captain + first mate/chef. 15–20 charters/season in BVI. Currently FL LLC — evaluating BVI BC + re-flagging. BVI Charter Yacht Show target Nov 2026.* | | | |
+| 15 | **Perpetual Blue — BVI Charter Yacht** | 🟩 **In Progress** | Co-owners: David Brandt, Derek Yurosek | [project_perpetual_blue.md](project_perpetual_blue.md) |
+| | *Self-managed crewed charter on 2013 Fountaine Pajot Sanya 57 (6 cabin). Captain + first mate/chef. 15–20 charters/season in BVI. **SVFP57 LLC (FL) — 3 owners** — evaluating BVI BC + re-flagging. **Paradise Yacht Management terminated Aug 2026** ($45,477.34 claim; escrow conflict — Hank is a partner in Paradise Yacht Clearing; counsel James Perry). Site live at perpetualbluebvi.com. Capital tracker: `Projects\perpetual-blue\partner-capital-tracker.md`. BVI Charter Yacht Show target Nov 2026.* | | | |
 | | ↳ **Sub: Yacht Management Company** — manage fleet of 15 yachts for other owners. Full-service management: maintenance, crew, charters, compliance. Partners: Sean, Mason | | | |
 
 ## Vessels
@@ -59,6 +59,9 @@
 ## Credentials
 - [Condo Assistant Admin Login](condo_assistant_credentials.md) — assistant.winterparkmanagement.com/admin
 - [Perpetual Blue Licenses & Credentials](pb_licenses.md) — BVI BC reg, CRVL, work permits, ship registry, insurance (template, fill in as numbers obtained)
+
+## Environment
+- [Windows Machine Quirks](env_windows_machine.md) — ⚠️ **Bash is broken** (fix: `CLAUDE_CODE_GIT_BASH_PATH` = `C:\Program Files\Git\bin\bash.exe`); permission rules are Bash-only so PowerShell hits the classifier; no Python; Node/ExcelJS lives in `Projects\project-budgets\`
 
 ## User Preferences (applies to all projects)
 - [Delegate build tasks to BACKGROUND subagents](pref_delegate_subagents.md) — keep Orion free to converse; only do quick answers, commits/pushes, and trivial edits directly

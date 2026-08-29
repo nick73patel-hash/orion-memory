@@ -4,16 +4,20 @@
 - **Vessel:** 2013 Fountaine Pajot Sanya 57 Catamaran — "Perpetual Blue"
 - **Configuration:** 6 cabins, crewed charter
 - **Crew:** Captain **Sean Powell** + Chef **Elise** (Sean's partner)
-- **Current ownership:** Florida LLC
+- **Current ownership:** Florida LLC — **SVFP57 LLC**
+- **Owners (3, confirmed 2026-08-28):** **Nick Patel**, **David Brandt**, **Derek Yurosek**. Capital contributions tracked in `Projects\perpetual-blue\partner-capital-tracker.md` (QuickBooks accts 340/350).
+- **Management:** ⚠️ **Self-managed — Paradise Yacht Management TERMINATED Aug 2026.** See "Paradise Yacht Management — Termination & Claim" below.
+- **Counsel:** **James Perry**, yacht lawyer — `perry@yachtlawyer.com`
 - **Target season:** 2026/2027
 - **Charter goal:** 15 charters minimum, up to 20
-- **Website:** ⚠️ **NOT actually live — corrected 2026-08-26** (the old "already live" note from July 14 2026 was stale). Verified state:
-  - `perpetualbluebvi.com` + `www` → **A 13.248.243.5 / 76.223.105.230 = GoDaddy's Airo site builder**, serving a placeholder headed "PERPETUAL BLUE BVI — Simplifying Offshore Success" (generic builder copy, not charter content). **This is what brokers and guests see today.**
-  - `perpetual-blue-website.vercel.app` → **503 `DEPLOYMENT_PAUSED`** ("paused by the owner"). The 503 (not a 404) proves the Vercel project still EXISTS — but Nick **cannot see it in his Vercel dashboard**, which points to a different account/team scope, not a deletion.
-  - `crm.perpetualbluebvi.com` → CNAME `2c5d4e4d92d7c459.vercel-dns-017.com` = **Vercel, working fine.** So the CRM and the marketing site are on different hosts.
-  - **Owner: Nick's son** — the Vercel project lives on **his son's personal account**, which is why it never appears in Nick's dashboard under any scope. Nick has no access to resume, redeploy, or transfer it himself.
-  - ⚠️ **Single point of failure:** a business asset (the charter marketing site) sits on a family member's personal account, with **no source copy on this machine** (`Projects\perpetual-blue` holds only research files — charter data, HeySea notes, buyer Q&A docx, calendar HTML — no repo). **Fix = transfer the Vercel project + its GitHub repo to Nick's own accounts**, don't just resume it.
-  - **Ask the son WHY it paused** — if Vercel flagged it as commercial use on a free Hobby plan (their ToS bars commercial sites), resuming won't stick and it needs a Pro plan or a different host.
+- **Website:** ✅ **LIVE on the real domain — cutover completed Aug 27–28 2026, re-verified 2026-08-29.**
+  - `www.perpetualbluebvi.com` → **200 from Vercel**, title *"Perpetual Blue | Caribbean Yacht Charter"*. The GoDaddy Airo placeholder is gone.
+  - apex `perpetualbluebvi.com` → **308** redirect to `www`. A record `216.198.79.1` (Vercel); `www` CNAME `23f538f04cffe0f0.vercel-dns-017.com`.
+  - **Mail survived the cutover** (this was the landmine): MX still `mx`/`mx2`/`mx3.zoho.com` — `charters@perpetualbluebvi.com` intact. Nameservers stayed at GoDaddy; only the apex A + `www` CNAME were changed by hand.
+  - `crm.perpetualbluebvi.com` → CNAME `2c5d4e4d92d7c459.vercel-dns-017.com` = **Vercel, unaffected.**
+  - ⚠️ **Still a single point of failure:** the Vercel project lives on **Nick's son's personal account** — Nick can't resume, redeploy, or transfer it — and there is **no source copy on this machine** (`Projects\perpetual-blue` holds only research files, no repo). **Fix = transfer the Vercel project + its GitHub repo to Nick's own accounts.**
+  - **Still worth asking the son WHY it paused** — if Vercel flagged it as commercial use on a free Hobby plan (their ToS bars commercial sites), it can re-pause; that needs Pro (~$20/mo) or another host.
+  - Rollback record: `Projects\perpetual-blue\dns-snapshot-2026-08-26.md` (full pre-change DNS incl. DKIM key).
 - **Related file:** [Grenada Itinerary](grenada_itinerary.md)
 
 ---
@@ -105,6 +109,11 @@ Transactions funded directly through the Mercury account:
 ---
 
 ### Personal Funds — Boat Expenses (not yet in Mercury)
+
+> ⚠️ **SUPERSEDED 2026-08-28 — authoritative version is `Projects\perpetual-blue\partner-capital-tracker.md`.** Two corrections that matter:
+> - The **$10,782.00 insurance** line below is vendor **MHG Services Inc** (not "MGH"), and it was **reimbursed as a capital credit to acct 350, not as cash** (Jul 23 2026) — it is already inside Nick's booked $261,615 and **must not be counted as out-of-pocket**.
+> - Nick's true unreimbursed out-of-pocket is therefore **$15,326.81 itemized** ($26,108.81 − $10,782.00), plus a **$7,500 credit-card estimate** and a **$2,000 rough cash outlay** = **$24,826.81**, of which **$9,500 is unsubstantiated**. His BVI flight is still unrecorded, and **nothing has been logged since 2026-08-02** (the Grenada delivery weeks are missing).
+
 Paid personally by owners — to be reimbursed or recorded as owner contributions:
 
 | Date | Item | Vendor | Amount | Category | Receipt |
@@ -313,6 +322,25 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 
 ---
 
+## Paradise Yacht Management — Termination & Claim (Aug 2026)
+
+**Status:** Termination letter and Clearing-house instruction both drafted Aug 27–28 2026. Nick sent the **Clearing letter first**; the termination goes out **on James Perry's letterhead**. *Confirm what actually sent and when.*
+
+- **Counterparty:** Paradise Yacht Management (PYM), principal **Hank**. Nick's account: dishonest, has been overbilling other yacht owners for years, dropped four F-bombs in an aggressive call over a stove/oven logistics question.
+- **Claim: $45,477.34 across 10 line items** — verified to the penny, zero variance. Largest: **aircon $15,838 billed twice** (once Maintenance, once R&M Supplies), **provisioning discrepancy $10,000**, **dinghy charged twice $7,405.40**, **Puerto Rico haul-out $3,455.44 (never used)**, **CRVL overcharge $2,000**, plus exterior washing that is the captain's responsibility under his employment agreement.
+- **The case is the billing forensics, not the vessel condition.** Double-billing is arithmetic and doesn't have two sides; "dirty boat, bad steering" is contestable. Total exposure discussed ≈ **$75K** including escrow.
+- **Deadline in the letter: Sept 4 2026.**
+- 🔲 **Three line items had text that didn't match the claimed figure** ($1,300 vs "$3,400"; $7,405.40 vs "$9,312.26"; $15,838 vs "$18,515.98"). Flagged twice — **verify these were corrected before the letter went out.**
+
+### 🚩 Paradise Yacht Clearing — conflict of interest on the escrow
+- Charter deposits are held by **Paradise Yacht Clearing**, a **separate LLC** acting as fiduciary between charter guest and boat LLC. Its duties run to the owners, not to its affiliate — so a PYM contract dispute gives PYM no claim on those funds.
+- **BUT Hank is a partner in Clearing.** One of the fiduciary's partners is the counterparty in the dispute. That is a **live conflict of interest sitting on top of the charter money**, and it mostly cancels the comfort the entity separation would otherwise give.
+- **The mechanism to watch is a set-off clause** — if the clearing agreement lets Clearing withhold funds for sums claimed by an affiliate, the deposits become collateral the moment a demand lands. (Note: set-off runs toward what the *holder* is owed; Nick's own claim doesn't create that lever.)
+- **Clearing letter does three things:** revokes PYM's disbursement authority effective immediately, demands a full statement of account, CCs Perry and both co-owners.
+- 🔲 **Still to ask Clearing:** who owns and controls it, and whether the agreement contains a set-off / affiliate-claim clause.
+
+---
+
 ## Self-Management Operations
 
 ### What the Management Company Was Doing (Now Your Job)
@@ -485,6 +513,9 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 |---|---|
 | **Grenada Itinerary** — Aug 12–21 2026, 10-day sailing itinerary | https://claude.ai/code/artifact/23c607f8-29df-4b6a-a4fe-0b5c081e3b82 |
 | **HeySea Seaview 60 Research Brief** — BVI charter evaluation, build quality, risks, due diligence | https://claude.ai/code/artifact/f0c44b26-02a1-46bc-be5e-2bf7ea6e8427 |
+| **Grenada Guest Page** — as-sailed 9-day itinerary, guest-facing (published 2026-08-26) | https://claude.ai/code/artifact/d4bc1f8b-9241-4723-9418-4573175cd7fd |
+| **Vercel/GoDaddy Cutover Runbook** — split by who does what (Nick / his son) | https://claude.ai/code/artifact/2d00dae9-7c07-421a-b16f-6e887a28711e |
+| **Partner Capital Update Email** — inline-styled, has a "Copy for Gmail" button (2026-08-28) | https://claude.ai/code/artifact/dee80d2d-c918-467a-b024-189ba0274769 |
 
 > Note: Both source HTML files are also in the scratchpad. To update, re-publish with the `url` parameter to keep the same link.
 
