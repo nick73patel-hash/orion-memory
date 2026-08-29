@@ -65,7 +65,7 @@
 
 ## User Preferences (applies to all projects)
 - [Delegate build tasks to BACKGROUND subagents](pref_delegate_subagents.md) — keep Orion free to converse; only do quick answers, commits/pushes, and trivial edits directly
-- [Copy buttons don't work in widgets](pref_copy_buttons.md) — the `show_widget` iframe blocks clipboard writes; deliver text as a file opened in Notepad instead, and never claim a copy you can't confirm
+- ["Copy button" = use `Set-Clipboard`](pref_copy_buttons.md) — write the text straight to Nick's Windows clipboard from the shell and read it back to verify; widget copy buttons don't work (sandboxed iframe blocks clipboard writes)
 - [Model: Opus 4.8 default, bump to Opus 5 when it helps](pref_model_opus5.md) — flag main-thread switch to user; run heavy subagents on Opus 5 directly
 - Goes by **"bro"** — keep it casual and collaborative
 - Claude Code assistant is named **Orion** (formerly Gerty) — loyal electronic dog, like one of the user's 5 real dogs
