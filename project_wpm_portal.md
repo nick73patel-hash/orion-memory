@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: cb8dbb3a-425a-4e53-a5c9-b7ae67499936
-  modified: 2026-08-29T20:41:20.580Z
+  modified: 2026-08-29T23:02:25.843Z
 ---
 
 # WPM Property Management Portal
@@ -60,6 +60,42 @@ Replace Buildium/AppFolio/Rentec ($45–$280/mo) with an owned system. At 200 un
 **Open questions for the client:** employing broker of record? who owns the non-YMCA property? what maintenance system + comms tools does SMR use (Teams/Slack/email/text)? does YMCA run M365 or Google Workspace (drives SSO)? are maintenance staff YMCA employees, WPM, or vendors?
 
 ⚠️ **A2P 10DLC registration** (business SMS) is a go-live prerequisite with real lead time — sits alongside Stripe/Plaid approval windows. The older plan didn't account for it.
+
+## ⚖️ Legal findings 2026-08-29 (4 research agents · full detail in `Projects\smr-crm\`)
+
+**Decision brief artifact:** https://claude.ai/code/artifact/ee156dc3-c429-47e8-bdc4-4d7b22aaa5bb (source `Projects\smr-crm\decision-brief.html` — republish that path to update)
+
+**⭐ THE STRUCTURE THAT WON — rent goes directly to a YMCA-controlled account; WPM has VIEW-ONLY access and never takes custody.**
+- **Trust/escrow accounting: ELIMINATED.** Every CREC Chapter 5 rule triggers on **custody, not agency** ("receives," "accepted," "holding," "collected"). Rule 5.4 is near-dispositive: *"If the Brokerage Firm is not in possession of Money Belonging to Others, there is no obligation to maintain a separate Trust or Escrow Account."* View-only is not custody — the rules never use "control" as the test. Journals, beneficiary ledgers, monthly three-way reconciliation, Rule 5.9 diversion risk and the 60-day clawback all fall away with it.
+- 🚨 **THE TRAP: never net the management fee out of rent. Invoice YMCA separately.** Netting = WPM handled the money = **reinstates all of Chapter 5.** Put it in the management agreement explicitly.
+- ⚠️ **The one non-YMCA property could reinstate the whole trust apparatus** if WPM collects its rent. Route it the same way.
+- **YMCA becomes ACH Originator.** WPM is a **Third-Party Service Provider** *only if YMCA signs the processor agreement*; if WPM originates through its own processor it becomes a **Third-Party Sender** — registration + annual ACH audit. Decided by whose name is on the contract.
+
+**🔴 LICENSING — the blocker that survives everything.**
+- `C.R.S. § 12-10-201(6)` triggers on renting/leasing "on behalf of the owner" **for compensation. Money appears nowhere in the definition.** Direct deposit does NOT fix this. The separate invoice that protects the trust exemption *is* the compensation that triggers licensure.
+- **All 16 exemptions in § 12-10-201(6)(b) tested individually — ZERO apply.** WPM fails two structural gates: it's **a corporate entity, not a natural person**, and it **neither owns the property nor is the owner's employee.** No nonprofit and no employee-housing exemption exist in Title 12.
+- **Unenforceability is VERIFIED, not inference:** *Benham v. Heyde*, 122 Colo. 233, 221 P.2d 1078 (1950), reaffirmed *Amedeus Corp. v. McAllister*, 232 P.3d 107 (Colo. App. 2009) — an agreement to compensate an unlicensed broker is **illegal and unenforceable**. Common law, settled. WPM could manage a year and recover nothing. Being wrong is **retroactive and incurable**.
+- **Licensure costs only ~$1,500–$3,000, weeks-to-months** — less than one month's management fee. Gating item: **does the agent on payroll have 2 years' experience** for the Employing Broker upgrade?
+
+**⭐ THE MOST PROMISING ROUTE — Commission Position 24 (formerly CP-42), *Apartment Building or Complex Management*.** Lists duties an **unlicensed on-site manager** may perform, and WPM's reduced scope maps onto it almost exactly: *showing available units · quoting the rental price set by the owner · acting as scrivener completing predetermined lease terms on preprinted forms · collecting applications · scheduling maintenance · collecting rent.* Corroborated by **Rule 1.61** (verbatim). **These acts are NOT inherently licensed activity — Nick's instinct was right.**
+- **But the obstacle is STATUS, not task.** The exemption runs to *"a regularly salaried employee of an owner."* A fee-paid third-party company is neither a Brokerage Firm nor an Unlicensed On-Site Manager.
+- **The fix is small:** put the *specific staff* who show units and complete leases on **YMCA's payroll**. Same people, same work — only the employment wrapper changes. WPM keeps cleaning, inspections, maintenance, admin under contract.
+- **Showings line = passive presentation vs. active offering.** Unlocking, pointing out features, stating YMCA's fixed rent = fine. Marketing, soliciting, or *"we could probably do better on the rent"* = licensed activity.
+- **UPL, counterintuitive:** `§ 12-10-403` / *Conway-Bogue* (1957) carve a UPL exception **for licensed brokers**. Unlicensed, WPM loses that shelter and falls back on the narrower scrivener doctrine. Fine for typing a name and date; risky if selecting forms or explaining terms. **Never invoice a line item for "lease preparation."**
+- ✅ **YMCA's authorised signatory should execute every lease** — cleanest fix, adopt regardless of route.
+- ⚠️ **Substance governs over paperwork.** `§ 12-10-217(1)` reaches anyone who *"assumes to act in the capacity of a licensee."* The failure mode isn't a deliberate breach — it's a helpful employee on a Tuesday.
+
+**🔴 THE STING NOBODY EXPECTED — getting licensed taxes the EXISTING vacation-rental business.**
+- **Short-term rentals need NO licence.** Commission Position 12: an STR is *"a license to use property and is not considered Real Estate Brokerage Services."* WPM's current STR business is fine. (Test is lease-vs-licence character, **not** the 30-day line.)
+- **BUT `§ 12-10-217(1)(h)` reaches others' money *"whether acting as real estate brokers or otherwise,"* and Rule 5.11 expressly names "Guest deposits for short term rentals."** Both bind **licensees only**. So **getting licensed for SMR pulls WPM's STR guest deposits into CREC trust accounting and audit — currently unregulated.** The direct-deposit fix removed trust accounting from SMR and it reappears on the vacation-rental side. **Price this into the SMR decision.**
+
+**⚠️ Sourcing caveat:** every Colorado DRE PDF returned **403**. CP-12 and CP-24 quotes come from search extracts corroborated by verified Rule 1.61 / 5.11 text. **Read CP-12 and CP-24 directly before relying on them.**
+
+**▶ NEXT STEP — written inquiry to the Division of Real Estate**, drafted at `Projects\smr-crm\dre-inquiry-letter.md`. Cheap, fast, close to dispositive. Asks: do these facts require a licence · does CP-24 reach a third-party company or only salaried employees · would putting showing/leasing staff on YMCA's payroll fix it · where's the line on showings · is view-only custody · **and (optional §4, Nick's call) does licensing pull STR guest deposits into trust accounting.** Have a Colorado attorney review before sending.
+
+**Other locked facts:** Reg E `12 CFR § 1005.10(d)` — varying-amount debits need **10 days' advance notice** (now YMCA's duty as Originator). **HB25-1249 effective 2026-01-01** rewrote the deposit statute: trigger moved from "willful" to **"wrongful,"** three mechanical failures now deemed wrongful with **no scienter** → near strict-liability treble damages + one-way attorney fees, so **photo-evidence inspections are the highest-value module.** **Employer-provided housing is carved out of the 2024 just-cause eviction law** (§ 38-12-1302(1)(d)) with a **3-day cure vs 10** — but it attaches **per lease, not per property**, and a retiree/contractor/seasonal-stayed-on silently converts to full protection (**3× monthly rent or $5,000** liability). **Colorado Privacy Act does not apply.** **10-year carpet rule:** carpet 10+ years old = no carpet deduction at all. **A2P 10DLC**: carriers block unregistered traffic outright since Feb 2025, no bounce; 3–5 week lead time. **Zero Colorado authority exists** on apportioning by-the-room shared-space damage — pure lease-drafting problem.
+
+**Build estimate, revised:** full custom w/ trust accounting 407–585 contractor hrs; v1 with money bought 220–310; **v1 direct-deposit ~120–180 contractor hrs ≈ 40–70 of Nick's engaged agent-assisted hours (~4–7 weeks at 10 hrs/wk).** Parallel agents don't divide evenly — ~65% mechanical parallelises 4–6×, ~35% judgment only 1.5–2×; review capacity is the real bottleneck. **The old "$600–3,000/mo saved" justification is dead** — Yardi Breeze is ~$100/mo at 42 units and **Stripe ACH fees (~$210/mo) exceed the SaaS being avoided.** Build on capability, not cost.
 
 ## First Property
 - **Snow Mountain Ranch** (YMCA of the Rockies, Granby CO)
