@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 2ba035ee-bd06-45c1-bbbc-a749b8dffa53
-  modified: 2026-08-29T18:30:00.000Z
+  modified: 2026-08-29T18:21:33.295Z
 ---
 
 Environment facts for Nick's Windows 11 machine that keep costing time when rediscovered.
@@ -33,6 +33,8 @@ Environment facts for Nick's Windows 11 machine that keep costing time when redi
 **PowerShell gotchas** (still relevant when PowerShell is the right tool):
 - `Invoke-WebRequest` needs **`-UseBasicParsing`** or it fails with "PowerShell is in NonInteractive mode" (IE engine).
 - Writing files with .NET `WriteAllLines` converts to **CRLF**; the memory repo is **LF**. Use `[System.IO.File]::WriteAllText` with `\n`, and always check `git diff --stat` looks proportional after a scripted edit.
+
+**🔒 GitHub auth = Git Credential Manager, NOT tokens in URLs (set 2026-08-29).** `credential.helper=manager` is set globally and holds a working GitHub credential in Windows Credential Manager (encrypted, per-user). **Never put a PAT in a remote URL** — three repos (`orion-memory`, `condo-assistant`, `perpetual-blue-crm`) each had one sitting in plaintext in `.git/config` for weeks; all three were stripped and verified to authenticate fine without it. Audit command: `find Projects .claude -maxdepth 4 -name config -path "*/.git/*" | xargs grep -lE 'https://[^@/]+@'` — any hit is a leak.
 
 **No Python installed.** Spreadsheet work runs on **Node + ExcelJS** from `C:\Users\ducat\Projects\project-budgets\` — that's where the deps live, `node` from anywhere else can't resolve `exceljs`.
 

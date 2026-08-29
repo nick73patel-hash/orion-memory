@@ -4,6 +4,57 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 29, 2026 (midday–afternoon) — Bash actually fixed, PATs pulled out of three repos, card FX trap, Sean's email stalls at Zoho
+
+**Theme:** Three short sessions after the morning log entry. Card/banking corrections and a CRM email fix, then Captain Sean's mailbox onboarding (still unfinished), then the environment problem that's been taxing every session since Aug 26 finally got solved — and the diagnosis we'd recorded twice was wrong.
+
+### 💳 Cards & banking — two corrections and a real money leak
+- **Mercury IO is not a credit card.** It's a **balance-secured charge card** — the limit is tied to the Mercury balance, it extends no actual credit. Mercury markets it as a "business credit card," which is what caused the confusion. Fine as the operating/spend card; useless as a credit line.
+- **Chase Ink Business Cash** is the real credit application — confirmation email received, **still pending as of Aug 29**. Ink apps routinely sit 7–10 business days, and a young multi-member LLC operating in the BVI is a manual-review profile. Chase has a **business reconsideration line** if it stalls.
+- 🚨 **The 3% foreign-transaction trap.** **Both Mercury IO and Ink Business *Cash* charge 3% FTF.** Invisible in the BVI — it runs on **US dollars** — but it bit hard all through the **Grenada/SVG offseason**, where Grenada, Carriacou, Union Island and the Tobago Cays are all **XCD**. Every provisioning run, fuel stop and customs fee in Aug 2026 took a 3% haircut.
+  - **Plan chosen:** keep Ink Cash for domestic spend (5% on Starlink/phone/internet earns its keep), add a **no-FTF Visa** for Sean's island spend — **Capital One Spark Cash Plus** (2% flat, no FTF) is the fit; **Ink *Preferred*** also has no FTF but costs $95/yr. Note Ink *Cash* ≠ Ink *Preferred* on this.
+  - **Tell Sean:** when a terminal offers to charge in **USD instead of local currency, always decline.** That's dynamic currency conversion — typically 3–7% worse than the Visa rate. Pay in XCD.
+  - **Revolut/Wise are NOT the answer here.** They solve non-USD *wires* (Mercury charges 1% FX; USD wires are free). Card FTF is solved by a no-FTF card, not a new bank.
+- **CRM email corrected live:** `migration_010_roles.sql` had seeded Sean as `sean@perpetualbluebvi.com`, but his real mailbox is **`captainsean@`** (which `migration_004_crew.sql` had right). Migration file fixed *and* the live row updated — `UPDATE crm_users SET email='captainsean@…' WHERE email='sean@…'` — confirmed applied.
+- ⚠️ **`elise@perpetualbluebvi.com` does not exist as a mailbox.** Zoho only has `charters@` and `captainsean@`. Her CRM row points at nothing. Free plan covers 5 users, so creating it costs $0.
+
+### 📧 Captain Sean's email — ⏸️ UNFINISHED, resume here
+Built `Projects\perpetual-blue\sean-email-onboarding.md`. **Nothing needed building** — `captainsean@perpetualbluebvi.com` has existed since **July 14**; he has simply never signed in. Mail DNS re-verified live and all green (MX ×3 Zoho, SPF, DKIM `zmail`, DMARC). This is a 15-minute onboarding, not a setup.
+- **Wrong console cost time:** `admin.zoho.com` is the **Zoho One / Directory** admin. A Zoho Mail *Free* account has no entitlement there, so it bounces to sign-in, sign-in hands back, and it **loops forever**. The right console is **`mailadmin.zoho.com`**.
+- **🔲 Open question that blocked it: who actually owns the Zoho super-admin account?** Memory says `charters@` verified the domain on July 14 — **that is not the same as owning the account.** The signup account is often a personal address. **Try `nick73patel@gmail.com` first**, and if it was created via Google, use the **"Sign in with Google"** button rather than typing a password (a Google-created account rejects a typed password with a generic error that looks like a wrong password).
+- Remaining steps once in: confirm Sean Active + mail-enabled → reset password with *force change on first login* → **text him the temp password, don't email it** → set display name `Sean Powell` / title `Captain` (that's the From line brokers see) → enforce 2FA → create Elise's mailbox.
+
+### 🔧 Bash — FIXED, and the previous root cause was wrong
+The Aug 29 morning entry recorded this as a **path-resolution bug** fixable with `CLAUDE_CODE_GIT_BASH_PATH`. **That diagnosis was wrong.** The env var was set correctly and Bash still failed. The actual finding:
+- **There was no Git installation at all.** No uninstall entry in HKLM, WOW6432Node *or* HKCU; `winget list --id Git.Git` found nothing. `C:\Program Files\Git` was an **orphaned partial copy of a Git tree** that had been dropped there.
+- `usr\bin` was **missing entirely** (only an empty `usr\share` survived), so **`msys-2.0.dll` existed nowhere** in the tree. `bin\bash.exe` and `sh.exe` were present but are ~47 KB stubs that cannot run without that MSYS2 runtime.
+- **Why it hid so long:** `git.exe` is self-contained and worked throughout, so everything *looked* like a config problem.
+- **Fix:** elevated `winget install --id Git.Git --exact --scope machine --silent` — official Git for Windows GitHub release, installer hash verified by winget. Installs to `C:\Program Files\Git`, so **the existing settings.json value started working with zero config change**. `usr\bin` now holds 367 files incl. `msys-2.0.dll`. Verified: `MINGW64_NT-10.0-26200`, git 2.55.0.windows.3. Needs UAC — raised via `Start-Process powershell -Verb RunAs`, Nick clicked Yes.
+- **📌 The knock-on win — the git-blocking problem is gone.** All ~50 permission rules are scoped `Bash(...)`; with Bash dead everything fell through to PowerShell and hit the auto-mode classifier, which is why routine `git commit` kept getting blocked and every push needed the Run-in-terminal button. **Those rules are live again** — this session committed and pushed end to end with no block and no button.
+- **Diagnostic if it ever recurs:** `Test-Path "C:\Program Files\Git\usr\bin\msys-2.0.dll"`. False = the install is gutted, reinstall. Don't chase the env var.
+
+### 🔒 GitHub PATs removed from three repos
+The `orion-memory` remote had carried a **PAT in plaintext** in `.git/config` since at least Aug 26 — flagged twice, never actioned. Done now, and a sweep found it was **not just that one repo**:
+
+| Repo | Before | After |
+|---|---|---|
+| `.claude\…\memory` (orion-memory) | token in URL | clean |
+| `Projects\condo-assistant` | token in URL | clean |
+| `Projects\perpetual-blue-crm` | token in URL | clean |
+
+- **Approach changed mid-task, for the better.** The first attempt copied the token from the URL into Git Credential Manager — **the classifier blocked it, correctly**, since it piped a secret through a command. Rather than route around it, the plan switched to simply **stripping the token and letting GCM supply its own credential**. That's strictly safer: the exposed PAT stops being used at all instead of being copied to a second location. `credential.helper=manager` was **already set globally** and already held a valid GitHub credential — the URL token had just been overriding it.
+- Verified after each change with a read-only `git ls-remote --heads` under `GIT_TERMINAL_PROMPT=0`: all three authenticate cleanly with no token in the URL. Final sweep of every `.git/config` under `Projects\` and `.claude\` is clean.
+- **🔲 STILL NICK'S TO DO — revoke the old PAT on GitHub.** Stripping the URL orphans it but does **not** invalidate it. It sat readable in three plaintext files for weeks; treat it as compromised until revoked. `github.com/settings/tokens`.
+
+### ⏭️ Open
+- 🔲 **Revoke the old GitHub PAT** (above) — the one genuinely outstanding security item
+- 🔲 **Get into Zoho** — try `nick73patel@gmail.com` at `mailadmin.zoho.com`, then finish Sean's onboarding and create Elise's mailbox
+- 🔲 **Apply for a no-FTF Visa** (Capital One Spark Cash Plus) before the next non-USD season; brief Sean on declining DCC
+- 🔲 Chase Ink reconsideration line if the application stays silent past ~10 business days
+- Everything still open from the Aug 27–28 entry stands: the three unreconciled claim line items, the Clearing ownership/set-off questions, the $7,500 + $2,000 placeholders, the missing post-Aug-2 Grenada expenses, and the Vercel/GitHub transfer off the son's account
+
+---
+
 ## Session: August 29, 2026 — Aug 27–28 reconstructed from transcripts; Bash breakage root-caused
 
 **Theme:** Short recovery session. Nick opened by asking why a new session had started again; the answer turned into recovering two more unlogged days, then into finding out why routine git work keeps getting blocked on this machine.
