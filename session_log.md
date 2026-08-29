@@ -4,6 +4,52 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 29, 2026 (evening) — Sean's mailbox onboarded, Elise departs, and a solved CRM bug comes back because it was never written down
+
+**Theme:** Crew and comms housekeeping that turned into a production incident. Sean finally got into his email; the chef seat opened and was refilled; then "I can't save to-dos" escalated to "the CRM doesn't work at all" and turned out to be a **regression of a bug fixed in July** — reintroduced because that fix only ever existed in the live database, never in a migration file.
+
+### ⛵ Captain Sean — email live, display name + signature packaged
+- ✅ **Sean is signed in to `captainsean@perpetualbluebvi.com`** — live after sitting unused since July 14.
+- **The console that cost the last session:** `admin.zoho.com` is the **Zoho One / Directory** admin, which a Mail *Free* account has no entitlement for — it redirect-loops forever. The right one is **`mailadmin.zoho.com`**. Recorded so it is never re-derived.
+- Built a step-by-step guide Nick can email him: display name (`Sean Powell`) + signature, with the two things people get wrong — associating the signature to the right account, and applying it to **replies and forwards** as well as new mail, or half his messages go out bare. Artifact: https://claude.ai/code/artifact/35ebda25-0de5-4fe5-96d4-c0a1daaa487b · sources `Projects\perpetual-blue\sean-email-setup.html`, plus plain-text `sean-signature.txt` and `sean-email-to-send.txt`.
+- **Sean's mobile: +1 954 807 1333.** Given as `19548071333` after a first attempt (`954 807 13333`) had 11 digits — flagged rather than guessed, since a wrong callback number on every broker enquiry is worse than a blank. Written in full international format on purpose: it is a **US/Fort Lauderdale number on a boat working the BVI and the Grenada/SVG offseason**, so he is roaming all season and guests dial it from three continents. Same family of problem as the 3% card FTF — US-domestic tooling running in the Eastern Caribbean.
+- ⚠️ **Still unverified: what display name `charters@` sends as.** Orion cannot read the mailbox. Memory records the holder as "Nikunj" — if that is what is in the field, that is what brokers have been seeing. Worth a deliberate decision (personal name vs. "Perpetual Blue Charters"), not a default.
+- **2FA deliberately back-burnered by Nick** — recorded so it stops being raised.
+
+### 👥 Crew changes
+- ⚠️ **Chef Elise McNabb departed 2026-08-29.** Her past records stay (the $108.97 SJU→EIS flight on 2026-07-28 is real history); her `crm_users` row should be **deactivated, not deleted**, since historical records reference it. `elise@perpetualbluebvi.com` was never created as a mailbox, so nothing to clean up there.
+- **A replacement chef has been identified** — **name, nationality and start date still to be captured.** Nationality is the one with lead time: **BVI work permits are person-specific**, so Elise's in-process application cannot be transferred. It needs withdrawing (check if any fee is recoverable) and a fresh one filed.
+
+### 🚨 CRM incident — "can't save to-dos" → "doesn't work at all" → a July bug, back again
+Reported as a to-do list problem. It was never a to-do problem.
+
+- **First finding — a real but secondary defect.** `TodoList.tsx` fired the Complete (PATCH) and Delete requests and called `router.refresh()` **without ever checking `res.ok`**, with no error state at all. A rejected save looked identical to a successful one. That is why this needed a diagnosis instead of reading the error off the screen. Fixed: `res.ok` checks, a network catch, and an error banner matching the one `TodoForm` already had.
+- **Then: "the CRM does not work at all."** First action was proving **nothing Orion had touched was live** — the TodoList edit was uncommitted and unpushed (`git log origin/main..HEAD` empty). Infrastructure checked clean too: site 200, login 200, and **Supabase was NOT paused** (a normal 401 "no API key" means the gateway is up — this was not the Aug 24 auto-pause trap).
+- **Root cause — `42P17: infinite recursion detected`.** `migration_010_roles.sql` creates a policy *on* `crm_users` that queries `crm_users`:
+  `CREATE POLICY "Admins can read all rows" ON crm_users ... USING (EXISTS (SELECT 1 FROM crm_users ...))`
+  Postgres raises on **any authenticated read** of that table.
+- **Why it looked like "nothing saves" and never like an auth error:** `getCurrentCrmUser()` reads `crm_users` through the *user-session* client → returns null → `app/(crm)/layout.tsx` falls back to `role = crmUser?.role ?? 'owner_readonly'` → `canEdit: false`. **Every signed-in user was silently demoted to read-only.** Pages still rendered and data still loaded, because those reads go through the service-role client and bypass RLS entirely.
+- **📌 THE LESSON — this was a regression, not a new bug.** Memory's own July 29 status line reads *"Three launch bugs fixed (RLS recursion, self-fetch 500s, nav 404s)."* **The July fix was applied to the live database and never back-ported into the migration file.** Re-running `migration_010` on Aug 29 (the table did not exist that morning — the first `UPDATE crm_users` failed with `relation "crm_users" does not exist`) reintroduced a solved bug. **Any hot-fix applied straight to Supabase must be written back into a migration the same day, or the next run silently regresses it.** One bug, two debugging sessions.
+- **Fix — `migration_022_fix_crm_users_rls.sql`** (run by Nick; Orion never touches the DB): policies rebuilt on **`is_admin()`**, which was already `SECURITY DEFINER` and so bypasses RLS and cannot recurse; **`SET search_path = public`** pinned on both helper functions (a `SECURITY DEFINER` function without it is a privilege-escalation vector); and an **email-join `UPDATE`** linking every `crm_users` row to its `auth.users` row so no UUIDs get hand-copied. **✅ Verified — saving restored.**
+- Also made `migration_010`'s seed **`ON CONFLICT (email) DO NOTHING`**. As written it aborted on `UNIQUE(email)`, and in a single-transaction SQL editor that rolls back the *entire file*, policies included — a live trap for the next person who re-runs it.
+- Shipped as `3380972`. **`.github/workflows/db-backup.yml` deliberately left out** of that commit — still uncommitted since Aug 26, and workflow files need the GitHub web UI (local token lacks `workflow` scope).
+
+### 🛠️ Tooling lesson — copy buttons do not work in the widget sandbox
+Three attempts, none reached the clipboard. Worse, the first reported **"copied"** anyway, because the `execCommand` fallback returns true whether or not anything landed — Nick pasted stale content into the Supabase SQL editor and got `42601: syntax error at or near "Sean"` (harmless: a syntax error executes nothing).
+- **Don't ship a copy button in a `show_widget` — the iframe sandbox blocks clipboard writes.** Never report success from `execCommand`'s return value.
+- **What actually works:** write the content to a file and open it in a native app (`Start-Process notepad.exe <file>`), then Ctrl+A / Ctrl+C. Plain `.txt` files and fenced code blocks are the reliable fallbacks.
+- The artifact's own copy buttons were unit-tested across ten paths (all fire exactly once) but **never verified in their real viewer** — the browser pane only renders local files as static snapshots, so the buttons could not be clicked. Unknown whether they work in practice.
+
+### ⏭️ Open
+- 🔲 **Capture the new chef's name, nationality and start date**; withdraw Elise's work-permit application; deactivate her `crm_users` row
+- 🔲 **Check what display name `charters@` sends as** and decide it deliberately
+- 🔲 **Sean's CRM login** — Supabase Auth user for `captainsean@`, separate from the mailbox (his row will read `NOT LINKED` until then)
+- 🔲 **Revoke the old GitHub PAT** — still outstanding from this morning; stripping it from three repos orphaned it but did not invalidate it
+- 🔲 Commit `db-backup.yml` via the GitHub web UI (open since Aug 26)
+- 🔲 Apply for a no-FTF Visa before the next non-USD season; brief Sean on declining DCC at card terminals
+
+---
+
 ## Session: August 29, 2026 (midday–afternoon) — Bash actually fixed, PATs pulled out of three repos, card FX trap, Sean's email stalls at Zoho
 
 **Theme:** Three short sessions after the morning log entry. Card/banking corrections and a CRM email fix, then Captain Sean's mailbox onboarding (still unfinished), then the environment problem that's been taxing every session since Aug 26 finally got solved — and the diagnosis we'd recorded twice was wrong.
