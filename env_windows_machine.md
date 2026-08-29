@@ -1,28 +1,36 @@
 ---
 name: env-windows-machine
-description: "Nick's Windows machine quirks — broken Bash path, PowerShell has no permission rules, no Python, where Node/ExcelJS lives"
+description: "Nick's Windows machine quirks — Bash FIXED 2026-08-29 (Git was never installed), PowerShell has no permission rules, no Python, where Node/ExcelJS lives"
 metadata: 
   node_type: memory
   type: reference
   originSessionId: 2ba035ee-bd06-45c1-bbbc-a749b8dffa53
-  modified: 2026-08-29T14:40:20.764Z
+  modified: 2026-08-29T18:30:00.000Z
 ---
 
 Environment facts for Nick's Windows 11 machine that keep costing time when rediscovered.
 
-**Bash tool — root cause found 2026-08-29.** Claude Code resolves Git Bash to `C:\Program Files\Git\bin\..\usr\bin\bash.exe`, which collapses to `C:\Program Files\Git\usr\bin\bash.exe` — **that path does not exist**. The real binary is at **`C:\Program Files\Git\bin\bash.exe`** (verified present). Fix is `CLAUDE_CODE_GIT_BASH_PATH` in the `env` block of `C:\Users\ducat\.claude\settings.json`. Until that's set, Bash fails with `bash.exe not found` and **everything must run through PowerShell**.
+**✅ Bash tool — FIXED 2026-08-29. Use Bash normally now.** Verified working: `uname -s` returns `MINGW64_NT-10.0-26200`, `git --version` 2.55.0.windows.3.
 
-**⚠️ Permission rules are Bash-only.** All ~50 rules in `settings.json` are scoped `Bash(...)`. There are **no `PowerShell(...)` rules**, so with Bash broken every command falls through to the auto-mode classifier — which blocks `git commit` and edits to `settings.json` itself. Symptom: "Blocked by classifier" on routine git work. Note `Bash(git commit *)` is already in the allow list; adding more Bash rules does nothing while Bash is broken.
+**The real root cause was NOT a path-resolution bug** (that was the earlier, wrong diagnosis — recorded here so it isn't re-derived). `CLAUDE_CODE_GIT_BASH_PATH` was set correctly and Bash *still* failed. The actual finding:
 
-**✅ Workaround that works — the Run-in-terminal button (proved 2026-08-29).** When the classifier blocks a git push, put it in a ```bash fence and let Nick click Run. That terminal spawns with a **stripped PATH — `git` is not on it**, so the bare command fails with `CommandNotFoundException`. Use the **full path with PowerShell's `&` call operator**:
+- `C:\Program Files\Git` was an **orphaned partial copy of a Git tree, never properly installed** — no uninstall entry in HKLM, WOW6432Node, or HKCU, and `winget list --id Git.Git` found nothing.
+- `usr\bin` was **missing entirely** (only an empty `usr\share` survived), so **`msys-2.0.dll` did not exist anywhere** in the tree.
+- `bin\bash.exe` and `sh.exe` were present but are ~47 KB stubs — they cannot run without the MSYS2 runtime in `usr\bin`. `git.exe` worked throughout because it's self-contained, which is why nothing else looked broken.
+
+**The fix:** elevated `winget install --id Git.Git --exact --scope machine --silent` (official Git for Windows GitHub release, installer hash verified). It installs to `C:\Program Files\Git`, so the **existing `CLAUDE_CODE_GIT_BASH_PATH` value started working with no settings.json change**. `usr\bin` now holds 367 files incl. `msys-2.0.dll`. Needs UAC — Nick clicks Yes; `Start-Process powershell -Verb RunAs` from a non-elevated shell raises the prompt on his desktop.
+
+**Diagnostic that settles it fast if Bash ever breaks again:** `Test-Path "C:\Program Files\Git\usr\bin\msys-2.0.dll"`. False = the install is gutted, reinstall. Don't chase the env var.
+
+**⚠️ Permission rules are Bash-only.** All ~50 rules in `settings.json` are scoped `Bash(...)`; there are **no `PowerShell(...)` rules**. That's why, while Bash was broken, every command fell through to the auto-mode classifier and routine `git commit` got blocked. **With Bash working these rules apply again** — so run git through the Bash tool, not PowerShell, to stay inside them.
+
+**Fallback if Bash breaks again — the Run-in-terminal button (proved 2026-08-29).** Put the command in a ```bash fence and let Nick click Run. That terminal spawns with a **stripped PATH — `git` is not on it** — so use the full path with PowerShell's `&` call operator:
 
 `& "C:\Program Files\Git\cmd\git.exe" -C "<repo>" push`
 
-Git is at `C:\Program Files\Git\cmd\git.exe` (also `\bin\git.exe`). This is the standing route for pushes until Bash is fixed: Orion commits, Nick clicks Run to push.
+**Orion still cannot edit `settings.json`.** Widening its own permissions is blocked by design, and routing around that block would defeat its purpose. Nick makes those edits himself.
 
-**Orion cannot fix either of these.** Editing `settings.json` to widen its own permissions is blocked by design, and routing around that block would defeat its purpose. Nick makes those edits himself.
-
-**PowerShell gotchas:**
+**PowerShell gotchas** (still relevant when PowerShell is the right tool):
 - `Invoke-WebRequest` needs **`-UseBasicParsing`** or it fails with "PowerShell is in NonInteractive mode" (IE engine).
 - Writing files with .NET `WriteAllLines` converts to **CRLF**; the memory repo is **LF**. Use `[System.IO.File]::WriteAllText` with `\n`, and always check `git diff --stat` looks proportional after a scripted edit.
 
