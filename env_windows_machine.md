@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 2ba035ee-bd06-45c1-bbbc-a749b8dffa53
-  modified: 2026-08-29T14:14:03.200Z
+  modified: 2026-08-29T14:40:20.764Z
 ---
 
 Environment facts for Nick's Windows 11 machine that keep costing time when rediscovered.
@@ -13,6 +13,12 @@ Environment facts for Nick's Windows 11 machine that keep costing time when redi
 **Bash tool — root cause found 2026-08-29.** Claude Code resolves Git Bash to `C:\Program Files\Git\bin\..\usr\bin\bash.exe`, which collapses to `C:\Program Files\Git\usr\bin\bash.exe` — **that path does not exist**. The real binary is at **`C:\Program Files\Git\bin\bash.exe`** (verified present). Fix is `CLAUDE_CODE_GIT_BASH_PATH` in the `env` block of `C:\Users\ducat\.claude\settings.json`. Until that's set, Bash fails with `bash.exe not found` and **everything must run through PowerShell**.
 
 **⚠️ Permission rules are Bash-only.** All ~50 rules in `settings.json` are scoped `Bash(...)`. There are **no `PowerShell(...)` rules**, so with Bash broken every command falls through to the auto-mode classifier — which blocks `git commit` and edits to `settings.json` itself. Symptom: "Blocked by classifier" on routine git work. Note `Bash(git commit *)` is already in the allow list; adding more Bash rules does nothing while Bash is broken.
+
+**✅ Workaround that works — the Run-in-terminal button (proved 2026-08-29).** When the classifier blocks a git push, put it in a ```bash fence and let Nick click Run. That terminal spawns with a **stripped PATH — `git` is not on it**, so the bare command fails with `CommandNotFoundException`. Use the **full path with PowerShell's `&` call operator**:
+
+`& "C:\Program Files\Git\cmd\git.exe" -C "<repo>" push`
+
+Git is at `C:\Program Files\Git\cmd\git.exe` (also `\bin\git.exe`). This is the standing route for pushes until Bash is fixed: Orion commits, Nick clicks Run to push.
 
 **Orion cannot fix either of these.** Editing `settings.json` to widen its own permissions is blocked by design, and routing around that block would defeat its purpose. Nick makes those edits himself.
 
