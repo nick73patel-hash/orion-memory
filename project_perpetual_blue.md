@@ -149,7 +149,11 @@ Paid personally by owners — to be reimbursed or recorded as owner contribution
 >
 > Chosen over GoDaddy's $71/yr MS365 upsell; free WHOIS privacy instead of the $13/yr add-on → ~$84/yr saved. Free plan = webmail + mobile app only (no IMAP/desktop-client unless upgraded to Mail Lite ~$1/user/mo).
 >
-> **Fully configured & verified 2026-07-14.** DNS in GoDaddy: MX (mx/mx2/mx3.zoho.com), SPF (GoDaddy `_spfm` merge that resolves to `include:zoho.com include:zohomail.com`), DKIM (selector `zmail`, live + verified), DMARC currently `p=none` with rua→charters@ (**bump to `p=quarantine` after monitoring**). Domain ownership verified by charters@. TODO: get Sean signed in (was "never signed in"), enable 2FA, mobile apps, draft email signatures.
+> **Fully configured & verified 2026-07-14.** DNS in GoDaddy: MX (mx/mx2/mx3.zoho.com), SPF (GoDaddy `_spfm` merge that resolves to `include:zoho.com include:zohomail.com`), DKIM (selector `zmail`, live + verified), DMARC currently `p=none` with rua→charters@ (**bump to `p=quarantine` after monitoring**). Domain ownership verified by charters@.
+>
+> ✅ **Sean is signed in — 2026-08-29.** `captainsean@perpetualbluebvi.com` is live and in his hands after sitting unused since July 14. **Admin console is `mailadmin.zoho.com`** — NOT `admin.zoho.com`, which is the Zoho One/Directory console a Mail Free account has no entitlement for; it redirect-loops forever. Remember that before troubleshooting Zoho again.
+>
+> Still open on the mail side: **2FA on both mailboxes**, mobile apps, email signatures, `elise@perpetualbluebvi.com` (never created — free plan covers 5 users, so $0), and the DMARC bump to `p=quarantine`.
 
 ---
 
