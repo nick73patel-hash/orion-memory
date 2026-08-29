@@ -5,6 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: cb8dbb3a-425a-4e53-a5c9-b7ae67499936
+  modified: 2026-08-29T18:34:41.033Z
 ---
 
 # Perpetual Blue — Licenses & Credentials
@@ -27,7 +28,7 @@ metadata:
 
 ## Crew Work Permits
 - Captain (Sean Powell, South African): _TBD — in process_
-- Chef (Elise, American): _TBD — in process_
+- ~~Chef (Elise, American)~~ — **departed 2026-08-29. WITHDRAW/CANCEL the in-process work permit application** if it hasn't been issued; check whether any fee is recoverable. New chef will need a fresh application.
 
 ## Other Regulatory
 - DPNR registration (USVI): _TBD — research in progress_
