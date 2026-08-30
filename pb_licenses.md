@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: cb8dbb3a-425a-4e53-a5c9-b7ae67499936
-  modified: 2026-08-30T20:09:06.596Z
+  modified: 2026-08-30T20:09:38.848Z
 ---
 
 # Perpetual Blue — Licenses & Credentials
@@ -29,7 +29,7 @@ metadata:
 ## Crew Work Permits
 - Captain (Sean Powell, South African): _TBD — in process_
 - ~~Chef (Elise McNabb, American)~~ — **departed 2026-08-29. WITHDRAW/CANCEL the in-process work permit application** if it hasn't been issued; check whether any fee is recoverable. Permits are person-specific — cannot be transferred.
-- **Chef (Henry Klopper, South African): _NOT STARTED — file ASAP_.** Confirmed 2026-08-30. ⚠️ **Same nationality as Sean, so the same permit path — and Sean's has been in process since ~July without being issued.** Treat that as the realistic lead time. Being entered in the CRM Wed 2026-09-02; actual start date TBC.
+- **Chef (Henry Klopper, South African): _APPLIED — in process_** (confirmed 2026-08-30). Being entered in the CRM Wed 2026-09-02; actual start date TBC.
 
 ## Other Regulatory
 - DPNR registration (USVI): _TBD — research in progress_
