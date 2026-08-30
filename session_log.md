@@ -4,6 +4,63 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 29–30, 2026 (late) — SMR portal research across 4 agents, a Server Component crash, and a capital module design that found a hole in the CRM
+
+**Theme:** Two threads. A deep research push on the Snow Mountain Ranch property-management portal that repeatedly overturned the existing plan — and a run of Perpetual Blue CRM work where every bug turned out to be a permissions or rendering assumption rather than the thing it looked like.
+
+### 🏔️ SMR / WPM Portal — 4 parallel research agents
+Full findings are in [project_wpm_portal.md](project_wpm_portal.md); reports live in `Projects\smr-crm\`. **Decision brief published:** https://claude.ai/code/artifact/ee156dc3-c429-47e8-bdc4-4d7b22aaa5bb (source `Projects\smr-crm\decision-brief.html` — republish that path to update).
+
+- **Requirements gathered live across ~15 messages** and locked into memory: multi-owner from day one, **by-the-room units** (a 3-bed leased to three unrelated tenants = 3 units), **ACH only** (cards requested then retracted), **no payroll deduction**, four roles, YMCA owner portal with scoped visibility, turnover + inspections, remodel projects.
+- **Maintenance flip-flopped and landed on "build it."** First: hand off to SMR's existing system (they run 24/7 on-call and ~150 other units). Then Nick reversed — SMR staff log into WPM's CRM so **the tenant can see status and communicate in one place**. Works because the **unit sets are disjoint** (their system for their 150, this one for the 42) → no sync, no duplicate tickets. **The risk moved from technical to adoption:** staff ignoring a second app while tenants watch a stale status is *worse* than no portal.
+- **Three agents independently converged on "don't build the money layer."** Then Nick proposed the structure that beat all of them: **rent deposited straight into a YMCA-controlled account, WPM view-only.** That removes the regulated activity instead of relocating it.
+- ⚠️ **I misread the licensing finding once and had to correct it.** Nick asked whether direct deposit meant no broker licence — the answer is **no, the opposite**. Trust rules trigger on *custody*; the licence triggers on *agency for compensation*. The separate fee invoice that protects the trust exemption **is** the compensation that triggers licensure. Corrected immediately and plainly.
+- **The finding nobody expected:** getting licensed for SMR would pull WPM's **existing vacation-rental guest deposits** into CREC trust accounting (§ 12-10-217(1)(h), Rule 5.11 — both bind *licensees only*). The fix removes trust accounting from SMR and it reappears on the side of the business that never had it.
+- **Nick's own reduced-scope theory turned out to be well-founded** — CP-24 lists exactly his activity list as permissible for an unlicensed on-site manager. **The blocker is status, not task**: the exemption runs to a *salaried employee of the owner*, and a fee-paid company is neither that nor a brokerage firm. Fix is small — put the staff who show units and complete leases on YMCA's payroll.
+- **Drafted a written inquiry to the Division of Real Estate** — `Projects\smr-crm\dre-inquiry-letter.md`. Cheap and close to dispositive. §4 (the vacation-rental deposit question) is flagged as **Nick's call**, since it volunteers a second line of business to a regulator.
+- **Honest numbers replaced optimistic ones.** The old "$600–3,000/mo saved" is dead — Yardi Breeze is ~$100/mo at 42 units and **Stripe ACH fees (~$210/mo) exceed the SaaS being avoided**. Build estimate went 18–22 hrs → 407–585 (contractor) → **~120–180 for the direct-deposit v1 ≈ 40–70 of Nick's engaged agent-assisted hours.**
+- **On parallel agents:** ~65% of a build is mechanical and parallelises 4–6×; ~35% is judgment and parallelises maybe 1.5–2×. **Review capacity is the bottleneck, not generation speed.**
+
+### 🐛 Perpetual Blue CRM — itinerary View page crash
+- **Symptom:** View showed nothing, Edit worked fine.
+- **Ruled the data out first** with a throwaway script against the live DB — the page's exact query returns all 9 stops, every column present. List and Edit both query fine. **The data was never the problem.**
+- **Root cause:** the page is an async **Server Component** carrying an inline `onClick` on a Print button. Next.js throws *"Event handlers cannot be passed to Client Component props"* and the whole render fails. Edit works because it's a client component — that asymmetry was the tell.
+- Fixed with a `'use client'` island (`components/itineraries/PrintItineraryButton.tsx`), deliberately **not** reusing `PrintControls` because that one auto-fires the print dialog on mount — right for a dedicated print page, wrong for a browsing destination. Swept the codebase for the same mistake: **clean, only instance.** Commit `55b12af`.
+- 📌 **CORRECTION TO MY OWN ADVICE:** I told Nick a full `npm run build` would have caught this. **It would not** — verified: `next build` exits **0** on the broken version. The error only surfaces on render. What catches it is loading the page, or a lint rule for event handlers in server components.
+- 📌 **And a process lesson:** I said "go test it" the moment the push succeeded. **A push is not a deploy** — Nick tested during the Vercel build window and saw the old error, which sent an agent hunting a second bug for 2.5 hours. Say "pushed, give it a minute."
+- **Print CSS fixed properly** (`4637600`): `.pb-print-hide` was defined only inside one page's `<style>` block, so it was a no-op everywhere. Promoted to `globals.css` under `@media print`, and the **sidebar is now hidden on print CRM-wide**.
+- **My own mistake, owned and fixed:** I named the RLS fix `migration_022` without checking — `migration_022_bar_inventory.sql` already had it. Renamed to **`migration_023`** (`35699a3`), file-level only since it's already applied.
+- Noted: **every itinerary stop has `date = null`** — the Date column renders "—" for all 9 Grenada stops. Data gap, not a bug.
+
+### 💰 Owner capital contributions — module designed (not built)
+Design at `Projects\perpetual-blue\capital-module-design.md` (~1,470 lines).
+- **A capital events register, not a second GL** — one row per economic event with a posting state (`draft → substantiated → exported → posted`). **"Unbooked out-of-pocket" stops being a separate list and becomes a state of a row.** Substantiation is *computed from attached evidence*, never typed, so the ~$9,500 of placeholder estimates can't silently harden into fact.
+- **Four structural locks make the MHG double-count impossible**, not merely discouraged: complementary states on one column; a generated `counts_in_total` every report must filter on; a CHECK forcing settlement type to match contribution type (so a non-cash credit can't masquerade as out-of-pocket); and `UNIQUE(expense_id)`. Export idempotency via a single-transaction claim with a count assertion.
+- **Equity vs member loan is typed `NOT NULL` with no default** — decided at entry, because it's painful to reconstruct and has real tax consequences.
+- **Digits verified:** Connect API is real (Oct 2025), self-serve OAuth 2.0, idempotent on `externalId`. No bulk-import path found for the historical $831K.
+- 🔴 **The finding that isn't about capital at all: every existing API route's `GET` uses the service-role client with NO auth check** — bypassing RLS entirely, CRM-wide. Copying that for capital would let Sean read owner equity. **Still open.**
+- 🔴 **The CRM's seeded chart of accounts belongs to a different boat** (Alexander/ITR/Shore Financial) — no 340 or 350. Prerequisite before any export mapping means anything.
+- **Open question that decides what the module is for:** does the operating agreement fix ownership at thirds, or float it with capital?
+
+### 🛠️ Tooling
+- 📌 **"Copy button" solved properly at last.** Three widget copy buttons failed — the `show_widget` iframe blocks clipboard writes, and one of them *reported success anyway*, so Nick pasted stale content into the Supabase SQL editor. **The answer was `Set-Clipboard` from the shell, verified by reading the clipboard back and comparing length.** Recorded in [pref_copy_buttons.md](pref_copy_buttons.md).
+- **Nick asked that work always be delegated to subagents** so he can keep queueing tasks — reinforces [pref_delegate_subagents.md](pref_delegate_subagents.md). Applied from that point on.
+- **Opened a second Claude Code session** in a Windows Terminal scoped to `Projects\perpetual-blue-crm`. Binary lives at `AppData\Roaming\Claude\claude-code\<version>\claude.exe` — it is NOT on PATH.
+- **`vercel` CLI is unauthenticated** (`expired_token`) and `gh` is not installed — which is why production stack traces had to be reproduced locally. `vercel login` + `vercel link` would make `vercel logs` available.
+
+### ⏭️ Open
+- 🔲 **Revoke the old GitHub PAT** — still outstanding since yesterday morning
+- 🔲 **CRM: add auth checks to API `GET` routes** — service-role client currently bypasses RLS everywhere
+- 🔲 **Ask the agent on payroll what licence level they hold** (2 years' experience → Employing Broker?) — go/no-go for SMR
+- 🔲 **Ask YMCA whether they'll receive rent directly** — the whole recommendation rests on it
+- 🔲 Send Sean his display name + signature; check what `charters@` sends as
+- 🔲 New chef's name, nationality, start date; withdraw Elise's work permit; deactivate her `crm_users` row
+- 🔲 DRE letter — fill brackets, decide on §4, attorney review
+- 🔲 `db-backup.yml` via the GitHub web UI (open since Aug 26)
+- 🔲 Fix the CRM's seeded chart of accounts before building capital export
+
+---
+
 ## Session: August 29, 2026 (evening) — Sean's mailbox onboarded, Elise departs, and a solved CRM bug comes back because it was never written down
 
 **Theme:** Crew and comms housekeeping that turned into a production incident. Sean finally got into his email; the chef seat opened and was refilled; then "I can't save to-dos" escalated to "the CRM doesn't work at all" and turned out to be a **regression of a bug fixed in July** — reintroduced because that fix only ever existed in the live database, never in a migration file.
