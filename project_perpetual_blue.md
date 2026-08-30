@@ -143,9 +143,17 @@ Transactions funded directly through the Mercury account:
 
 | Date | Item | Vendor | Amount | Category | Receipt |
 |---|---|---|---|---|---|
-| 2026-07-24 | Initial deposit | Nick (owner) | **$100.00** | Owner Contribution | — |
+| 2026-07-24 | Initial deposit | Nick (owner) | **$100.00** | **CAPITAL CONTRIBUTION (cash to LLC) — not an expense** | — |
 
 **Mercury balance: $100.00**
+
+> ⚠️ **Do not confuse the two $100s (clarified 2026-08-30).** They are unrelated:
+> - **This one:** Nick's **$100 cash contribution** on 2026-07-24 to open the **Mercury** account. **A genuine capital contribution, NOT returned, NOT a round trip.** It belongs in the capital module as `cash_to_llc`, not in the expense ledger — it isn't money spent on anything.
+> - **The other:** a **$100 PYM deposit** that opened the **BoA** account, **returned 2 Jan 2024** — which is why QuickBooks acct 340 nets to $0.
+>
+> Orion conflated these on 2026-08-30 and wrongly called Nick's Mercury deposit a round trip. Different account, different payer, different year.
+>
+> 📌 In the CRM this is expense row `0fc400cb-1a6a-41c4-9445-90c97f8fd391`, currently flagged `Uncategorised - needs review` by migration 026. **Resolution: move it out of `expenses` and into the capital module as a cash contribution when that module ships.**
 
 ---
 
