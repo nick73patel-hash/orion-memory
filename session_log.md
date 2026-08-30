@@ -4,6 +4,64 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 30, 2026 — CRM cleanup and a run of permission decisions; six fixes shipped
+
+**Theme:** A long working session on the Perpetual Blue CRM. Several bugs turned out to be the same class — something that looked fine and silently wasn't — plus a batch of decisions on capital, labour and permissions that had been open for weeks.
+
+### 🔌 Environment
+- **Vercel CLI authenticated** as `nick73patel-hash`, `perpetual-blue-crm` linked. Orion can now pull production runtime logs directly instead of rebuilding locally to reproduce (which cost 2.5 hrs on Aug 29).
+- 📌 **Orion's shell sees a DIFFERENT filesystem than Nick's terminal.** `Test-Path` said `vercel.cmd` existed; his real PowerShell said it didn't, same path, same `$env:APPDATA`. Vercel was never installed. **Orion insisted on the wrong answer three times.** Lesson: to check whether a tool exists, RUN it — don't stat a file. Also `.env*` is invisible to Orion entirely (sandbox protection, and a good one).
+- **PowerShell execution policy blocks `.ps1` shims** — `npx` resolves to `npx.ps1` and dies. Use `npx.cmd` / `npm.cmd`. Standing workaround.
+- 📌 **Nick was right to push back on the terminal detour.** The Vercel setup was for Orion's convenience; the dashboard shows the same logs. It landed and was worth finishing, but the setup cost nearly exceeded the benefit — say "just paste it from the dashboard" sooner.
+
+### 🧹 Third-party data found in the CRM and cleared
+- **`migration_002_seed.sql` had seeded another vessel's REAL books** — Shore Financial banks, "Partner Capital — Alexander"/"ITR", Due to Nex Gen Yachting, United Visa/Frontier/Amex cards, and two partner rows naming real people. Not placeholders. **The commit message never mentioned any of it**, so the origin is unrecorded — git history genuinely doesn't say, and Orion didn't guess.
+- **Cleared in `025d02e`:** 72 rows deactivated (67 accounts, 3 cards, 2 banks), 2 partner rows deleted. Deactivation is right for *our* data; **deletion is right for third parties' PII** that arrived unexplained and is referenced by nothing.
+- **The seed file was neutered too** — the four foreign blocks commented out, so re-running can't reintroduce them. *This is the same trap that let the RLS bug regress: a fix applied only to the live DB while the migration kept shipping the broken version.*
+- **Safe because `transactions` is empty (0 rows)** and no app code reads any of those tables. Confirmed real and left alone: the `vessels` row, `charters` (21), `brokers` (18), `expenses` (13).
+- ⚠️ Noted, not fixed: `transactions.account_code` has **no FK** to `accounts.code`, and `accounts` has **no UNIQUE(vessel_id, code)**.
+- 😅 **Nick ran the migration against the Condo Assistant project by mistake.** No harm — verified with the service-role key that none of the target tables exist there, and it aborted on its first statement. **He'd hit the same wrong-project error earlier in the day with `crm_users`.** The two Supabase projects: PB = `udmndiuasxgglqvskxua`, Condo Assistant = `mthzmtvopazhsmnbdhkc`. **Check the project ref before pasting.**
+
+### 🐛 Four CRM fixes shipped
+- **Maintenance Log button 404'd** (`f3f6dbe`) — the Operations tile pointed at `/operations/maintenance`, which doesn't exist. Real route is `/maintenance`. One-line fix. **A sweep of every internal link vs. the routes on disk found one other dead link.**
+- **Captain's Log edit page never existed** (`946653b`) — every entry linked to `[id]/edit` with no page there, though the API already implemented PATCH. Built it, sharing the form with the new-entry page rather than duplicating. The agent **render-tested for real** rather than trusting the build.
+- **Nav renamed + summary figures** (`eef32b6`) — "To-Do List" → **Jobs**, "Log" → **History**, parent stays **Maintenance** (Nick's call). Status labels became **Planned / In Progress / Completed**. Three figures added at the top of Jobs: Planned, In Progress, Completed-this-calendar-year, each with cost where the data supports it. **It discloses "3 of 8 costed"** rather than quietly summing a partial total.
+- **Migration numbering collision fixed** (`35699a3`) — Orion had named the RLS fix `022` without checking; `022_bar_inventory` already held it. Renamed to `023`.
+
+### 🔐 API auth — and a correction Orion had to make
+- **`9135c6d`, 43 files.** 42 `GET` handlers now require authentication; `/api/crew/[id]/payroll` gated to admin+owner. New helpers in `lib/roles-server.ts`: `requireAuth()`, `requirePermission(flag)`, `authErrorResponse()`.
+- 📌 **CORRECTION Orion made twice before being corrected by evidence:** he told Nick unauthenticated requests to `/api/expenses` would return data to anyone. **Wrong.** `proxy.ts` already redirects unauthenticated `/api/*` to `/login`. **The real hole was ROLE, not authentication** — any logged-in account could read anything. Still worth fixing before Sean logs in, but the severity was overstated.
+- **Genuine hole found unprompted:** `POST /api/fuel` and `PATCH`/`DELETE /api/fuel/[id]` had **no guard at all**, not even on writes.
+- **Correctly left public:** the token-gated guest preference sheet and the public review form.
+- **Role-scoping map produced but deliberately NOT built** — `dashboard`, `calendar`, `alerts` return composite payloads needing per-field filtering that could silently blank pages.
+
+### ⭐ Decisions locked
+- **Digits is the general ledger, confirmed.** ✅ **The CRM will NOT hold a chart of accounts** — Digits owns the ledger, the CRM feeds it, mapping happens at the export boundary. A mirrored local chart is just a second thing to drift. **Digits setup planned for 2026-08-31.**
+- **⭐ Ownership is fixed at ONE THIRD EACH regardless of capital contributed.** So contributing more never buys more of the boat — an imbalance is an *obligation*, not equity.
+- **✅ Book everything as CAPITAL CONTRIBUTION, not member loans.** Nick's reasoning: the short owners will always catch up, so it's self-correcting; also avoids loan formalities. **The capital module's primary job is therefore making the gap visible** so it actually closes. (Revisit at exit/sale — capital accounts under fixed thirds don't by themselves record who's owed what.)
+- **Sean's internal labour rate = $30/hr, NOTIONAL ONLY** — never booked, never charged, never exported. He's salaried; booking it would double-count real money. **Real project cost = materials + subcontractors only.**
+- **Project tracking = extend `maintenance_todos`, no separate projects table.** Decisive evidence: a `maintenance_projects` table **already exists** in `migration_001` with zero references anywhere in the app — the parallel design was built here once and nobody used it.
+
+### 👥 Permission policies decided (build before either login exists)
+- **Captain (Sean): SEES EVERYTHING** — Nick explicitly overrode Orion's suggestion to hide other crew's payroll and owner capital. **Edits his operational domain** (maintenance, captain's log, time, expenses, fuel, inventory, itineraries, guest prefs, tasks, ports). **View-only** on charters, brokers, rates, crew, payroll, documents, reconciliation, analytics, vessel, users, capital. Principle: *"Sean edits what he does; Nick edits what the business is."*
+- **Chef (`crew`): SCOPED, deliberately different.** Edits galley/recipes/menus/provisioning, galley + bar inventory, guest preference notes, and **creates maintenance jobs only** (finds the broken oven; can't close it). Views charters, calendar, guests + preferences (**allergies are safety-critical**), itineraries, ports, maintenance status. **Cannot see** financials, payroll, capital, analytics, documents, reconciliation, crew records.
+- **✅ NO DELETES for either role** — the one Orion suggestion Nick adopted from that exchange. Edit and complete, never delete: it's irreversible and there's no audit trail.
+- ⚠️ **The blocker: the granular flags already exist in `lib/roles.ts` but are NOT enforced.** `requireEditPermission()` only checks the blanket `canEdit`, so the per-resource flags are decorative. **The work is the enforcement layer**, plus a `canDelete` flag.
+
+### 👨‍🍳 Crew
+- ✅ **Chef is HENRY KLOPPER (he/him), South African** — replacing Elise McNabb. **Work permit already applied for, in process.** Being entered in the CRM **Wed 2026-09-02**; start date still TBC. *(Orion had referred to the chef as "she" until corrected.)*
+
+### ⏭️ In flight / next
+- **Running:** project time-and-cost tracking build (migration 025, needs applying by hand)
+- **Queued:** captain + chef permission enforcement → capital contributions module
+- 🔲 **Revoke the old GitHub PAT** — still open since Aug 29
+- 🔲 Role-scoping second pass (composite endpoints) before Sean logs in
+- 🔲 Ask the agent their licence level · ask YMCA about receiving rent directly · send Sean his email setup
+- 🔲 `db-backup.yml` via the GitHub web UI (open since Aug 26)
+- 🔲 24 `monthly_tasks` seed rows still include "Pay Management Fee to Nigel" — that INSERT would now fail anyway (schema changed)
+
+---
+
 ## Session: August 29–30, 2026 (late) — SMR portal research across 4 agents, a Server Component crash, and a capital module design that found a hole in the CRM
 
 **Theme:** Two threads. A deep research push on the Snow Mountain Ranch property-management portal that repeatedly overturned the existing plan — and a run of Perpetual Blue CRM work where every bug turned out to be a permissions or rendering assumption rather than the thing it looked like.
