@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 2ba035ee-bd06-45c1-bbbc-a749b8dffa53
-  modified: 2026-08-29T18:21:33.295Z
+  modified: 2026-08-30T18:37:37.112Z
 ---
 
 Environment facts for Nick's Windows 11 machine that keep costing time when rediscovered.
@@ -35,6 +35,12 @@ Environment facts for Nick's Windows 11 machine that keep costing time when redi
 - Writing files with .NET `WriteAllLines` converts to **CRLF**; the memory repo is **LF**. Use `[System.IO.File]::WriteAllText` with `\n`, and always check `git diff --stat` looks proportional after a scripted edit.
 
 **🔒 GitHub auth = Git Credential Manager, NOT tokens in URLs (set 2026-08-29).** `credential.helper=manager` is set globally and holds a working GitHub credential in Windows Credential Manager (encrypted, per-user). **Never put a PAT in a remote URL** — three repos (`orion-memory`, `condo-assistant`, `perpetual-blue-crm`) each had one sitting in plaintext in `.git/config` for weeks; all three were stripped and verified to authenticate fine without it. Audit command: `find Projects .claude -maxdepth 4 -name config -path "*/.git/*" | xargs grep -lE 'https://[^@/]+@'` — any hit is a leak.
+
+**⚠️ Orion's shell sees a DIFFERENT filesystem view than Nick's terminal — don't trust `Test-Path` about installs (learned 2026-08-30).** `Test-Path "$env:APPDATA\npm\vercel.cmd"` returned **True** in Orion's shell and **False** in Nick's real PowerShell, for the identical path and identical `$env:APPDATA`. Vercel was never actually installed. Orion insisted on a wrong answer three times off the back of it. **To check whether a tool exists, RUN it — don't stat a file.** Project files under `Projects\` are real and shared; `AppData` is not reliable. **`.env*` files are invisible to Orion entirely** (sandbox protection — good; it means secrets can't be read or leaked).
+
+**PowerShell execution policy blocks `.ps1` shims.** `npx` resolves to `npx.ps1` and dies with *"running scripts is disabled on this system"*. **Use the `.cmd` form: `npx.cmd`, `npm.cmd`, `git.exe`.** This is a standing workaround, not a one-off.
+
+**✅ Vercel CLI authenticated 2026-08-30** as `nick73patel-hash`, and `perpetual-blue-crm` is linked (repo-level: `.vercel/repo.json`). Orion can pull production runtime logs directly — `cmd //c "npx.cmd vercel ls perpetual-blue-crm"`, then `vercel logs <deployment-url>`. **Use this instead of rebuilding locally to reproduce a production error** (that cost 2.5 hours on 2026-08-29). Note the perpetualbluebvi.com *website* project is on Nick's son's account and won't appear here.
 
 **No Python installed.** Spreadsheet work runs on **Node + ExcelJS** from `C:\Users\ducat\Projects\project-budgets\` — that's where the deps live, `node` from anywhere else can't resolve `exceljs`.
 
