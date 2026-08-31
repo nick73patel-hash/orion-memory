@@ -4,6 +4,57 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 30, 2026 (night) — all five migrations applied; an hour lost to a SQL editor quirk
+
+**Theme:** Getting migrations 025–029 into the live database, and a long debugging detour that turned out to be a Supabase SQL editor behaviour rather than anything wrong with the SQL.
+
+### ✅ Applied to the live database (project `udmndiuasxgglqvskxua`)
+| Migration | What |
+|---|---|
+| **025** | Project time & cost tracking |
+| **026** | `expenses.paid_by_owner_id` — who paid, split from what it was for |
+| **027** | Henry Klopper as `crew`; David Brandt + Derek Yurosek as `owner_readonly`; Elise retired |
+| **028** | Capital contributions module + the full data migration |
+| **029** | Elise's CRM login deleted, crew record deactivated |
+
+**Perpetual Blue's capital history is now in the CRM**: three opening balances (Nick 261,615 / David 265,833 / Derek 278,833), the MHG 10,782.00 marker row flagged `rolled_into_opening_balance`, nine itemised out-of-pocket lines, two flagged estimates (7,500 card + 2,000 cash), and Nick's Mercury 100.00 moved out of `expenses` into capital as `cash_to_llc`.
+
+### 🕵️ The bug that ate an hour — `relation "the" does not exist`
+Migration 028 failed repeatedly with `42P01: relation "the" does not exist`. **The SQL was valid** — it parsed clean through `pgsql-parser` (real libpg_query), quotes balanced, no bare identifier, all 122 lines read by eye.
+
+**What gave it away:** rewriting the memo text changed the error to match it.
+- `'... Cash INTO the company ...'` → `relation "the" does not exist`
+- `'... Cash into company ...'` → `relation "company" does not exist`
+
+**The failing identifier is always the word immediately after `into`.** Postgres was treating `INTO` as the SQL keyword — the surrounding quotes were not being honoured as string delimiters by the time it reached the server. Stripping the prose fixed it instantly.
+
+**Ruled out with evidence first (recorded so nobody re-tests them):** file size (failed at 58 KB, 13 KB *and* 684 bytes), paste truncation, comments, non-ASCII, the `%` in `ILIKE '%mercury%'` (the one statement containing `%` — looked damning, wasn't), the clipboard, and syntax.
+
+📌 **The method that worked: bisect by statement.** Split 028 into three parts, then into six single statements, then ran them one at a time. Steps 1, 2, 3, 5 passed; step 4 failed; then one variable at a time until *the error message itself changed with the text*. **That change was the actual clue.** Generalisable: when an error names an identifier that appears nowhere in your source, suspect a string literal ending early and look at the word just before the named one.
+
+Recorded in [[env-supabase-sql-editor]]. Also noted: `check` is reserved and cannot be a column alias.
+
+📌 **Orion spent too long theorising before bisecting.** Four wrong hypotheses were pursued in sequence — truncation, comments, `%`, clipboard — each with a fix shipped, before splitting the file to isolate. The bisect took three minutes and should have come first.
+
+### 🐛 Two real bugs caught by reading migrations before running them
+- **`027` set Elise to `owner_readonly`** while its own comment called that "the lowest-privilege role." **It is the opposite** — `owner_readonly` sees financials, payroll and owner capital. Applying it would have left a departed employee with full visibility of the books. Changed to `crew`. Caught only because Nick's "27 not in" was misread as a failure, prompting a read-through.
+- **`028` inserted into `monthly_tasks (vessel_id, frequency, sort_order, is_active)`** — the schema from `migration_002_seed.sql`. The live table is migration_007's: a per-month instance table with no `vessel_id`, where recurring items belong in `task_templates`. Failed with 42703 and rolled back all of 028. Fixed to target `task_templates`.
+
+### 👤 Elise — the judgement call
+Nick asked for her deletion and left the treatment to Orion. **Two records, two answers:**
+- **`crm_users` login → DELETED.** Safe: she never signed in, and 7 of 8 FKs to that table have no `ON DELETE`, so a stray reference would block the delete loudly rather than corrupt silently.
+- **`crew` employment record → DEACTIVATED, not deleted.** `crew_certifications.crew_id` is `ON DELETE CASCADE`, so deleting would have silently destroyed her certification history — and that record ties to the BVI work permit still to be withdrawn and to a booked expense. **Deleting employment history to remove access is the wrong trade.**
+
+### ⏭️ Next
+1. **Create 3 Supabase Auth users** — `chefhenry@perpetualbluebvi.com`, `dlbrandt90@gmail.com`, `derekyurosek@gmail.com` — then link each `supabase_uid` (instructions at the bottom of migration 027)
+2. **Create Henry's Zoho mailbox** at `mailadmin.zoho.com` (free — 5-user plan, 2 in use)
+3. **Set up Digits**, then key the real chart of accounts into `capital_account_mappings` — nothing can export until then
+4. 🔲 **Revoke the old GitHub PAT** (open since Aug 29)
+5. 🔲 Role-scoping second pass on composite endpoints before Sean logs in
+6. 🔲 `db-backup.yml` via the GitHub web UI (open since Aug 26)
+
+---
+
 ## Session: August 30, 2026 (later) — five CRM modules built in parallel; permissions, project tracking, capital, expenses, owner logins
 
 **Theme:** The build session. Five substantial pieces of the Perpetual Blue CRM shipped, mostly by parallel agents. Also a lesson in when parallelism helps and when it corrupts, and one instruction Orion got wrong that an agent caught.

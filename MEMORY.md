@@ -61,6 +61,7 @@
 - [Perpetual Blue Licenses & Credentials](pb_licenses.md) — BVI BC reg, CRVL, work permits, ship registry, insurance (template, fill in as numbers obtained)
 
 ## Environment
+- [Supabase SQL editor — the `INTO`-in-a-string trap](env_supabase_sql_editor.md) — a SQL keyword inside a quoted value gets parsed as SQL; cost an hour on 2026-08-30. Keep prose out of SQL values.
 - [Windows Machine Quirks](env_windows_machine.md) — ✅ **Bash FIXED 2026-08-29** (Git was never really installed — `usr\bin`/`msys-2.0.dll` missing; reinstalled via elevated winget); permission rules are Bash-only, so run git through Bash not PowerShell; no Python; Node/ExcelJS lives in `Projects\project-budgets\`
 
 ## User Preferences (applies to all projects)
