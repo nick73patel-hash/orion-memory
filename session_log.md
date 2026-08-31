@@ -17,7 +17,7 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 | **028** | Capital contributions module + the full data migration |
 | **029** | Elise's CRM login deleted, crew record deactivated |
 
-**Perpetual Blue's capital history is now in the CRM**: three opening balances (Nick 261,615 / David 265,833 / Derek 278,833), the MHG 10,782.00 marker row flagged `rolled_into_opening_balance`, nine itemised out-of-pocket lines, two flagged estimates (7,500 card + 2,000 cash), and Nick's Mercury 100.00 moved out of `expenses` into capital as `cash_to_llc`.
+✅ **Tie-out verified by Nick 2026-08-30 — numbers look right; he is clear to enter data.** Perpetual Blue capital history is now in the CRM: three opening balances (Nick 261,615 / David 265,833 / Derek 278,833), the MHG 10,782.00 marker row flagged `rolled_into_opening_balance`, nine itemised out-of-pocket lines, two flagged estimates (7,500 card + 2,000 cash), and Nick's Mercury 100.00 moved out of `expenses` into capital as `cash_to_llc`.
 
 ### 🕵️ The bug that ate an hour — `relation "the" does not exist`
 Migration 028 failed repeatedly with `42P01: relation "the" does not exist`. **The SQL was valid** — it parsed clean through `pgsql-parser` (real libpg_query), quotes balanced, no bare identifier, all 122 lines read by eye.
