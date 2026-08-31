@@ -4,6 +4,47 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 31, 2026 — DORA confirms no licence needed; the SMR blocker clears
+
+**Theme:** Short morning. The single biggest open question on the SMR portal — whether Winter Park Management needs a Colorado brokerage licence — was answered by the regulator directly. Plus a drafted email to YMCA.
+
+### ✅ THE BLOCKER IS CLEARED — no licence required
+Nick called the **Colorado Division of Real Estate (DORA), 303-894-2166** and spoke to **MARCY RIVERA, an Investigator with DORA**, on **2026-08-31**. She confirmed **WPM does not need a licence** provided it operates as structured. A licensed employing broker consulted separately gave the same answer.
+
+**Confirmed:** WPM does **NOT** hold an employing broker's licence; the licensed person on the team is an **associate broker**.
+
+🚨 **The exemption is conditional. Four binding operational constraints:**
+1. **YMCA sets the rent** — WPM never negotiates or sets pricing
+2. **YMCA selects the tenants** — occupancy follows their hiring
+3. **YMCA signs every lease** — WPM prepares the document from their template and enters name + dates only
+4. **Rent goes straight into a YMCA-controlled account** — WPM has view-only access, never custody
+
+**If any one drifts, the exemption goes** — and under *Benham v. Heyde* the management contract becomes **unenforceable**, meaning WPM could manage for a year and be unable to sue for its fee. **The failure mode is not a deliberate breach; it is a helpful employee on a Tuesday** saying "we could probably do better on that rent." `§ 12-10-217(1)` reaches anyone who *"assumes to act in the capacity of a licensee"* — conduct governs over paperwork.
+
+📌 **Still worth doing:** send the written DRE inquiry (`Projects\smr-crm\dre-inquiry-letter.md`), referencing the call with **Marcy Rivera on 2026-08-31** in it. A phone opinion does not survive a dispute; a written answer on these exact facts does — and citing the investigator who already agreed makes it a confirmation rather than an open question.
+
+✅ **Knock-on win:** staying unlicensed keeps WPM's **existing short-term-rental guest deposits** outside CREC trust accounting and audit — `§ 12-10-217(1)(h)` and Rule 5.11 bind licensees only. Getting licensed would have dragged the vacation-rental business into a regime it currently escapes entirely.
+
+### 📧 Email to Ann at YMCA — drafted, not sent
+`Projects\smr-crm\email-to-ann-ymca.md` (plain) and `.html` (formatted). Puts the four-condition structure up front so the bank-account request reads as considered rather than odd, then eight numbered questions grouped by topic: ownership (incl. whether the Granby property is LANCA), direct-deposit with view-only access, payroll deduction (assumed not wanted), the tenant roster, who signs leases, whether there's a staff accountant, and the current maintenance process.
+
+Two things added beyond what Nick listed: **which bedroom** each tenant occupies where a house is let by the room (the "unit" field alone can't express three tenancies in one house), and a line about **not creating two competing maintenance queues** given SMR already runs 24-hour on-call for ~150 other units.
+
+📌 **Formatting lesson:** Notepad strips formatting, so a rich-text version was built with **every style inline** (Gmail strips `<style>` blocks) and placed on the clipboard as **CF_HTML** via a `-STA` PowerShell child process, with a plain-text fallback also set. Script kept at `Projects\smr-crm\set-html-clipboard.ps1` — reusable for any future formatted email.
+
+### 💰 Capital module in use
+Nick located the Capital module (sidebar, piggy-bank icon) and confirmed his Mercury $100 was already there from the migration. **Derek's $1,000 deposit** into the Mercury account still to be recorded via `/capital/new` — `cash_to_llc`, equity, company cash. That closes Derek's gap from $7,608.81 to roughly $6,608.81.
+
+### ⏭️ Next
+- 🔲 Send the email to Ann; send the written DRE inquiry
+- 🔲 Record Derek's $1,000
+- 🔲 **Digits setup** — then key the real chart of accounts into `capital_account_mappings`; nothing exports until then
+- 🔲 Create 3 Supabase Auth users (Henry, David, Derek) + link UUIDs; create Henry's Zoho mailbox
+- 🔲 **Revoke the old GitHub PAT** — open since Aug 29
+- 🔲 Role-scoping second pass before Sean logs in; `db-backup.yml` via GitHub web UI
+
+---
+
 ## Session: August 30, 2026 (night) — all five migrations applied; an hour lost to a SQL editor quirk
 
 **Theme:** Getting migrations 025–029 into the live database, and a long debugging detour that turned out to be a Supabase SQL editor behaviour rather than anything wrong with the SQL.

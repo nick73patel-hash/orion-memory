@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: cb8dbb3a-425a-4e53-a5c9-b7ae67499936
-  modified: 2026-08-29T23:02:25.843Z
+  modified: 2026-08-31T22:08:09.972Z
 ---
 
 # WPM Property Management Portal
@@ -23,7 +23,17 @@ Replace Buildium/AppFolio/Rentec ($45–$280/mo) with an owned system. At 200 un
 - **YMCA owns the properties, all but ONE** → at least **two owner entities from day one**. Multi-owner must be in v1, not retrofitted.
 - **The lease is between YMCA and the tenant.** WPM is the **managing agent, not the lessor.**
 - **YMCA does not collect rent today — WPM will collect it.** So WPM holds other people's money → **trust/escrow accounting is in scope**, with per-owner sub-ledgers and three-way reconciliation.
-- ⚠️ **OPEN GO/NO-GO:** Nick says "we have a real estate agent on payroll so DORA compliance is doable." Colorado trust accounts are likely the duty of an **employing broker**, not a licensed associate. **Confirm WPM has an employing broker of record** — if not, this blocks the whole payment module.
+- ✅ **RESOLVED 2026-08-31 — NO LICENCE REQUIRED.** This clears the single biggest blocker on the project.
+  - 📞 **Source of the ruling — record this, it is the documentation:** Nick called the **Colorado Division of Real Estate (DORA)** on **2026-08-31** at **303-894-2166** and spoke with **MARCY RIVERA, Investigator, DORA**. She confirmed WPM does **not** need a licence provided it operates as structured below. Cite her name and the date in the management agreement file and in any future correspondence on this point.
+  - **Confirmed facts:** WPM does **NOT** hold an employing broker's licence. The licensed person on the team is an **associate broker**. A licensed employing broker consulted separately gave the same answer.
+  - 🚨 **THE EXEMPTION IS CONDITIONAL — these four are now BINDING OPERATIONAL CONSTRAINTS, not preferences. If any one drifts, the exemption is gone and, under *Benham v. Heyde*, the management contract becomes UNENFORCEABLE — WPM could manage for a year and be unable to sue for its own fee.**
+    1. **YMCA sets the rent.** WPM never negotiates or sets pricing.
+    2. **YMCA selects the tenants.** Occupancy follows their hiring.
+    3. **YMCA signs every lease.** WPM is not a party; its role is preparing the document from YMCA's template and entering name + dates.
+    4. **Rent goes directly into a YMCA-controlled account.** WPM has **view-only** access and never takes custody.
+  - ⚠️ **The failure mode is not a deliberate breach — it is a helpful employee on a Tuesday** saying "we could probably do better on that rent." `§ 12-10-217(1)` reaches anyone who *"assumes to act in the capacity of a licensee"*, so **conduct governs over paperwork**. Brief anyone who shows units; see the may-say/may-not-say guidance in `Projects\smr-crm\research-legal-colorado.md`.
+  - 📌 **STILL WORTH DOING: send the written inquiry** (`Projects\smr-crm\dre-inquiry-letter.md`). A phone opinion does not survive a dispute; a written answer on these exact facts does. **Also record who was spoken to and when** — that call is currently undocumented.
+  - ✅ **Knock-on win:** staying unlicensed also keeps WPM's **existing short-term-rental guest deposits** outside CREC trust accounting and audit. `§ 12-10-217(1)(h)` and Rule 5.11 bind **licensees only**. Getting licensed would have dragged the vacation-rental business into trust accounting it currently escapes.
 - **YMCA is both employer and landlord** → check whether lease termination can follow employment termination in CO.
 
 **Units — the central modeling problem:**
