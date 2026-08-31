@@ -4,6 +4,65 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: August 30, 2026 (later) — five CRM modules built in parallel; permissions, project tracking, capital, expenses, owner logins
+
+**Theme:** The build session. Five substantial pieces of the Perpetual Blue CRM shipped, mostly by parallel agents. Also a lesson in when parallelism helps and when it corrupts, and one instruction Orion got wrong that an agent caught.
+
+### 🚢 Shipped (all pushed to `main`)
+| Commit | What |
+|---|---|
+| `1b1a2c4` | **Project time & cost tracking v1** — migration 025 |
+| `5200332` | **Expenses: "paid personally by" split from category** — migration 026 |
+| `615ea87` | **Captain + chef permission model** — 27 resources, deletes admin-only |
+| `82718a1` | Chef email corrected to `chefhenry@perpetualbluebvi.com` |
+| `9d52cf4` | **Owner logins** (David, Derek) + owners can see the user roster — migration 027 |
+| `3185849` | **Owner capital contributions module** — migration 028 |
+| `8b3922f` | Captain sees capital — Orion's brief was wrong, corrected |
+
+**⚠️ Migrations 026, 027, 028 are committed but NOT APPLIED.** Run in order in project `udmndiuasxgglqvskxua`. 025 was applied 2026-08-30.
+
+### 🔐 Permission model — the enforcement layer that didn't exist
+- **The flags were decorative.** `captain` had `editMaintenance`/`editCaptainsLog`/etc. but `requireEditPermission()` only checked the blanket `canEdit`, so a captain could edit anything via the API. **The work was the enforcement layer, not the config.**
+- New shape: `resources: Record<Resource, {view, write}>` across **27 resources**, `write` an ordered ladder **none < create < edit** — which is what makes "the chef may *create* a maintenance job but not work it" expressible rather than a special case. **Delete sits off the ladder entirely**: one role-level `canDelete`, admin only, so the no-delete rule can't be partially applied.
+- 📌 **Verified, not asserted.** The agent wrote a script that compiles `roles.ts` and evaluates each handler's actual guard: across **79 route files / 147 handlers — 0 unguarded, 0 admin denials, 0 non-admin deletes.** Re-run after the owner-login change and still clean.
+- **Chef keeps guest allergies/preferences** — explicitly preserved, not swept up by the financial-data guard. Safety-critical and the easiest thing to break.
+- UI matches the API: `EditGuard` now requires a resource, new `DeleteGuard` on all 14 Trash controls, `ViewGuard`, sidebar filters sub-items (chef sees Maintenance, not Jobs), charter lists drop contract value/broker without `seeFinancials`.
+- **The users-list oddity fixed:** captain could read `/api/admin/users` but owners couldn't. Owners now can too. Captain keeps it — he already sees full crew records and payroll, both more sensitive than name/email/role, and the person aboard is well placed to spot an account that shouldn't exist.
+
+### 💰 Capital module
+- 11 API routes under `app/api/capital/**`, 6 pages, 8 components, plus `lib/capital-{roles,access}.ts`.
+- **All four anti-double-count locks shipped:** one row/many states (not two lists) · a `counts_in_total` GENERATED column gating every total, with the **MHG row carrying `rolled_into_opening_balance`** so the DB itself excludes it · a CHECK forcing settlement type to match contribution type · `UNIQUE(expense_id)`. **Nothing aggregates the base table — API and pages read only the views.**
+- `capital_owner_standing` computes `behind_baseline` (highest contributor = mark) with equal-share as a toggle. Every total shows its estimate figure alongside, so the ~$9,500 of placeholders stays visible.
+- Migration 028 includes the §15 data migration: 3 opening balances, the MHG marker, 9 itemised lines, 2 estimates, and **the documented one-off moving Nick's Mercury $100 out of `expenses` into capital as `cash_to_llc`.**
+- ⚠️ **`capital_account_mappings` is EMPTY** — no export to Digits can emit until SVFP57's real chart of accounts exists there. Correct order: Digits first.
+
+### 📌 Orion's own error, caught by an agent
+**Orion briefed the capital module "owner-only, captain and crew must never reach it."** That contradicted Nick's explicit decision that Sean sees everything — made when he overrode the suggestion to hide payroll and owner capital. The agent found `lib/roles.ts` and `can_see_capital()` both granting captain access, **failed closed rather than guessing, and flagged the conflict for a human.** Exactly right. Fixed in `8b3922f`; all three now agree. Crew stays excluded — that scoping was separately and equally explicit.
+
+### 🧵 Parallelism — what worked and what didn't
+- **Nick asked whether multiple agents could work the permissions job. Answer: no, and the reason matters.** Permissions is inherently sequential (define model → build enforcement → apply to ~80 routes → match UI), every step keyed off `lib/roles.ts`. **Security code especially wants one coherent mind — split-brain permission logic is how holes appear, and the failure mode isn't a merge conflict you'd notice, it's a gap you wouldn't.**
+- **Where parallelism DID work: separate surfaces with explicit boundaries.** Capital ran alongside because it was mostly new files. The brief pre-assigned migration numbers (capital→028, leaving 027 free), forbade touching the role files or any existing `app/api/` file, banned `git add -A`, and said to report rather than fix a build break originating in the other agent's work. **The boundaries held** — capital briefly broke the build with a type error and fixed it; the owner-login agent staged only its own 3 files.
+- **One agent stalled** (10 min no output) mid-permissions with ~95 files modified and nothing committed. **Resumed rather than discarded** — told to assess its own diff first, not restart, and to say plainly if the tree couldn't be confidently finished, because *a permission model that's 90% applied is worse than none: it looks done*. It recovered and finished.
+
+### ⭐ Decisions
+- **Sean's rate $30/hr, notional only.** Real project cost = materials + subcontractors.
+- **Chef email `chefhenry@perpetualbluebvi.com`** — mailbox NOT yet created; Zoho Free covers 5 users, currently 2, so $0. Create at `mailadmin.zoho.com`.
+- **Owner logins use personal Gmail** (`dlbrandt90@gmail.com`, `derekyurosek@gmail.com`) — the address is only a login identifier, and there's no sense spending the last Zoho slots on people who won't send mail as the business.
+- **No new role for the partners** — `owner_readonly` already did exactly this: sees everything, **0 of 55 write/delete handlers**, `canEdit` and `canDelete` both false.
+- 📌 **Corrected: the two $100s are unrelated.** Nick's **$100 into Mercury 2026-07-24 is a real capital contribution, not returned.** The separate **$100 PYM deposit on the BoA account was returned 2 Jan 2024** (why acct 340 nets to $0). Orion conflated them.
+- **"Save" now means all four actions** — memory, session log, commit/push, backup. See [[pref-save-command]].
+
+### ⏭️ Nick's next steps
+1. **Apply migrations 026 → 027 → 028** (project `udmndiuasxgglqvskxua` — he ran one against Condo Assistant by mistake earlier; no harm, but check the ref)
+2. **Create 3 Supabase Auth users** — Henry, David, Derek — then link each `supabase_uid` per migration 027's instructions
+3. **Create Henry's Zoho mailbox**
+4. **Set up Digits** (planned 2026-08-31) — then key the real chart of accounts into `capital_account_mappings`
+5. 🔲 **Revoke the old GitHub PAT** — open since Aug 29
+6. 🔲 Role-scoping second pass on composite endpoints (`dashboard`, `calendar`, `alerts`) — field-level filtering, deliberately deferred
+7. 🔲 `db-backup.yml` via the GitHub web UI (open since Aug 26)
+
+---
+
 ## Session: August 30, 2026 — CRM cleanup and a run of permission decisions; six fixes shipped
 
 **Theme:** A long working session on the Perpetual Blue CRM. Several bugs turned out to be the same class — something that looked fine and silently wasn't — plus a batch of decisions on capital, labour and permissions that had been open for weeks.
