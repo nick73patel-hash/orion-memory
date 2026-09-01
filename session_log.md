@@ -35,7 +35,19 @@ Two things added beyond what Nick listed: **which bedroom** each tenant occupies
 ### 💰 Capital module in use
 Nick located the Capital module (sidebar, piggy-bank icon) and confirmed his Mercury $100 was already there from the migration. **Derek's $1,000 deposit** into the Mercury account still to be recorded via `/capital/new` — `cash_to_llc`, equity, company cash. That closes Derek's gap from $7,608.81 to roughly $6,608.81.
 
+### 👀 First visual review of the CRM — via Claude in Chrome
+📌 **Nick pointed out that Orion had been building UI without ever looking at it.** Correct — the capital pages, Jobs summary cards, print stylesheet, decision brief artifact and formatted email were all shipped on structural checks (tag balance, `tsc`, `npm run build`) and never actually viewed. The Grenada guest page has been unverified since Aug 26. **Structural checks prove a page renders; they do not catch a squashed column, a bad wrap, or a figure that is simply wrong.**
+
+**The sandboxed in-app browser cannot do this** — the CRM, private artifacts and local HTML files all need a login it does not have. **Claude in Chrome (the extension, driving Nick's real Chrome) can.** ✅ **NEW DEFAULT from 2026-08-31: build it, then LOOK at it before calling it done.**
+
+**First review — `/capital`:**
+- ✅ **Numbers verify.** Total **$831,207.81**, **$28,417.62** to level. Every figure is exactly $100 above the old tracker (and $200 on the levelling) — precisely right, because the Mercury $100 moved into capital, putting Nick $100 further ahead and each of the others $100 further behind. It appears correctly as *"Mercury opening deposit · Cash into the LLC · Jul 24"*. **The migration did what it claimed.**
+- ⚠️ **REAL BUG FOUND — "Of which estimated" overstates.** The banner reads *"$24,926.81 of the totals above is an estimate rather than evidenced spend"* and the column shows that full amount against Nick. **Wrong.** Only **$9,500** is a genuine estimate (the $7,500 card placeholder + the $2,000 cash figure — the only two rows carrying an `ESTIMATE` badge). The other **$15,426.81** is itemised real spend — crew pay, autopilot parts, both crew flights, water/sand weights, carbon fibre roll — documented purchases whose receipts merely are not attached yet. **The view conflates "estimated" with "not yet evidenced".** That makes $15K of solid figures look as soft as the two placeholders, defeating the point of flagging estimates at all. **Discuss and fix 2026-09-01.**
+- Derek's **$1,000** still not recorded (he shows $0.00 unbooked).
+- Nick's Chrome viewport is 991px wide, where the events table gets tight — confirm it scrolls rather than clips on a narrow screen.
+
 ### ⏭️ Next
+- 🔲 **Discuss and fix the "of which estimated" figure** — separate *estimated* from *unevidenced*
 - 🔲 Send the email to Ann; send the written DRE inquiry
 - 🔲 Record Derek's $1,000
 - 🔲 **Digits setup** — then key the real chart of accounts into `capital_account_mappings`; nothing exports until then

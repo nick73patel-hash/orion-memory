@@ -66,6 +66,7 @@
 
 ## User Preferences (applies to all projects)
 - [Delegate build tasks to BACKGROUND subagents](pref_delegate_subagents.md) — keep Orion free to converse; only do quick answers, commits/pushes, and trivial edits directly
+- [**Build it, then LOOK at it**](pref_look_before_done.md) — visually verify UI in **Claude in Chrome** before calling it done; the sandboxed browser can't reach the CRM or private artifacts. Set 2026-08-31 after the first review found a real bug the build couldn't catch.
 - [**"Save" = all four actions**](pref_save_command.md) — update memory + update session log + commit/push + back up to `Projects\orion-memory-backups\`. Never just one.
 - ["Copy button" = use `Set-Clipboard`](pref_copy_buttons.md) — write the text straight to Nick's Windows clipboard from the shell and read it back to verify; widget copy buttons don't work (sandboxed iframe blocks clipboard writes)
 - [Model: Opus 4.8 default, bump to Opus 5 when it helps](pref_model_opus5.md) — flag main-thread switch to user; run heavy subagents on Opus 5 directly
