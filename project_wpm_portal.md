@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: cb8dbb3a-425a-4e53-a5c9-b7ae67499936
-  modified: 2026-08-31T22:08:09.972Z
+  modified: 2026-09-02T21:39:12.541Z
 ---
 
 # WPM Property Management Portal
@@ -22,7 +22,7 @@ Replace Buildium/AppFolio/Rentec ($45–$280/mo) with an owned system. At 200 un
 **Ownership & parties — the structural facts everything else depends on:**
 - **YMCA owns the properties, all but ONE** → at least **two owner entities from day one**. Multi-owner must be in v1, not retrofitted.
 - **The lease is between YMCA and the tenant.** WPM is the **managing agent, not the lessor.**
-- **YMCA does not collect rent today — WPM will collect it.** So WPM holds other people's money → **trust/escrow accounting is in scope**, with per-owner sub-ledgers and three-way reconciliation.
+- ⚠️ **SUPERSEDED — this line originally read "WPM will collect it," which drove a whole trust-accounting design.** That is no longer the plan: **rent goes directly into a YMCA-controlled account and WPM never takes custody** (see the four binding constraints below). **Trust/escrow accounting, per-owner sub-ledgers and three-way reconciliation are all OUT OF SCOPE** — that is precisely what the direct-deposit structure buys. YMCA does not collect rent today, so standing this up is a real ask of them and the first thing to confirm.
 - ✅ **RESOLVED 2026-08-31 — NO LICENCE REQUIRED.** This clears the single biggest blocker on the project.
   - 📞 **Source of the ruling — record this, it is the documentation:** Nick called the **Colorado Division of Real Estate (DORA)** on **2026-08-31** at **303-894-2166** and spoke with **MARCY RIVERA, Investigator, DORA**. She confirmed WPM does **not** need a licence provided it operates as structured below. Cite her name and the date in the management agreement file and in any future correspondence on this point.
   - **Confirmed facts:** WPM does **NOT** hold an employing broker's licence. The licensed person on the team is an **associate broker**. A licensed employing broker consulted separately gave the same answer.
@@ -101,7 +101,7 @@ Replace Buildium/AppFolio/Rentec ($45–$280/mo) with an owned system. At 200 un
 
 **⚠️ Sourcing caveat:** every Colorado DRE PDF returned **403**. CP-12 and CP-24 quotes come from search extracts corroborated by verified Rule 1.61 / 5.11 text. **Read CP-12 and CP-24 directly before relying on them.**
 
-**▶ NEXT STEP — written inquiry to the Division of Real Estate**, drafted at `Projects\smr-crm\dre-inquiry-letter.md`. Cheap, fast, close to dispositive. Asks: do these facts require a licence · does CP-24 reach a third-party company or only salaried employees · would putting showing/leasing staff on YMCA's payroll fix it · where's the line on showings · is view-only custody · **and (optional §4, Nick's call) does licensing pull STR guest deposits into trust accounting.** Have a Colorado attorney review before sending.
+**▶ Written inquiry still worth sending** — `Projects\smr-crm\dre-inquiry-letter.md`. Now **confirmation rather than a gate**, since Marcy Rivera at DORA answered by phone on 2026-08-31. Still worth having in writing: a phone opinion does not survive a dispute, and under *Benham v. Heyde* an unlicensed manager's contract is unenforceable — so the downside of being wrong is losing the fee entirely.
 
 **Other locked facts:** Reg E `12 CFR § 1005.10(d)` — varying-amount debits need **10 days' advance notice** (now YMCA's duty as Originator). **HB25-1249 effective 2026-01-01** rewrote the deposit statute: trigger moved from "willful" to **"wrongful,"** three mechanical failures now deemed wrongful with **no scienter** → near strict-liability treble damages + one-way attorney fees, so **photo-evidence inspections are the highest-value module.** **Employer-provided housing is carved out of the 2024 just-cause eviction law** (§ 38-12-1302(1)(d)) with a **3-day cure vs 10** — but it attaches **per lease, not per property**, and a retiree/contractor/seasonal-stayed-on silently converts to full protection (**3× monthly rent or $5,000** liability). **Colorado Privacy Act does not apply.** **10-year carpet rule:** carpet 10+ years old = no carpet deduction at all. **A2P 10DLC**: carriers block unregistered traffic outright since Feb 2025, no bounce; 3–5 week lead time. **Zero Colorado authority exists** on apportioning by-the-room shared-space damage — pure lease-drafting problem.
 

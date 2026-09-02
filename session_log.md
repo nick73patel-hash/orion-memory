@@ -4,6 +4,50 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: September 1–2, 2026 — DORA cleared the licence question; CRM in real use, three fixes found by looking
+
+**Theme:** The SMR licence blocker resolved by an actual regulator. Then the first real day of data entry in the Perpetual Blue CRM, which surfaced three issues no build check could have caught.
+
+### ⭐ SMR — the licence question is ANSWERED
+- **Nick called the Colorado Division of Real Estate** (DORA) — 303-894-2166, Broker Program. **Result: NO licence needed**, provided WPM operates as discussed: does not set or negotiate rent, does not select tenants, does not sign leases, and never takes custody of funds.
+- **This clears the single biggest unknown across the whole project.** It removes both the go/no-go on the payment module and — importantly — the knock-on threat that getting licensed would have pulled WPM's **existing vacation-rental guest deposits** into CREC trust accounting under § 12-10-217(1)(h) / Rule 5.11. That risk is now moot.
+- **Email to Ann at YMCA drafted, formatted and clipboard-ready** — `Projects\smr-crm\email-to-ann-ymca.html` (inline-styled for Gmail) and `.md`. Leads with the four structural commitments (YMCA sets rent, selects tenants, signs leases, holds the bank account) because they justify the bank-account ask. Then eight numbered questions: ownership incl. the Granby property and whether it is LANCA · direct-to-YMCA bank account with WPM view-only · payroll deduction assumed unwanted · full tenant list with **which bedroom** where let by the room · who signs · staff accountant · current maintenance process · how the CRM connects without creating two competing queues. **Not yet sent.**
+- The written DRE inquiry (`Projects\smr-crm\dre-inquiry-letter.md`) is still worth sending to get it in writing, since *Benham v. Heyde* makes an unlicensed manager's contract unenforceable — but it is now confirmation rather than a gate.
+
+### 🚢 Perpetual Blue CRM — first real data entry
+Nick entered **21 jobs** (~$19,101 estimated) and began using the system properly. Sean Powell's login created and verified **Active**.
+
+**Sean's login — and a stale record caught by looking.** The User Access page showed his email as `sean@perpetualbluebvi.com`, not `captainsean@`. The Aug 29 correction had reported success but almost certainly ran against the **wrong Supabase project** (the same session that hit *relation crm_users does not exist*). Fixed with a single statement that set both `supabase_uid` and the corrected email, matching on either address so it worked regardless of prior state. Also caught Nick about to paste **his own UUID** — it matched the abbreviated `fae3ca42…8e0c` displayed for his row.
+
+### 🐛 Three fixes, all found by looking rather than building
+1. **The job detail page was unreachable** (`1efd19a`). It existed at `/maintenance/todo/<id>` with the Add-cost action — but `TodoList.tsx` only ever linked to `/edit`, and the job title was plain text. **The feature that makes the whole no-double-entry design work had no way in.** Titles now link, in both the open and completed tables.
+2. **Add-cost made you retype what you had already entered** (`0a39618`). Nick asked for "a button that says turn this into a financial transaction... and I can upload the receipt." The plumbing already existed — an expense with `todo_id` lands in **Financials → Transactions** *and* the job roll-up, one row not two. What was missing was convenience: it now prefills AMOUNT from the job's `estimated_cost` and WHAT FOR from the job title (only when the fields are empty, so it never fights the user), and carries **Attach Receipt / Take Photo** reusing the existing `ReceiptUpload` component and `pb-receipts` bucket. No migration needed. **Deliberately did NOT add a second button** — prefilling *is* the feature; a second button doing what Add cost already does would confuse.
+3. **New `Customs` expense category** (`087705b`) — a real recurring cost once the boat works Grenada and the Grenadines, previously disappearing into "Other". **Fixed a drift risk while there:** `app/(crm)/expenses/page.tsx` re-typed the whole category list instead of importing it, so adding a category would have put it in the form but silently left it out of the filter. It now spreads `EXPENSE_CATEGORIES`.
+
+### 📅 Opening balance dates moved to Aug 1
+Nick asked to move all three opening balances from 2026-08-31 to **2026-08-01**. **The state guard blocks this** — posted rows are immutable except memo/notes/posting refs, and `txn_date` is explicitly listed. Justified bypass: 08-31 was an arbitrary cutover date chosen by migration 028, not a filed accounting date; nothing had been posted against it and only the date changed. `supabase/fix_opening_balance_date.sql` disables `capital_txn_state_guard_trg`, updates only rows where `contribution_type = 'opening_balance'`, re-enables the guard, and verifies. ✅ Applied and confirmed on screen — Derek 278,833 / Nick 261,615 / David 265,833, all Aug 1, still Booked and locked. The MHG marker (Jul 23), Mercury $100 (Jul 24) and itemised lines were untouched.
+
+### 👀 The new default is earning its keep
+Every one of the three fixes above came from **opening the page in Claude in Chrome and looking** — none would have been caught by `tsc`, `npm run build`, or structural checks. Also confirmed working on screen: the MHG row renders with its **$10,782.00 struck through** and a badge reading *"ALREADY IN OPENING BALANCE — never counted again."*
+
+📌 **Two recurring process notes:**
+- **A push is not a deploy.** Repeatedly saw stale pages after pushing; **`ctrl+shift+r` (hard reload) is required** — a normal reload serves the cached bundle. Check `vercel ls` for `● Ready` before concluding a fix failed.
+- Page-zoom shortcuts are unsupported in Claude in Chrome; `resize_window` resizes the OS window but the page still reports a desktop viewport, so **mobile layout cannot be emulated this way.** Nick asked whether the CRM works on a phone — it will load, but it is desktop-first (9-column tables, fixed sidebar) and **remains genuinely unverified.** He should just open it on his phone; it matters because Sean will use it from the boat.
+
+### 🎓 Personal
+Nick makes his **final college payment next week — $20,000.** Roughly **$600K total** across two children (~$100K/yr × 4 for his daughter, ~$200K for his son). No more college bills. Funds will be **saved and kept liquid** for the many projects rather than committed to any one.
+
+### ⏭️ Open
+- 🔲 **Revoke the old GitHub PAT** — open since Aug 29. ⚠️ A stored credential exists in Windows Credential Manager under `nick73patel-hash`; it may BE that PAT, so revoking could break pushes. Recoverable: clear the credential and GCM re-prompts. Nick to do it himself — he may hold several tokens and should see which he is deleting.
+- 🔲 **Fix "of which estimated"** — still claims $24,926.81 when only $9,500 is a genuine estimate; conflates *estimated* with *unevidenced*
+- 🔲 Record Derek's **$1,000**; create Auth users for **Henry, David, Derek** + link UUIDs; create Henry's Zoho mailbox
+- 🔲 **Digits setup**, then the real chart of accounts into `capital_account_mappings` — nothing exports until then
+- 🔲 Send the email to Ann; send the written DRE inquiry
+- 🔲 Role-scoping second pass before Sean actually uses his login; `db-backup.yml` via the GitHub web UI
+- 🔲 Verify the CRM on a phone
+
+---
+
 ## Session: August 31, 2026 — DORA confirms no licence needed; the SMR blocker clears
 
 **Theme:** Short morning. The single biggest open question on the SMR portal — whether Winter Park Management needs a Colorado brokerage licence — was answered by the regulator directly. Plus a drafted email to YMCA.
