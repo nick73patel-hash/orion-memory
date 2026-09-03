@@ -62,6 +62,7 @@ Last updated: 2026-07-18
 - [ ] **Set up a passkey** — GitHub login hardening
 
 ## Tech & Dev
+- [ ] ⭐ **TOMORROW — 1Password signup + break the Google single point of failure.** In this order: (1) create 1Password account with an EMAIL, never "Continue with Google"; (2) print the Emergency Kit; (3) Google backup codes (Google Account → Security → 2-Step Verification → Backup codes) — print them; (4) store `BACKUP_ENCRYPTION_KEY` in 1Password AND on paper — it is the only secret with no reset button and it guards the only full copy of the CRM database; (5) set a real GitHub password + enable 2FA at github.com/settings/security. **Why:** GitHub shows Password `Not configured`, no passkeys, 2FA off, Google the sole sign-in — so one Google lockout today costs the backups, the encryption key and the Supabase restore target simultaneously. Orion to open each page in order.
 - [ ] **Second-computer setup** — git PAT for orion-memory, auto-approve on, memory sync + pull-before-push habit
 - [ ] **Set up meeting notes system** — Fireflies.ai → Supabase or paste-to-Claude workflow
 

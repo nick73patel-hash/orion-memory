@@ -19,3 +19,13 @@ The Perpetual Blue CRM database backs itself up nightly to GitHub. **Live and ve
 **Pushing changes to this file requires a PAT with `workflow` scope.** The current PAT lacks it, so edits to anything under `.github/workflows/` are rejected by `git push` and must go through the GitHub web editor. See [[env-windows-machine]].
 
 Related: [[project-perpetual-blue]], [[pb-licenses]]
+
+## Open gaps (as of 2026-09-03)
+
+1. **Never restore-tested.** No one has decrypted a snapshot. Test: `gpg --decrypt backups/<file> | gunzip | head -30` run in Nick's own terminal so pinentry prompts him (never via Orion's Bash tool — it blocks on the dialog).
+2. **⚠️ Supabase Storage is NOT backed up.** Four buckets in use — `pb-receipts`, `pb-documents`, `pb-capital`, `avatars`. `pg_dump` captures only the metadata rows; the actual uploaded files (receipt photos, documents) exist nowhere else. A restore today would produce dead links for every receipt.
+3. **The cron has never fired successfully** — every green run so far was `workflow_dispatch`. First unattended proof is 08:00 UTC.
+4. **30-day retention blind spot** — corruption discovered on day 31 exists in every retained snapshot. A never-pruned monthly archive would cover it.
+5. **`backups/README.md` is stale** — still describes `find -mtime +30` pruning, which never matched anything.
+6. **No deploy/config capture** — Vercel environment variables are not recorded anywhere outside Vercel.
+7. **Whether `auth.users` is in the dump is unverified** — if it is not, a restore yields data with no logins. The restore test in (1) answers this.
