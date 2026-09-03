@@ -59,6 +59,7 @@
 ## Credentials
 - [Condo Assistant Admin Login](condo_assistant_credentials.md) — assistant.winterparkmanagement.com/admin
 - [Perpetual Blue Licenses & Credentials](pb_licenses.md) — BVI BC reg, CRVL, work permits, ship registry, insurance (template, fill in as numbers obtained)
+- [Perpetual Blue DB Backup](pb_db_backup.md) — nightly encrypted Supabase dump to GitHub, LIVE since 2026-09-03; BACKUP_ENCRYPTION_KEY is write-only and is the ONLY thing that can open the files
 
 ## Environment
 - [Supabase SQL editor — the `INTO`-in-a-string trap](env_supabase_sql_editor.md) — a SQL keyword inside a quoted value gets parsed as SQL; cost an hour on 2026-08-30. Keep prose out of SQL values.
@@ -69,6 +70,7 @@
 - [**Build it, then LOOK at it**](pref_look_before_done.md) — visually verify UI in **Claude in Chrome** before calling it done; the sandboxed browser can't reach the CRM or private artifacts. Set 2026-08-31 after the first review found a real bug the build couldn't catch.
 - [**"Save" = all four actions**](pref_save_command.md) — update memory + update session log + commit/push + back up to `Projects\orion-memory-backups\`. Never just one.
 - ["Copy button" = use `Set-Clipboard`](pref_copy_buttons.md) — write the text straight to Nick's Windows clipboard from the shell and read it back to verify; widget copy buttons don't work (sandboxed iframe blocks clipboard writes)
+- [Measure, don't guess](lesson_measure_dont_guess.md) — when a failure resists theories, print the SHAPE of the invisible thing; cost hours twice before it stuck
 - [Model: Opus 4.8 default, bump to Opus 5 when it helps](pref_model_opus5.md) — flag main-thread switch to user; run heavy subagents on Opus 5 directly
 - Goes by **"bro"** — keep it casual and collaborative
 - Claude Code assistant is named **Orion** (formerly Gerty) — loyal electronic dog, like one of the user's 5 real dogs

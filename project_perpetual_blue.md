@@ -60,6 +60,8 @@ Stack for the **Florida LLC** (US operating entity):
 **Live at:** crm.perpetualbluebvi.com · **Repo:** github.com/nick73patel-hash/perpetual-blue-crm (private) · **Stack:** Next.js 16 + Supabase + Vercel · 20 modules
 **Status (as of July 29, 2026):** Deployed and working. Nick's admin login is live. Three launch bugs fixed (RLS recursion, self-fetch 500s, nav 404s). See session log for detail.
 
+**Data safety (2026-09-03):** Nightly encrypted DB backup is **LIVE** — `.github/workflows/db-backup.yml` dumps to `backups/perpetual-blue-<date>.sql.gz.gpg` (AES256) at 08:00 UTC, 30-day retention. Took five bugs to get green. ⚠️ `BACKUP_ENCRYPTION_KEY` is a write-only GitHub secret and is the **only** thing that can decrypt these files — it must be stored off GitHub and off the laptop. See [[pb-db-backup]].
+
 > ⚠️ **Known gotcha (hit Aug 24, 2026):** Supabase **free tier auto-pauses the DB after ~7 days of inactivity.** When paused, the Vercel-hosted login page still loads fine but ALL auth calls (login + password reset) fail with **"Failed to fetch"** / `net::ERR_BLOCKED_BY_CLIENT`. **Fix:** Supabase dashboard → open `perpetual-blue-crm` project → **Resume**. This WILL recur whenever the CRM sits unused a week. Nick's admin email = **charters@perpetualbluebvi.com**. Permanent fixes: **Supabase Pro ($25/mo, no auto-pause + daily backups)** once it carries live data, or a scheduled keep-alive ping (free but hacky).
 
 > 🚨 **REGRESSION — the RLS recursion bug came back on 2026-08-29, and here is why it will come back again.** The July fix was applied **to the live database only and never back-ported into `migration_010_roles.sql`.** That file still shipped the broken policy, so **re-running migration_010 on Aug 29 reintroduced an already-solved bug.**

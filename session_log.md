@@ -4,6 +4,36 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: September 3, 2026 — The nightly DB backup is LIVE (five bugs deep)
+
+**Theme:** Answering "what happens if my laptop disappears right now" with something real. The GitHub Action had been silently failing every night since Aug 29. Five distinct bugs, found and killed in sequence.
+
+### ✅ Nightly encrypted Supabase backup — WORKING (run #42, commit `481237d`)
+`backups/perpetual-blue-2026-09-03.sql.gz.gpg` — **90,594 bytes**, AES256, committed by `backup-bot`. Runs 08:00 UTC nightly, 30-day retention (pruned by **date in the filename**, not mtime — `actions/checkout` rewrites mtimes every run, so a `find -mtime` prune would never match).
+
+**Verified structurally without decrypting:** first bytes `8c 0d 04 09 03` = Symmetric-Key Encrypted Session Key packet, v4, cipher algo 9 (AES256), iterated+salted S2K.
+
+### 🐛 The five bugs, in the order they surfaced
+1. **`gpg --dearmor` hung on a TTY-less runner** — tried to prompt to confirm overwrite, died on `/dev/tty`. curl then reported (23) as its pipe collapsed. Fix: `--batch --yes`. This one failed *before the backup step was ever reached*, every night since Aug 29.
+2. **Direct connection is IPv6-only** — unreachable from GitHub runners. Fix: Session pooler, `aws-1-us-west-2.pooler.supabase.com:5432`, user `postgres.udmndiuasxgglqvskxua`.
+3. **⭐ Supabase's `[YOUR-PASSWORD]` brackets were left in the secret** — the template placeholder ships *with* square brackets; Nick replaced the inside and kept the wrapper, so libpq sent `[password]` literally. Surfaced as `FATAL: password authentication failed for user "postgres"` — indistinguishable from a wrong password. Survived 4 runs and a full password reset.
+4. **`pg_dump` wrapper resolved to client 16** vs server 17.6 — `/usr/bin/pg_dump` is postgresql-common's wrapper and picks the runner's *preinstalled* 16, not the 17 just installed from PGDG. pg_dump refuses to dump a newer server. Fix: call `/usr/lib/postgresql/17/bin/pg_dump` directly.
+5. **`${PIPESTATUS[1]}: unbound variable`** — my own error-checking block. Under `set -u`, the `[` test on the first index resets PIPESTATUS before the second is read. Deleted it: `set -e` + `pipefail` already abort the step, and a failed step means the commit step never runs, so nothing partial can be committed.
+
+### 🔦 The technique that actually cracked it
+Bug #3 resisted four runs of guessing. What broke it was a **diagnostic step that printed the SHAPE of the secret without printing the secret**: total length, scheme, username, password length, password *symbol count*, host/port/db, and a whitespace check. That output — `password length: 17, symbol count: 3` against an expected ~15 alphanumeric — made the brackets arithmetic-obvious (110 − 17 + 15 = 108). **Measure the thing you cannot see, rather than guessing at it.** Same lesson as the `INTO`-in-a-string bisect on Aug 30.
+
+### ⚠️ The single point of failure that remains
+**`BACKUP_ENCRYPTION_KEY` is the only thing that can open these files.** GitHub secrets are write-only — it cannot be read back by Nick or by Orion. If it is lost, every backup in that folder is permanently unreadable. **It must live somewhere that is neither GitHub nor the laptop** (password manager, or written down physically). Not yet confirmed done.
+
+### 🔧 Process notes
+- **The PAT still lacks `workflow` scope** — `git push` is rejected for any change under `.github/workflows/`, so workflow edits must go through the GitHub web editor. Worth fixing when the old PAT is finally revoked.
+- **Editing CodeMirror by pixel coordinates is unreliable** — the view scrolls between the screenshot and the click. An early edit landed on `set -euo pipefail` instead of the pg_dump line. **Navigate by keyboard from a fixed anchor instead:** `ctrl+Home`, then `Down` × N, then `Home`. Deterministic.
+- **Never run `gpg --list-packets` on the user's machine** — it triggers a **pinentry** passphrase dialog on *his* screen and blocks until answered. Read the header bytes with `od` instead.
+
+---
+
+
 ## Session: September 1–2, 2026 — DORA cleared the licence question; CRM in real use, three fixes found by looking
 
 **Theme:** The SMR licence blocker resolved by an actual regulator. Then the first real day of data entry in the Perpetual Blue CRM, which surfaced three issues no build check could have caught.
