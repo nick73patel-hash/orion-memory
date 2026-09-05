@@ -75,6 +75,59 @@ Nick's car — $105K sticker (vs $82,900 base), **no** air suspension, new tires
 
 Also found and fixed while in there: the condo-assistant memory pointed at `Documents\` when the project actually lives in `Projects\`, and claimed "last active April 15" when the last commit is July 28.
 
+### 💵 Accounts payable — 3 more agents; migration 034 applied
+
+Nick had a $1,000 accounting invoice and $7–8K of other invoices **received but not paid**, and everything already in the CRM was paid. `expenses` conflated two different events: *"we incurred this cost"* and *"we paid this cost."* For history they coincide; for a projection they are completely different — **a paid expense is finished, an unpaid one is a claim on future cash.**
+
+**Migration 034** adds `due_date` + `paid_date` to `expenses` (**NULL paid_date = unpaid**), backfills every existing row as paid, and ships a Paid/Unpaid toggle, an unpaid filter, and separate **PAID** vs **OUTSTANDING** totals. Applied successfully.
+
+🚨 **The trap that would have corrupted partner capital:** `capital_sync_from_expense()` auto-creates an owner capital contribution from any expense carrying `paid_by_owner_id`. Entering $9,000 of *unpaid* invoices would have credited an owner for money nobody had spent — and David and Derek read those balances. The agent guarded it by narrowing the notion of the payer ONCE at the top (*effective payer = the payer if the row is paid, otherwise nobody*) rather than bolting a test onto each of four branches. The unpaid→paid transition then needs **no separate code path** — there is no fifth branch to forget.
+
+📌 **The subtle call that saved the ledger:** `paid_date` defaults to `CURRENT_DATE`, **not NULL**. Five write paths reach `expenses` and only two know about the column; a NULL default would have silently reclassified every job cost as an unpaid invoice. Also: the default is set **after** the backfill, never on the `ADD COLUMN` — otherwise every historical row would claim it settled the day the migration ran.
+
+### 🕳️ The completion hole — worse than I described it
+Nick's model: *job added (not counted) → **approved** (counted at estimate) → completed (counted at ACTUAL) → paid (falls away).* Investigating it found **two** ways a real liability could vanish:
+
+1. **Completing a job never created a transaction.** The panel said "leave blank to use the estimate" — but blank wrote `actual_cost` as NULL, so the money survived only in the maintenance log.
+2. ⭐ **The bigger one: a completed job left the projection unconditionally**, because the cash flow **did not read the `expenses` table at all**. Mark a job done and its money disappeared from cash needed whether or not the yard had been paid.
+
+Now completion **refuses to close on a shrug** — exactly one of: costs already linked · a figure entered (pre-filled with the estimate) · **"No cost — already covered"** ticked, which records an explicit answer rather than silence. It writes a real `expenses` row carrying `todo_id`, ledger-row-first so a failure completes nothing, and asks paid/unpaid with a due date.
+
+**Approve** maps onto the existing `cashflow_status` rather than adding a fourth classification: `wishlist` = **Not approved** (never counted), `planned`/`committed` = approved. Approving requires a target date, enforced in the form *and* the API.
+
+### 🧮 Payroll — and a discovery about where it already lives
+**Henry $3,000/mo · Sean $3,500/mo — but August and September are an ANNUAL LAY-UP.** Henry does not work them at all; Sean drops to $2,000. Peak Caribbean hurricane season.
+
+**Sept–Dec 2026 = $21,500** (Sep 2,000 · Oct–Dec 6,500 each).
+
+📌 **`crew.salary_amount` and `payroll` already exist** (migration 004) — `payroll` even has its own `paid_date`. But **neither `crew.salary_amount` nor `recurring_expenses.amount` can hold "except in these months"** — both are a single number. **Date-bounded rows are how this schema expresses a rate that changes.** Two seasons seeded, through July 2028.
+
+⭐ **Every payroll row DELIBERATELY ends.** From Aug 2028 the projection shows **zero** payroll. That is intentional: open-ended rows would quietly bill Henry through a lay-up he does not work, every year, forever. **A wrong number you can SEE beats a wrong number you cannot** — same principle as the undated-jobs banner.
+🔲 **Durable fix:** one nullable column on `recurring_expenses` listing which months a cost applies to. Henry becomes a single row (3,000, Oct–Jul), correct forever. Retires the whole maintenance class.
+
+**Sean's August 2026 $2,000 is unpaid** — entered as a past-due `expenses` row, not a recurring one. `paid_by_owner_id` deliberately left NULL so it cannot create a capital contribution.
+⚠️ **TRACKED DUPLICATION RISK:** that row belongs in `payroll` semantically but lives in `expenses` because that is the only table the cash flow reads. **When payroll is wired into the projection it must move or be de-duplicated, or August 2026 counts twice.**
+
+### 🔎 Two risks the agents found on their own
+- **`recurring_expenses` and `expenses` have no foreign key.** A standing cost also entered as an unpaid invoice lands in outflows twice. Heuristic detection + amber banner added — but **nothing is netted off**, on the grounds that a heuristic silently deleting money is worse than one that asks. Right call.
+- **Double-count guard is deliberately OFF unless both `paid_date` and `todo_id` exist.** Suppressing a job estimate when the replacing invoice cannot be counted would *understate* cash needed — the one failure this page must not have.
+
+### 🧰 Process notes
+- **PowerShell `$( )` breaks on a paren inside a quoted regex** — `$($x -match '[,)]')` is a parse error. Keep regex out of subexpressions; assign to a variable first.
+- **Shell blocks handed to Nick must use `;` not `&&`.** The app's Run button feeds them straight to PowerShell, where `&&` is a parse error — he hit it on the memory push. Already a known Windows quirk and I still handed him the broken form.
+- **Check the clipboard by reading it back before saying what is in it.** Nick asked twice today whether what he had was the right thing; `Get-Clipboard -Raw` answers it in one call instead of guessing.
+- An odd single-quote count is **not automatically a problem** — an apostrophe in a `--` comment is inert. Count quotes on non-comment lines before raising it.
+
+### ⏭️ Open after this session
+- 🔲 **STILL nothing visually verified.** Four migrations, three new pages, a rewritten expenses page — all confirmed only by compiler and build. Nick has not signed in. This is the single largest outstanding risk.
+- 🔲 Remaining fixed costs — insurance, dockage, comms, registration, accounting, bottom cleaning, BVI show fees. **Payroll is done; do not re-enter it.**
+- 🔲 The $1,000 accounting invoice + the $7–8K batch, as unpaid
+- 🔲 Target dates on the 21 jobs; approve the real ones
+- 🔲 Wire `crew` + `payroll` into the projection (and de-duplicate Sean's August row when doing so)
+- 🔲 Seasonality column on `recurring_expenses` — retires the annual row-extension chore
+
+---
+
 ### ⏭️ Open
 - 🔲 **Nick to sign in to the CRM** so the three new pages can finally be LOOKED at — nothing has been visually verified
 - 🔲 **Confirm whether `ad7b230` actually deployed** — production built Sep 5 05:30, which is after the commit, but an unauthenticated probe cannot tell (middleware 307s everything, including deliberately bogus routes)

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 2ba035ee-bd06-45c1-bbbc-a749b8dffa53
-  modified: 2026-09-05T15:44:59.828Z
+  modified: 2026-09-05T17:03:07.806Z
 ---
 
 Environment facts for Nick's Windows 11 machine that keep costing time when rediscovered.
@@ -51,5 +51,13 @@ Environment facts for Nick's Windows 11 machine that keep costing time when redi
 s = s.split("Documents\\condo-assistant").join("Projects\\condo-assistant")
 ```
 Same rule for any replacement containing backslashes. For multi-line content, write the text with the Write tool and have Node read it from a file rather than passing it through the shell — heredocs plus `node -e '...'` in one command also break on embedded quotes.
+
+**💵 And NEVER pass prose containing `$` amounts through a double-quoted shell string (bit me 2026-09-05).** `node -e "...Henry ($3,000/mo)..."` — bash expanded `$3` as a positional parameter and wrote **`(,000/mo)`** into a memory file. Every dollar figure in the paragraph was silently destroyed; `$21,500` became `1,500`. Same silent-corruption class as the sed backslash trap. **Content with money, backslashes, or quotes goes through the Write tool, then Node reads the FILE.** Never inline it into a shell command. Audit after any scripted edit: `grep -n "(,[0-9]" <file>`.
+
+**⚠️ Shell blocks handed to Nick must use `;` not `&&` (learned 2026-09-05).** The app Run button feeds a shell block straight to PowerShell, where `&&` is a hard parse error - *"The token && is not a valid statement separator in this version."* He hit it on a git push.
+
+**PowerShell `$( )` breaks on a paren inside a quoted regex.** `$($x -match '[,)]')` is a parse error - the subexpression parser counts parens without respecting the string quoting. Assign to a variable first.
+
+**Read the clipboard back before telling Nick what is in it.** `Get-Clipboard -Raw` answers "is this the right thing?" in one call. He asked twice in one session.
 
 See [[session-log]] for the sessions where each of these bit.

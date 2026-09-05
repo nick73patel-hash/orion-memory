@@ -634,3 +634,15 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 ⚠️ **Structural risk to flag in any projection:** those inflows run through a clearing company where there is an active escrow conflict (Hank is a partner in Paradise Yacht Clearing; $45,477.34 outstanding). Revenue depends on a counterparty currently in dispute. Open question: does the clearing company release on completion day or with a lag?
 
 ⚠️ **Opening cash is typed in by hand** — the CRM stores no bank balance anywhere.
+
+## 📒 Accounts payable + payroll (added 2026-09-05, migration 034 applied)
+
+**Unpaid invoices are now first-class.** `expenses.paid_date` NULL = outstanding; `due_date` places it in a month (defaults to net 30). Paid/Unpaid toggle on every transaction row, and the expenses page shows PAID vs OUTSTANDING separately.
+
+🚨 **`capital_sync_from_expense()` is guarded so an UNPAID expense can never create an owner capital contribution.** Without it, entering unpaid invoices tagged to an owner would credit them for money nobody has spent, corrupting the balances David and Derek review.
+
+**The lifecycle:** job added (not counted) -> **approved** (counted at estimate) -> completed (counted at ACTUAL, writes a real expense row) -> **paid** (falls away). `wishlist` = Not approved and is never counted.
+
+**PAYROLL — August and September are an ANNUAL LAY-UP** (peak hurricane season). Henry (**$3,000/mo**) does NOT work them at all; Sean drops from **$3,500** to **$2,000**. **Sept–Dec 2026 = $21,500** (Sep 2,000 · Oct–Dec 6,500 each). Seeded as date-bounded rows through July 2028; **every row deliberately ENDS** so it cannot silently bill Henry through a lay-up he does not work — from Aug 2028 payroll reads zero, which is visibly wrong rather than quietly wrong. Sean's **August 2026 $2,000 is unpaid** and sits as a past-due `expenses` row.
+
+⚠️ **Do NOT enter payroll into recurring_expenses twice** - and note `crew.salary_amount` / the `payroll` table already exist but are NOT read by the cash flow. When they are wired in, Sean August 2026 must be de-duplicated or it counts twice.
