@@ -29,3 +29,7 @@ Related: [[project-perpetual-blue]], [[pb-licenses]]
 5. **`backups/README.md` is stale** — still describes `find -mtime +30` pruning, which never matched anything.
 6. **No deploy/config capture** — Vercel environment variables are not recorded anywhere outside Vercel.
 7. **Whether `auth.users` is in the dump is unverified** — if it is not, a restore yields data with no logins. The restore test in (1) answers this.
+
+**✅ Confirmed running UNATTENDED 2026-09-04** — `perpetual-blue-2026-09-04.sql.gz.gpg`, 90,591 bytes, commit `e04015e`, GPG header `8c 0d 04 09 03` (AES256) verified. ⚠️ It committed at **12:23 UTC, not the scheduled 08:00** — GitHub schedule cron is best-effort and runs hours late under load. **Not a bug; do not chase it.**
+
+🐛 **Known defect: the prune step never fires.** It uses `find -mtime +30`, but `actions/checkout` rewrites mtimes every run so nothing ever matches. Backups accumulate forever (~90KB/night, so not urgent). **Fixed properly in the Condo Assistant port** by comparing the date in the FILENAME — port that back.

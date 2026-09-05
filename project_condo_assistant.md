@@ -7,7 +7,7 @@ metadata:
   originSessionId: 2f508bd7-8698-45f7-9fcc-37235f88587b
 ---
 
-Next.js 15 + Supabase + Claude API app at `C:\Users\ducat\Documents\condo-assistant`.
+Next.js 15 + Supabase + Claude API app at `C:\Users\ducat\Projects\condo-assistant`.
 
 Built as an AI concierge for **Winter Park Management** (Winter Park, CO). Guests get a time-limited link and chat with an AI about their stay.
 
@@ -17,16 +17,18 @@ Built as an AI concierge for **Winter Park Management** (Winter Park, CO). Guest
 
 **Why:** Property management company needed a way to answer guest questions 24/7 without staff intervention. Unanswered questions email the admin automatically.
 
-**How to apply:** When opening this project, always switch working directory to `C:\Users\ducat\Documents\condo-assistant`. CLAUDE.md in the project root has full architecture details.
+**How to apply:** When opening this project, always switch working directory to `C:\Users\ducat\Projects\condo-assistant`. CLAUDE.md in the project root has full architecture details.
 
-Session log (what was built, bugs fixed, pending items): `C:\Users\ducat\Documents\condo-assistant\.claude\session-log.md` — read this at the start of every session.
+Session log (what was built, bugs fixed, pending items): `C:\Users\ducat\Projects\condo-assistant\.claude\session-log.md` — read this at the start of every session.
 
 Key facts:
 - 3-tier knowledge hierarchy: Company → Building → Unit (all searched via RAG on each guest message)
 - Guest chat at `/guest/[token]` — voice input + TTS enabled
 - Admin panel at `/admin` — manage company/buildings/units/knowledge/guest links
 - Deploy target: Vercel + `assistant.winterparkmanagement.com`
-- Last active development: April 15, 2026
+- Last active development: **July 28, 2026** (`e21082c`, mobile photo uploads in the inspection module)
+- Remote: `github.com/nick73patel-hash/Condo-Assistant`, branch `master`. Supabase project `mthzmtvopazhsmnbdhkc`.
+- **Backups:** code is on GitHub and in sync. Nightly encrypted DB backup ported from the Perpetual Blue CRM on 2026-09-03 — **inert until the `SUPABASE_DB_URL` and `BACKUP_ENCRYPTION_KEY` secrets are added by hand.** Supabase Storage (inspection photos) is NOT covered by it. See `docs/BACKUP-SETUP.md` in the repo and the backup items in the session log.
 
 **SaaS Layer (in progress):**
 Two target segments:

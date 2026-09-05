@@ -4,6 +4,88 @@ Running log of work sessions. Newest first. Project-specific detail lives in eac
 
 ---
 
+## Session: September 4-5, 2026 — Five agents in parallel; the cash flow module ships
+
+**Theme:** The biggest parallel build yet — 5 subagents, 3 migrations, all applied clean. Plus the first *unattended* backup run, and a bug whose root cause sat three modules away from where I sent the agent looking.
+
+### ✅ Cash flow projection — BUILT; migrations 031/032/033 all applied successfully
+Nick can now run a projection at any time, including for an impromptu meeting. Committed `ad7b230`.
+
+- **031** `maintenance_todos.cashflow_status` — `committed` / `planned` / `wishlist`, seeded from `priority` inside a guarded `DO` block so a re-run never overwrites a hand correction.
+- **032** `recurring_expenses` — the CRM had **nowhere to record a future scheduled cost**; `expenses` only records what already happened. This was the real missing piece, not the categories.
+- **033** the "of which estimated" fix (below).
+- `lib/cashflow.ts` + `/cashflow` — monthly columns, charter revenue, owner capital calls, Paradise claim as a toggle. Integer cents throughout. Nav under **Financials → Cash Flow / Fixed Costs**.
+
+🔑 **The design call that mattered: do NOT reuse `priority` for the cash-flow split.** Priority answers *"how badly do I want this"*; cash flow needs *"have I committed the money."* They genuinely diverge — a low-priority job with the part already ordered is committed cash; a high-priority wishlist item is the first thing cut. Conflating them would have put a wrong number in front of David and Derek. Three tiers, not two, so Nick can say *"here is our floor, and here is the $X we could defer."*
+
+### 💰 REVENUE TIMING — corrected twice, now structurally confirmed
+I assumed charter **start** date. Nick corrected to **end** date. Then he explained *why*: **charter deposits are held in escrow by a clearing company; he is paid only after the charter completes.** So it is not an approximation — it is structural. There is no deposit inflow to model at all.
+
+⚠️ **Within a month this is immaterial. At a month boundary it moves real money between columns.** A charter running 28 Dec – 3 Jan books to **January** and falls outside a Sept–Dec horizon entirely. `beyondHorizon` exists to catch exactly that case.
+
+🚨 **Unflagged business risk surfaced:** charter revenue flows through a clearing company where there is an **active escrow conflict** — Hank is a partner in Paradise Yacht Clearing, $45,477.34 outstanding. **Inflows depend on a counterparty currently in dispute.** "We are covered in November" and "we are covered provided the clearing company releases funds normally" are different statements; the second is the true one. Offered to add it as a named risk row on the page — Nick had not answered when the session was saved.
+
+🔲 **Open:** does the clearing company release on completion day, or with a lag (7/30 days)? A lag moves money across month boundaries the same way the start/end distinction did.
+
+### 🐛 "Of which estimated" — the root cause was in CAPITAL, not maintenance
+I sent Agent D to `components/maintenance/`. **The bug was three modules away**, in `capital_totals_by_owner.estimated_total` (migration 028, line 610):
+
+```sql
+AND t.substantiation IN ('unsubstantiated','estimate')
+```
+
+**`unsubstantiated` is the column DEFAULT** — it means "no document attached yet", *not* "this figure is a guess". `capital_sync_from_expense()` never sets the field, so every owner-paid expense auto-imported into capital inherited it.
+
+**Verified to the penny from seed data, no live DB needed:** $9,500.00 declared estimates (7,500 card + 2,000 cash placeholders, block 15e) + $15,326.81 itemised real out-of-pocket (block 15c) + $100.00 Mercury = **$24,926.81** exactly. So **$15,426.81 that looked like guesswork is money actually spent** — it needs receipts photographed, not re-estimating.
+
+The view **already had a correct `unevidenced_total` column**. Only `estimated_total` mixed the two concepts, so the fix is one expression. ⚠️ **But the owner page GATED its warning banner on `estimated_total` while DISPLAYING `unevidenced_total`** — the migration alone would have silently hidden a warning Nick relies on. Both now gate on what they show.
+
+### 🤖 Running 5 agents in one repo — what actually makes it work
+Roughly 10–12 hours of sequential work done in well under an hour. **Four things prevented a pile-up, and none are obvious:**
+
+1. **Pre-assign migration numbers** (031/032/033). Three agents left alone each create `migration_031`.
+2. **Assign explicit file ownership**, and name the files each agent must NOT touch. `Sidebar.tsx` and `lib/roles.ts` were withheld from everyone and done by me at integration — otherwise a 5-way conflict on the nav.
+3. ⭐ **FORBID agents from running git.** Five agents committing into one working tree corrupts the index. They leave changes uncommitted; the orchestrator commits once, at the end.
+4. **Fix the schema contract up front** so the dependent agent (the report) builds against it instead of waiting. That is where the real time saving comes from.
+
+**Agent D did the right thing by NOT fixing its own bug** — the fix needed a migration and I had told it migrations were taken, so it reported instead of guessing. I finished it myself. *A constraint I imposed left the task half-done; completing it was mine, not the agent's failure.*
+
+**Agent quality note:** one agent stalled (600s watchdog) chasing a CRLF problem that did not exist. **Verify a dead agent's claims rather than inheriting them** — the file had 0 CR bytes and 0 control characters.
+
+### 🔐 Backups
+- **PB nightly backup ran UNATTENDED for the first time** — `perpetual-blue-2026-09-04.sql.gz.gpg`, 90,591 bytes, commit `e04015e`. Header `8c 0d 04 09 03` verified = AES256, same as day one. ⚠️ It committed at **12:23 UTC, not the scheduled 08:00** — GitHub's schedule cron is best-effort and runs late under load. Not a bug; do not chase it.
+- **Condo Assistant backup ported** — `docs/BACKUP-SETUP.md` pushed (`fe1dc43`); the workflow commit `6a7eb4d` is **stuck locally**, push rejected for missing PAT `workflow` scope. **Inert until the two secrets are added by hand.**
+
+### 🏛️ YMCA / DORA — a FIFTH constraint, on wording rather than conduct
+Marcy Rivera's instruction: WPM's title in the contract is **"Leasing Coordinator, working on behalf of the YMCA."** **Never "property manager"** or any variant. `§ 12-10-217(1)` reaches anyone who *"assumes to act in the capacity of a licensee"* — **the label alone can constitute holding out, independent of what you actually do.** The other four constraints govern conduct; this one governs **nomenclature**, and it is the easiest of the five to breach by accident — in a template, an email signature, a job posting.
+
+Checked all four outward-facing docs: clean, and **no contract exists yet**, so this landed before drafting rather than after. ⚠️ The portal's own name ("WPM Property Management Portal") contains the forbidden phrase — fine as an internal tool name, must not bleed into client-facing text.
+
+### 🚗 Side project — 2019 Cayenne S trade-in (VIN WP1AB2AY7KDA61774, 68k mi)
+**Trade-in $23,000–$27,500, midpoint ~$25,250.** The split by buyer matters more than the range: mainstream store $21.5–24K · luxury/independent $25–27.5K · **Porsche dealer with records in hand $27–29.5K**. Private party ~$29,500–31,500.
+
+Nick's car — $105K sticker (vs $82,900 base), **no** air suspension, new tires + snow set, no accidents, always serviced at Porsche — sits in the **upper half, ~$26–29K**.
+
+📌 **I had mileage backwards:** 68k is a *plus*, not a minus. KBB baselines this car at 76,815 miles, J.D. Power at ~103,000, Edmunds says local 2019s average 86–96K. **The low-mileage-Porsche instinct applies to 911s, not Cayennes** — these get driven.
+📌 CO trade-in tax credit (~$2,000) closes most of the private-party gap → real delta only ~$3,250. **Take the trade.**
+🔲 Check service records for **water pump / vacuum actuator** — the 9Y0's known defect, worth $2,000–3,500 if undocumented.
+
+### 🧰 Environment lesson — never use `sed` on Windows paths
+`sed 's|...|Projects\\condo-assistant|'` wrote a literal **`0x0F` control byte** into a memory file: GNU sed read `\c` as a control-character escape. Silent corruption — and the Edit tool then could not match the string, which is how it surfaced. **Use Node `split`/`join` for anything containing backslashes** — no escaping layer at all. See [[env-windows-machine]].
+
+Also found and fixed while in there: the condo-assistant memory pointed at `Documents\` when the project actually lives in `Projects\`, and claimed "last active April 15" when the last commit is July 28.
+
+### ⏭️ Open
+- 🔲 **Nick to sign in to the CRM** so the three new pages can finally be LOOKED at — nothing has been visually verified
+- 🔲 **Confirm whether `ad7b230` actually deployed** — production built Sep 5 05:30, which is after the commit, but an unauthenticated probe cannot tell (middleware 307s everything, including deliberately bogus routes)
+- 🔲 **Fixed costs list** — the cash flow page renders but shows almost nothing until `recurring_expenses` has rows. Critical path, and only Nick has it.
+- 🔲 **Target dates on the 21 jobs** — undated committed/planned jobs are excluded and named in a red banner
+- 🔲 **Confirm the Paradise claim direction** ($45,477.34 owed *to* the boat) — inferred from context, appears nowhere in the codebase
+- 🔲 Camera multi-capture untested on a real phone; the file-picker path is the safer bet
+- 🔲 All standing backup items (see 2026-09-03) — `BACKUP_ENCRYPTION_KEY` off-machine storage still unconfirmed
+
+---
+
 ## Session: September 3, 2026 — The nightly DB backup is LIVE (five bugs deep)
 
 **Theme:** Answering "what happens if my laptop disappears right now" with something real. The GitHub Action had been silently failing every night since Aug 29. Five distinct bugs, found and killed in sequence.
@@ -76,6 +158,14 @@ Nick makes his **final college payment next week — $20,000.** Roughly **$600K 
 - 🔲 Role-scoping second pass before Sean actually uses his login; `db-backup.yml` via the GitHub web UI
 - 🔲 Verify the CRM on a phone
 
+**🔐 Backup items (all open):**
+- 🔲 **Store `BACKUP_ENCRYPTION_KEY` off GitHub and off the laptop** — write-only, unreadable by Nick or Orion. Lose it and every backup ever taken is permanently unopenable. Password manager or paper. ⚠️ Highest-stakes item on this list.
+- 🔲 **Condo Assistant: add the two GitHub secrets** — `SUPABASE_DB_URL` (Supabase **Session pooler** string, NOT direct — direct is IPv6-only; and strip the square brackets from `[YOUR-PASSWORD]`) and `BACKUP_ENCRYPTION_KEY`. The workflow is ported and committed but **does nothing until both exist**. Repo `nick73patel-hash/Condo-Assistant`, project `mthzmtvopazhsmnbdhkc`.
+- 🔲 **Supabase Storage buckets are NOT backed up on either project** — `pg_dump` covers Postgres only. Condo Assistant's **inspection photos** and PB's **`pb-receipts`** live in Storage and are in no backup anywhere. Needs a separate storage-sync job.
+- 🔲 **PB prune step is broken** — `db-backup.yml` still uses `find -mtime +30`, which never matches because `actions/checkout` rewrites mtimes every run. Backups will accumulate forever (~90KB/night, so not urgent). Fixed in the Condo Assistant port by comparing the **date in the filename**; port that fix back to PB.
+- 🔲 **PAT `workflow` scope** — until fixed, no `.github/workflows/` file can be pushed from this machine; edits must go through the GitHub web editor.
+- 🔲 **Condo Assistant workflow commit `6a7eb4d` is stuck locally** — push confirmed rejected 2026-09-03: *"refusing to allow a Personal Access Token to create or update workflow `.github/workflows/db-backup.yml` without `workflow` scope"*. The file must be created via the GitHub web editor (or the PAT re-scoped). `docs/BACKUP-SETUP.md` (`fe1dc43`) pushed fine — it is not under `.github/`.
+
 ---
 
 ## Session: August 31, 2026 — DORA confirms no licence needed; the SMR blocker clears
@@ -87,11 +177,12 @@ Nick called the **Colorado Division of Real Estate (DORA), 303-894-2166** and sp
 
 **Confirmed:** WPM does **NOT** hold an employing broker's licence; the licensed person on the team is an **associate broker**.
 
-🚨 **The exemption is conditional. Four binding operational constraints:**
+🚨 **The exemption is conditional. Five binding operational constraints:**
 1. **YMCA sets the rent** — WPM never negotiates or sets pricing
 2. **YMCA selects the tenants** — occupancy follows their hiring
 3. **YMCA signs every lease** — WPM prepares the document from their template and enters name + dates only
 4. **Rent goes straight into a YMCA-controlled account** — WPM has view-only access, never custody
+5. **Title in the contract is "Leasing Coordinator, working on behalf of the YMCA"** — ⚠️ **Marcy Rivera's explicit instruction. Never use "property manager," "property management," or any variant, anywhere in the contract or in outward-facing material.** Under `§ 12-10-217(1)` the statute reaches anyone who *"assumes to act in the capacity of a licensee"* — calling yourself a property manager IS holding out as one, regardless of what you actually do. The other four constraints govern conduct; this one governs **nomenclature**, and it is the easiest of the five to breach by accident in a template, an email signature, or a job posting.
 
 **If any one drifts, the exemption goes** — and under *Benham v. Heyde* the management contract becomes **unenforceable**, meaning WPM could manage for a year and be unable to sue for its fee. **The failure mode is not a deliberate breach; it is a helpful employee on a Tuesday** saying "we could probably do better on that rent." `§ 12-10-217(1)` reaches anyone who *"assumes to act in the capacity of a licensee"* — conduct governs over paperwork.
 

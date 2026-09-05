@@ -10,6 +10,8 @@ metadata:
 
 # WPM Property Management Portal
 
+🚨 **CONTRACT LANGUAGE — binding, from DORA.** Marcy Rivera (DORA Investigator, 2026-08-31) instructed that WPM's title in the YMCA contract must be **"Leasing Coordinator, working on behalf of the YMCA."** **Never "property manager," "property management," or any variant** — not in the contract, not in outward-facing material, email signatures, or job postings. `§ 12-10-217(1)` reaches anyone who *"assumes to act in the capacity of a licensee"*; the label alone can constitute holding out, independent of actual conduct. ⚠️ **This portal's own name contains the forbidden phrase.** That is fine as an internal tool name, but do NOT let it bleed into contract or client-facing text. See the four conduct constraints in the session log (2026-08-31); this is the fifth.
+
 **Status:** Planned — waiting on Snow Mountain Ranch management contract to kick off build.
 **Build time:** 18–22 hours with Orion across sessions.
 **Full plan file:** `C:\Users\ducat\Projects\wpm-portal-plan.md`

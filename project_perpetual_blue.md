@@ -623,3 +623,14 @@ Contact crewedyachtsbvi.com directly. Register Perpetual Blue as a Crewed Charte
 - Net Income: ($45,800) at 10 charters · $9,525 at 15 charters · $70,800 at 20 charters
 - Break-even between 15–20 charters; 15 charters is marginally profitable
 - Output: `C:\Users\ducat\Projects\Perpetual_Blue_PnL.xlsx`
+
+## 💵 Cash flow projection (built 2026-09-04)
+`/cashflow` — runnable at any time, monthly columns, today → year end by default. Nav: **Financials → Cash Flow**. Fixed costs live at **Financials → Fixed Costs** (`recurring_expenses`, migration 032).
+
+**Jobs carry `cashflow_status`** (migration 031): `committed` always counted · `planned` counted but discretionary · `wishlist` **excluded from every total**, shown separately. This is deliberately SEPARATE from `priority` — priority is how badly you want it, cashflow_status is whether the money is committed.
+
+🚨 **REVENUE TIMING: charter deposits are held in ESCROW by a clearing company; Nick is paid only AFTER the charter completes.** So revenue buckets on `end_date`, never `start_date`, and there is no deposit inflow to model. At a month boundary this moves real money between columns — a charter running 28 Dec–3 Jan books to January.
+
+⚠️ **Structural risk to flag in any projection:** those inflows run through a clearing company where there is an active escrow conflict (Hank is a partner in Paradise Yacht Clearing; $45,477.34 outstanding). Revenue depends on a counterparty currently in dispute. Open question: does the clearing company release on completion day or with a lag?
+
+⚠️ **Opening cash is typed in by hand** — the CRM stores no bank balance anywhere.

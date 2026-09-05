@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: reference
   originSessionId: 2ba035ee-bd06-45c1-bbbc-a749b8dffa53
-  modified: 2026-08-30T18:37:37.112Z
+  modified: 2026-09-05T15:44:59.828Z
 ---
 
 Environment facts for Nick's Windows 11 machine that keep costing time when rediscovered.
@@ -43,5 +43,13 @@ Environment facts for Nick's Windows 11 machine that keep costing time when redi
 **✅ Vercel CLI authenticated 2026-08-30** as `nick73patel-hash`, and `perpetual-blue-crm` is linked (repo-level: `.vercel/repo.json`). Orion can pull production runtime logs directly — `cmd //c "npx.cmd vercel ls perpetual-blue-crm"`, then `vercel logs <deployment-url>`. **Use this instead of rebuilding locally to reproduce a production error** (that cost 2.5 hours on 2026-08-29). Note the perpetualbluebvi.com *website* project is on Nick's son's account and won't appear here.
 
 **No Python installed.** Spreadsheet work runs on **Node + ExcelJS** from `C:\Users\ducat\Projects\project-budgets\` — that's where the deps live, `node` from anywhere else can't resolve `exceljs`.
+
+**🚫 NEVER use `sed` on anything containing a Windows path (learned 2026-09-04).** `sed 's|...|Projects\\condo-assistant|'` wrote a literal **`0x0F` control byte** into a memory file — GNU sed reads `\c` in the *replacement* as a control-character escape (`\co` = Ctrl-O). It corrupts **silently**: the file looks nearly right, and the failure only surfaced later when the Edit tool could not match the string. Two earlier attempts with different quoting failed the same way.
+
+**Use Node `split`/`join` instead** — no escaping layer at all:
+```js
+s = s.split("Documents\\condo-assistant").join("Projects\\condo-assistant")
+```
+Same rule for any replacement containing backslashes. For multi-line content, write the text with the Write tool and have Node read it from a file rather than passing it through the shell — heredocs plus `node -e '...'` in one command also break on embedded quotes.
 
 See [[session-log]] for the sessions where each of these bit.
